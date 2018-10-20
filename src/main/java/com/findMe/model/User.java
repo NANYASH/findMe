@@ -97,6 +97,4 @@ public class User {
     private List<Message> messagesReceived;
 
     //interests;
-
-
 }
