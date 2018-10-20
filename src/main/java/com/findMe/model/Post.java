@@ -33,7 +33,7 @@ public class Post {
     @Setter
     private Date datePosted;
 
-    @Column(name = "ID_USER")
+    @Column(name = "ID_USER_POSTED")
     @Getter
     @Setter
     private User userPosted;
@@ -41,5 +41,5 @@ public class Post {
     // levels permissions
 
     //TODO
-    //COMMENTS
+    //comments
 }
