@@ -7,9 +7,8 @@ CREATE TABLE USER(
   CITY                     VARCHAR(50),
   AGE                      NUMBER,
   DATE_REGISTERED          DATE NOT NULL,
-  DATE_LAST_ACTIVE         DATE NOT NULL,
+  DATE_LAST_ACTIVE         DATE,
   RELATIONSHIPS_STATUS     VARCHAR(50),
   RELIGION                 VARCHAR(50),
   SCHOOL                   VARCHAR(50),
-  UNIVERSITY               VARCHAR(50)
-);
+  UNIVERSITY               VARCHAR(50));
