@@ -33,7 +33,8 @@ public class Post {
     @Setter
     private Date datePosted;
 
-    @Column(name = "ID_USER_POSTED")
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "ID_USER_POSTED")
     @Getter
     @Setter
     private User userPosted;
