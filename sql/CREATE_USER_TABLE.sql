@@ -1,11 +1,11 @@
-CREATE TABLE USER(
-  ID                   NUMBER PRIMARY KEY,
+CREATE TABLE USER_TABLE(
+  ID                   BIGINT PRIMARY KEY,
   FIRST_NAME           VARCHAR(50) NOT NULL,
   LAST_NAME            VARCHAR(50) NOT NULL,
   PHONE                VARCHAR(50),
   COUNTRY              VARCHAR(50),
   CITY                 VARCHAR(50),
-  AGE                  NUMBER,
+  AGE                  INTEGER,
   DATE_REGISTERED      DATE NOT NULL,
   DATE_LAST_ACTIVE     DATE,
   RELATIONSHIPS_STATUS VARCHAR(50),
