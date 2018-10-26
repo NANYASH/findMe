@@ -14,7 +14,7 @@ public class GenericDAO<T> {
         return entityManager;
     }
 
-    public T save(T t) {
+    public T create(T t) {
         getEntityManager().persist(t);
         return t;
     }
