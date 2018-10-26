@@ -19,6 +19,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findUserById(Long id) throws BadRequestException {
-        return userDAO.findById(id);
+        User userFound =  userDAO.findById(id);
+        if (userFound!=null) return userFound;
+        throw new BadRequestException("No users with such id");
     }
 }
