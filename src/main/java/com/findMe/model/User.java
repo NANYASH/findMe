@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -53,6 +54,7 @@ public class User {
     @Getter
     @Setter
     private Integer age;
+
 
     @Column(name = "DATE_REGISTERED")
     @Getter
