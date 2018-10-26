@@ -1,7 +1,6 @@
 package com.findMe.controller;
 
 import com.findMe.exception.BadRequestException;
-import com.findMe.model.User;
 import com.findMe.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
