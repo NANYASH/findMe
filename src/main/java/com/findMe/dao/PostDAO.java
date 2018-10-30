@@ -1,12 +1,13 @@
 package com.findMe.dao;
 
 
+import com.findMe.exception.InternalServerError;
 import com.findMe.model.Post;
 
 public interface PostDAO {
-    Post create(Post post);
-    Post update(Post post);
-    void delete(Long id);
-    Post findById(Long id);
+    Post create(Post post) throws InternalServerError;
+    Post update(Post post) throws InternalServerError;
+    void delete(Long id) throws InternalServerError;
+    Post findById(Long id) throws InternalServerError;
 
 }
