@@ -1,6 +1,7 @@
 package com.findMe.controller;
 
 import com.findMe.exception.BadRequestException;
+import com.findMe.model.User;
 import com.findMe.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,11 +23,18 @@ public class UserController {
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
     public String profile(Model model, @PathVariable String userId) {
         try {
-            model.addAttribute("user", userService.findUserById(Long.valueOf(userId)));
-            return  "profile2";
-        } catch (BadRequestException e) {
+
+            User userFound = userService.findUserById(Long.valueOf(userId));
+
+            if (userFound != null) {
+                model.addAttribute("user", userService.findUserById(Long.valueOf(userId)));
+                return "profile2";
+            }
+            throw new BadRequestException("No users with such id");
+
+        } catch (BadRequestException | NumberFormatException e) {
             e.printStackTrace();
-            return  "error404";
+            return "error404";
         }
     }
 }

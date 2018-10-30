@@ -6,7 +6,7 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 @Transactional
-public class GenericDAO<T> {
+public abstract class GenericDAO<T> {
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -24,14 +24,16 @@ public class GenericDAO<T> {
         return t;
     }
 
-    public T delete(Class<T> c,long id) {
-        T t = getEntityManager().find(c, id);
+    public T delete(long id) {
+        T t = getEntityManager().find(getEntityClass(), id);
         getEntityManager().detach(t);
         return t;
     }
 
-    public T findById(Class<T> c,long id){
-        return getEntityManager().find(c, id);
+    public T findById(long id){
+        return getEntityManager().find(getEntityClass(), id);
     }
+
+    abstract Class<T> getEntityClass();
 
 }

@@ -12,11 +12,16 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
 
     @Override
     public void delete(Long id) {
-        super.delete(User.class, id);
+        super.delete(id);
     }
 
     @Override
     public User findById(Long id){
-        return super.findById(User.class, id);
+        return super.findById(id);
+    }
+
+    @Override
+    Class<User> getEntityClass() {
+        return User.class;
     }
 }

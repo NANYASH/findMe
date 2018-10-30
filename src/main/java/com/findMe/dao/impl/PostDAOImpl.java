@@ -7,11 +7,16 @@ import com.findMe.model.Post;
 public class PostDAOImpl extends GenericDAO<Post> implements PostDAO{
     @Override
     public void delete(Long id) {
-        super.delete(Post.class,id);
+        super.delete(id);
     }
 
     @Override
     public Post findById(Long id) {
-        return super.findById(Post.class,id);
+        return super.findById(id);
+    }
+
+    @Override
+    Class<Post> getEntityClass() {
+        return Post.class;
     }
 }
