@@ -24,21 +24,21 @@ public class UserController {
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
     public String profile(Model model, @PathVariable String userId) {
         try {
-
-            User userFound = userService.findUserById(Long.valueOf(userId));
-
-            if (userFound != null) {
-                model.addAttribute("user", userService.findUserById(Long.valueOf(userId)));
-                return "profile2";
-            }
-            throw new BadRequestException("No users with such id");
-
-        } catch (BadRequestException | NumberFormatException e) {
+            model.addAttribute("user", validateUserExists(userId));//Логика
+        } catch (BadRequestException | NumberFormatException e) {//Результат
             e.printStackTrace();
             return "error404";
         } catch (InternalServerError internalServerError) {
             internalServerError.printStackTrace();
             return "error500";
         }
+        return "profile2";
+    }
+
+    private User validateUserExists(String userId) throws InternalServerError, BadRequestException {//Валидация
+        User userFound = userService.findUserById(Long.valueOf(userId));
+        if (userFound == null)
+            throw new BadRequestException("No users with such id");
+        return userFound;
     }
 }
