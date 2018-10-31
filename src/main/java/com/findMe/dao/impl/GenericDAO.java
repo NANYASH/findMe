@@ -4,6 +4,7 @@ import com.findMe.exception.InternalServerError;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.TransactionRequiredException;
 import javax.transaction.Transactional;
 
@@ -19,7 +20,7 @@ public abstract class GenericDAO<T> {
     public T create(T t) throws InternalServerError {
         try {
             getEntityManager().persist(t);
-        } catch (IllegalArgumentException | TransactionRequiredException e) {
+        } catch (PersistenceException e) {
             e.printStackTrace();
             throw new InternalServerError("Internal server error");
         }
@@ -29,7 +30,7 @@ public abstract class GenericDAO<T> {
     public T update(T t) throws InternalServerError {
         try {
             getEntityManager().merge(t);
-        } catch (IllegalArgumentException | TransactionRequiredException e) {
+        } catch (PersistenceException e) {
             e.printStackTrace();
             throw new InternalServerError("Internal server error");
         }
@@ -41,7 +42,7 @@ public abstract class GenericDAO<T> {
         try {
             t = getEntityManager().find(getEntityClass(), id);
             getEntityManager().detach(t);
-        } catch (IllegalArgumentException e) {
+        } catch (PersistenceException e) {
             e.printStackTrace();
             throw new InternalServerError("Internal server error");
         }
@@ -51,7 +52,7 @@ public abstract class GenericDAO<T> {
     public T findById(long id) throws InternalServerError {
         try {
             return getEntityManager().find(getEntityClass(), id);
-        } catch (IllegalArgumentException e) {
+        } catch (PersistenceException e) {
             e.printStackTrace();
             throw new InternalServerError("Internal server error");
         }
