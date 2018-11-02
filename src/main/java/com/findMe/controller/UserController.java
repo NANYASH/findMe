@@ -2,6 +2,7 @@ package com.findMe.controller;
 
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
+import com.findMe.exception.NotFoundException;
 import com.findMe.model.User;
 import com.findMe.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,21 +25,20 @@ public class UserController {
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
     public String profile(Model model, @PathVariable String userId) {
         try {
-            model.addAttribute("user", validateUserExists(userId));//Логика
-        } catch (BadRequestException | NumberFormatException e) {//Результат
+            User userFound = userService.findUserById(userId);
+            model.addAttribute("user", userFound);
+
+        } catch (BadRequestException e) {
             e.printStackTrace();
-            return "error404";
-        } catch (InternalServerError internalServerError) {
-            internalServerError.printStackTrace();
+            return "page400";
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            return  "error404";
+        } catch (InternalServerError e) {
+            e.printStackTrace();
             return "error500";
         }
         return "profile2";
     }
 
-    private User validateUserExists(String userId) throws InternalServerError, BadRequestException {//Валидация
-        User userFound = userService.findUserById(Long.valueOf(userId));
-        if (userFound == null)
-            throw new BadRequestException("No users with such id");
-        return userFound;
-    }
 }
