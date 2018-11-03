@@ -7,4 +7,5 @@ import com.findMe.model.User;
 
 public interface UserService {
     User findUserById(String id) throws InternalServerError, NotFoundException, BadRequestException;
+    User registerUser(User user) throws InternalServerError, BadRequestException;
 }

@@ -11,6 +11,8 @@ import com.findMe.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -27,5 +29,18 @@ public class UserServiceImpl implements UserService{
         if (userFound == null)
             throw new NotFoundException("User with such id cannot be found.");
         return userFound;
+    }
+
+    @Override
+    public User registerUser(User user) throws InternalServerError, BadRequestException {
+        user.setDateRegistered(new Date());
+        try {
+            userDAO.findByPhone(user.getPhone());
+        }catch (BadRequestException e){
+            return userDAO.create(user);
+        }
+
+        throw new BadRequestException("User with such phone already exists");
+
     }
 }

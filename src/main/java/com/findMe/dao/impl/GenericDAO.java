@@ -29,14 +29,14 @@ public abstract class GenericDAO<T> {
     public T update(T t) throws InternalServerError {
         try {
             getEntityManager().merge(t);
-        } catch (PersistenceException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new InternalServerError("Internal server error");
         }
         return t;
     }
 
-    public T delete(long id) throws InternalServerError {
+    public T remove(long id) throws InternalServerError {
         T t;
         try {
             t = getEntityManager().find(getEntityClass(), id);

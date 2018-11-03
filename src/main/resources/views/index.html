@@ -2,11 +2,66 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Find me</title>
+    <header>Header</header>
 </head>
 
-<div>
-    <div>
-        <h1>Welcome to FindMe!</h1>
-    </div>
+
+<body>
+
+
+<h1>Welcome to find me!</h1>
+Some text
+
+<form id="registration-form">
+    <input type="text" name="firstName" required/>
+</form>
+
+<button id="test-ajax">Click here!</button>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!--CDN-->
+
+</body>
+
+<footer>Footer</footer>
+
+<script>
+    $("#test-ajax").click(function () {
+        debugger;
+        $.ajax({
+            type: "GET",
+            url: "/test-ajax",
+            data: {},
+            success: function success() {
+                debugger;
+                alert("success");
+            },
+            error: function error(xhr) {
+                debugger;
+                alert("error");
+            }
+
+        })
+
+    })
+
+    //submit registration form
+    /*$("#registration-form").submit(function (e) {
+        $.ajax({
+            url: "register-user",
+            type: "POST",
+            data: $('registration-form').serialize(),
+            success: function success() {
+
+            },
+            error: function error(xhr) {
+                //
+            }
+
+        })
+
+    })*/
+</script>
 
 </div>
+</html>

@@ -8,7 +8,7 @@ import com.findMe.model.Post;
 public class PostDAOImpl extends GenericDAO<Post> implements PostDAO{
     @Override
     public void delete(Long id) throws InternalServerError {
-        super.delete(id);
+        super.remove(id);
     }
 
     @Override
