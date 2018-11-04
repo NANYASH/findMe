@@ -24,9 +24,9 @@ public class UserController {
 
     @RequestMapping(path = "/registerUser", method = RequestMethod.POST)
     public ResponseEntity registerUser(@ModelAttribute User user) {
-        System.out.println(user);
         try {
-            userService.registerUser(user).toString();
+            userService.registerUser(user);
+            return new ResponseEntity<>("Ok", HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
             return new ResponseEntity<>("BadRequestException", HttpStatus.BAD_REQUEST);
@@ -34,10 +34,10 @@ public class UserController {
             e.printStackTrace();
             return new ResponseEntity<>("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>("Ok", HttpStatus.OK);
+
     }
 
-    @RequestMapping(path = "/registerUser", method = RequestMethod.GET)
+    @RequestMapping(path = "/registerUserForm", method = RequestMethod.GET)
     public String registerUserForm() {
         return "register2";
     }

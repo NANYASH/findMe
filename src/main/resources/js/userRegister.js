@@ -1,4 +1,3 @@
-(function($){
 
 $("#registration-form").submit(function (e) {
     $.ajax({
@@ -6,15 +5,12 @@ $("#registration-form").submit(function (e) {
         type: "POST",
         data: $("#registration-form").serialize(),
         success: function success() {
-            debugger;
             alert("success");
         },
         error: function error(xhr) {
-            debugger;
             alert("error");
         }
 
     })
 
 })
-})(jQuery);

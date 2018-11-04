@@ -11,6 +11,7 @@ import com.findMe.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.NoResultException;
 import java.util.Date;
 
 @Service
@@ -36,10 +37,10 @@ public class UserServiceImpl implements UserService{
         user.setDateRegistered(new Date());
         try {
             userDAO.findByPhone(user.getPhone());
-        }catch (BadRequestException e){
+        }catch (NoResultException e){
+            e.printStackTrace();
             return userDAO.create(user);
         }
-
         throw new BadRequestException("User with such phone already exists");
 
     }
