@@ -37,11 +37,10 @@ public class UserServiceImpl implements UserService{
         user.setDateRegistered(new Date());
         try {
             userDAO.findByPhone(user.getPhone());
-        }catch (NoResultException e){
+        }catch (BadRequestException e){
             e.printStackTrace();
             return userDAO.create(user);
         }
         throw new BadRequestException("User with such phone already exists");
-
     }
 }

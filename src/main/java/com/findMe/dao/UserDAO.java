@@ -9,5 +9,5 @@ public interface UserDAO {
     User update(User user)throws InternalServerError;
     void delete(Long id) throws InternalServerError;
     User findById(Long id) throws InternalServerError;
-    User findByPhone(String phone);
+    User findByPhone(String phone) throws BadRequestException, InternalServerError;
 }

@@ -22,7 +22,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping(path = "/registerUser", method = RequestMethod.POST)
+    @RequestMapping(path = "/user-registration", method = RequestMethod.POST)
     public ResponseEntity registerUser(@ModelAttribute User user) {
         try {
             userService.registerUser(user);
@@ -37,7 +37,7 @@ public class UserController {
 
     }
 
-    @RequestMapping(path = "/registerUserForm", method = RequestMethod.GET)
+    @RequestMapping(path = "/user-registration", method = RequestMethod.GET)
     public String registerUserForm() {
         return "register2";
     }
