@@ -34,7 +34,6 @@ public class UserController {
             e.printStackTrace();
             return new ResponseEntity<>("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     @RequestMapping(path = "/user-registration", method = RequestMethod.GET)
@@ -46,6 +45,7 @@ public class UserController {
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
     public String profile(Model model, @PathVariable String userId) {
         try {
+
             User userFound = userService.findUserById(userId);
             model.addAttribute("user", userFound);
 
@@ -54,7 +54,7 @@ public class UserController {
             return "page400";
         } catch (NotFoundException e) {
             e.printStackTrace();
-            return  "error404";
+            return "error404";
         } catch (InternalServerError e) {
             e.printStackTrace();
             return "error500";

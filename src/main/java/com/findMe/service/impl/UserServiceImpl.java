@@ -36,11 +36,11 @@ public class UserServiceImpl implements UserService{
     public User registerUser(User user) throws InternalServerError, BadRequestException {
         user.setDateRegistered(new Date());
         try {
-            userDAO.findByPhone(user.getPhone());
+            userDAO.findByPhoneAndEmail(user.getPhone(),user.getEmail());
         }catch (BadRequestException e){
             e.printStackTrace();
             return userDAO.create(user);
         }
-        throw new BadRequestException("User with such phone already exists");
+        throw new BadRequestException("User with such phone/email already exists");
     }
 }

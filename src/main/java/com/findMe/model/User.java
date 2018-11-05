@@ -40,6 +40,11 @@ public class User {
     @Setter
     private String phone;
 
+    @Column(name = "EMAIL")
+    @Getter
+    @Setter
+    private String email;
+
     //TODO from existed data
     @Column(name = "COUNTRY")
     @Getter

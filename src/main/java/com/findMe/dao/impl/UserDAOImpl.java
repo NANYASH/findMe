@@ -14,7 +14,7 @@ import javax.transaction.Transactional;
 @Transactional
 @Repository
 public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
-    private static final String FIND_USER_BY_PHONE = "SELECT * FROM user_table WHERE phone = ?";
+    private static final String FIND_USER_BY_PHONE_AND_EMAIL = "SELECT * FROM user_table WHERE phone = ? and email = ?";
 
     @Override
     public void delete(Long id) throws InternalServerError {
@@ -27,11 +27,12 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
     }
 
     @Override
-    public User findByPhone(String phone) throws BadRequestException, InternalServerError {
+    public User findByPhoneAndEmail(String phone,String email) throws BadRequestException, InternalServerError {
         User user;
         try {
-            Query query = getEntityManager().createNativeQuery(FIND_USER_BY_PHONE, User.class);
+            Query query = getEntityManager().createNativeQuery(FIND_USER_BY_PHONE_AND_EMAIL, User.class);
             query.setParameter(1, phone);
+            query.setParameter(2, email);
             user = (User) query.getSingleResult();
         }catch (Exception e){
             if (e instanceof NoResultException)
