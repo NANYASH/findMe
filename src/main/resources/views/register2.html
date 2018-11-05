@@ -159,13 +159,11 @@
                url: "user-registration",
                type: "POST",
                data: $("#registration-form").serialize(),
-               success: function success() {
-                   debugger;
-                   alert("success");
+               success: function success(data){
+                   alert(data)
                },
-               error: function error(xhr) {
-                   debugger;
-                   alert("error");
+               error: function error(data){
+                   alert(data);
                }
 
            })
