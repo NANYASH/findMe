@@ -15,7 +15,7 @@ import javax.persistence.NoResultException;
 import java.util.Date;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private UserDAO userDAO;
 
@@ -35,12 +35,8 @@ public class UserServiceImpl implements UserService{
     @Override
     public User registerUser(User user) throws InternalServerError, BadRequestException {
         user.setDateRegistered(new Date());
-        try {
-            userDAO.findByPhoneAndEmail(user.getPhone(),user.getEmail());
-        }catch (BadRequestException e){
-            e.printStackTrace();
+        if (userDAO.findByPhoneAndEmail(user.getPhone(), user.getEmail()) == null)
             return userDAO.create(user);
-        }
         throw new BadRequestException("User with such phone/email already exists");
     }
 }

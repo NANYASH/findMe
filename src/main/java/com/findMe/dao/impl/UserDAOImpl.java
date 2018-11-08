@@ -27,17 +27,18 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
     }
 
     @Override
-    public User findByPhoneAndEmail(String phone,String email) throws BadRequestException, InternalServerError {
+    public User findByPhoneAndEmail(String phone, String email) throws InternalServerError {
         User user;
         try {
             Query query = getEntityManager().createNativeQuery(FIND_USER_BY_PHONE_AND_EMAIL, User.class);
             query.setParameter(1, phone);
             query.setParameter(2, email);
             user = (User) query.getSingleResult();
-        }catch (Exception e){
+        } catch (NoResultException e) {
             e.printStackTrace();
-            if (e instanceof NoResultException)
-                throw new BadRequestException("No users with such phone/email.");
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
             throw new InternalServerError("InternalServerError");
         }
         return user;

@@ -1,67 +1,172 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Find me</title>
-    <header>Header</header>
-</head>
-
-
-<body>
-
-
-<h1>Welcome to find me!</h1>
-Some text
-
-<form id="registration-form">
-    <input type="text" name="firstName" required/>
-</form>
-
-<button id="test-ajax">Click here!</button>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"
+      xmlns:th="http://www.thymeleaf.org">
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!--CDN-->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-</body>
+<div class="container">
 
-<footer>Footer</footer>
+    <div class="row">
+
+        <div class="col-md-7 ">
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><h4>User Profile</h4></div>
+                <div class="panel-body" style="min-height: 800px; max-height: 1000px;">
+
+
+                    <div class="box box-info">
+
+
+                        <div class="box-body">
+                            <div class="col-sm-6">
+                                <div align="center"><img alt="User Pic"
+                                                         src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg"
+                                                         id="profile-image1" class="img-circle img-responsive">
+
+                                    <input id="profile-image-upload" class="hidden" type="file">
+                                    <div style="color:#999;">click here to upload profile image</div>
+                                    <!--Upload Image Js And Css-->
+
+
+                                </div>
+
+                                <br>
+
+                                <!-- /input-group -->
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <hr style="margin:5px 0 5px 0;">
+
+                            <form id="registration-form">
+
+                                <div class="form-group">
+                                    <label class="col-md-6 control-label" for="firstName">Fist Name:</label>
+                                    <div class="input-group">
+                                        <input id="firstName" name="firstName" type="text" placeholder="Fist Name"
+                                               class="form-control input-md" required/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-6 control-label" for="lastName">Last Name:</label>
+                                    <div class="input-group">
+                                        <input id="lastName" name="lastName" type="text" placeholder="Last Name"
+                                               class="form-control input-md" required/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-6 control-label" for="phone">Phone:</label>
+                                    <div class="input-group">
+                                        <input id="phone" name="phone" type="text" placeholder="Phone"
+                                               class="form-control input-md" required/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-6 control-label" for="email">Email:</label>
+                                    <div class="input-group">
+                                        <input id="email" name="email" type="text" placeholder="Email"
+                                               class="form-control input-md" required/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-6 control-label" for="country">Country:</label>
+                                    <div class="input-group">
+                                        <input id="country" name="country" type="text" placeholder="Country"
+                                               class="form-control input-md"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-6 control-label" for="city">City:</label>
+                                    <div class="input-group">
+                                        <input id="city" name="city" type="text" placeholder="City"
+                                               class="form-control input-md"/>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label class="col-md-6 control-label" for="age">Age:</label>
+                                    <div class="input-group">
+                                        <input id="age" name="age" type="text" placeholder="Age"
+                                               class="form-control input-md"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-6 control-label" for="relationshipsStatus">Relationships
+                                        status:</label>
+                                    <div class="input-group">
+                                        <input id="relationshipsStatus" name="relationshipsStatus" type="text"
+                                               placeholder="Relationships status" class="form-control input-md"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-6 control-label" for="religion">Religion:</label>
+                                    <div class="input-group">
+                                        <input id="religion" name="religion" type="text" placeholder="Religion"
+                                               class="form-control input-md"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-6 control-label" for="school">School:</label>
+                                    <div class="input-group">
+                                        <input id="school" name="school" type="text" placeholder="School"
+                                               class="form-control input-md"/>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label class="col-md-6 control-label" for="university">University:</label>
+                                    <div class="input-group">
+                                        <input id="university" name="university" type="text" placeholder="University"
+                                               class="form-control input-md"/>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label"></label>
+                                    <div class="col-md-4">
+                                        <button id="test-ajax" class="btn btn-success">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
-    $("#test-ajax").click(function () {
-        debugger;
+    $("#registration-form").submit(function (e) {
+        e.preventDefault();
         $.ajax({
-            type: "GET",
-            url: "/test-ajax",
-            data: {},
-            success: function success() {
-                debugger;
-                alert("success");
+            url: "user-registration",
+            type: "POST",
+            data: $('#registration-form').serialize(),
+            success: function success(data) {
+                alert(data)
             },
             error: function error(xhr) {
-                debugger;
-                alert("error");
+                alert(xhr.responseText);
             }
 
         })
 
     })
 
-    //submit registration form
-    /*$("#registration-form").submit(function (e) {
-        $.ajax({
-            url: "register-user",
-            type: "POST",
-            data: $('registration-form').serialize(),
-            success: function success() {
-
-            },
-            error: function error(xhr) {
-                //
-            }
-
-        })
-
-    })*/
 </script>
-
-</div>
 </html>

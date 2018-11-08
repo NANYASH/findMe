@@ -36,12 +36,6 @@ public class UserController {
         }
     }
 
-    @RequestMapping(path = "/user-registration", method = RequestMethod.GET)
-    public String registerUserForm() {
-        return "register2";
-    }
-
-
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
     public String profile(Model model, @PathVariable String userId) {
         try {
