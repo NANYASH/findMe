@@ -38,7 +38,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
             return null;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new InternalServerError("InternalServerError");
+            throw new InternalServerError();
         }
     }
 

@@ -21,7 +21,7 @@ public abstract class GenericDAO<T> {
             getEntityManager().persist(t);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new InternalServerError("Internal server error");
+            throw new InternalServerError();
         }
         return t;
     }
@@ -31,7 +31,7 @@ public abstract class GenericDAO<T> {
             getEntityManager().merge(t);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new InternalServerError("Internal server error");
+            throw new InternalServerError();
         }
         return t;
     }
@@ -43,7 +43,7 @@ public abstract class GenericDAO<T> {
             getEntityManager().detach(t);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new InternalServerError("Internal server error");
+            throw new InternalServerError();
         }
         return t;
     }
@@ -53,7 +53,7 @@ public abstract class GenericDAO<T> {
             return getEntityManager().find(getEntityClass(), id);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new InternalServerError("Internal server error");
+            throw new InternalServerError();
         }
     }
 
