@@ -26,10 +26,10 @@ public class UserController {
     public ResponseEntity registerUser(@ModelAttribute User user) {
         try {
             userService.registerUser(user);
-            return new ResponseEntity<>("Ok", HttpStatus.OK);
+            return new ResponseEntity<>("User is registered.", HttpStatus.CREATED);
         } catch (BadRequestException e) {
             e.printStackTrace();
-            return new ResponseEntity<>("BadRequestException", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("User with such username/email already exists.", HttpStatus.BAD_REQUEST);
         } catch (InternalServerError e) {
             e.printStackTrace();
             return new ResponseEntity<>("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
