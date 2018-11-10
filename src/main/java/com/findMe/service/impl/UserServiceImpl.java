@@ -5,6 +5,7 @@ import com.findMe.dao.UserDAO;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.NotFoundException;
+import com.findMe.exception.UnauthorizedException;
 import com.findMe.model.User;
 import com.findMe.service.UserService;
 import com.findMe.util.Util;
@@ -39,4 +40,13 @@ public class UserServiceImpl implements UserService {
             return userDAO.create(user);
         throw new BadRequestException("User with such phone/email already exists");
     }
+
+    @Override
+    public User login(String login, String userEnteredPassword) throws InternalServerError, UnauthorizedException {
+        User user = userDAO.findByPhoneAndEmail(login,login);
+        if (user!=null && user.getPassword().equals(userEnteredPassword)) return user;
+        throw new UnauthorizedException("Incorrect credentials.");
+    }
+
+
 }

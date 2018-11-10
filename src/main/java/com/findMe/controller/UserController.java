@@ -3,6 +3,7 @@ package com.findMe.controller;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.NotFoundException;
+import com.findMe.exception.UnauthorizedException;
 import com.findMe.model.User;
 import com.findMe.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
@@ -36,6 +40,36 @@ public class UserController {
         }
     }
 
+    @RequestMapping(path = "/user-registration", method = RequestMethod.GET)
+    public String getRegisterPage() {
+       return "registerPage";
+    }
+
+
+    @RequestMapping(path = "/login", method = RequestMethod.GET)
+    public ResponseEntity logIn(HttpServletRequest request, @ModelAttribute User user) {
+        try {
+            User foundUser = userService.login(user.getEmail(), user.getPassword());
+            HttpSession httpSession = request.getSession();
+            httpSession.setAttribute("id", foundUser.getId());
+            return new ResponseEntity<>("User is logged.", HttpStatus.OK);
+        } catch (UnauthorizedException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Incorrect credentials.", HttpStatus.UNAUTHORIZED);
+        } catch (InternalServerError e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("InternalServerError.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(path = "/logout", method = RequestMethod.GET)
+    public ResponseEntity logOut(HttpServletRequest request) {
+        if (request.getSession() != null)
+            request.getSession().invalidate();
+        return new ResponseEntity<>("User is logged out.", HttpStatus.OK);
+    }
+
+
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
     public String profile(Model model, @PathVariable String userId) {
         try {
@@ -53,7 +87,7 @@ public class UserController {
             e.printStackTrace();
             return "error500";
         }
-        return "profile2";
+        return "profilePage";
     }
 
 }

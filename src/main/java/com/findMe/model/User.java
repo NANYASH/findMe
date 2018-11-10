@@ -94,6 +94,11 @@ public class User {
     @Setter
     private String university;
 
+    @Column(name = "PASSWORD")
+    @Getter
+    @Setter
+    private String password;
+
     @OneToMany(targetEntity = Message.class, fetch = FetchType.LAZY, mappedBy = "userFrom")
     @Getter
     @Setter
