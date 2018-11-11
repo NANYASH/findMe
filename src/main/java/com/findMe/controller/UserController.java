@@ -42,7 +42,7 @@ public class UserController {
 
     @RequestMapping(path = "/user-registration", method = RequestMethod.GET)
     public String getRegisterPage() {
-       return "registerPage";
+        return "registerPage";
     }
 
 
@@ -62,10 +62,10 @@ public class UserController {
         }
     }
 
+
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
-    public ResponseEntity logOut(HttpServletRequest request) {
-        if (request.getSession() != null)
-            request.getSession().invalidate();
+    public ResponseEntity logOut(HttpServletRequest request) throws BadRequestException {
+        request.getSession().invalidate();
         return new ResponseEntity<>("User is logged out.", HttpStatus.OK);
     }
 
