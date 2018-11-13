@@ -42,10 +42,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User login(String login, String userEnteredPassword) throws InternalServerError, UnauthorizedException {
+    public User login(String login, String userEnteredPassword) throws InternalServerError, BadRequestException {
         User user = userDAO.findByPhoneAndEmail(login,login);
         if (user!=null && user.getPassword().equals(userEnteredPassword)) return user;
-        throw new UnauthorizedException("Incorrect credentials.");
+        throw new BadRequestException("Incorrect credentials.");
     }
 
 

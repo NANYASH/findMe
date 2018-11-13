@@ -47,13 +47,13 @@ public class UserController {
 
 
     @RequestMapping(path = "/login", method = RequestMethod.GET)
-    public ResponseEntity logIn(HttpServletRequest request, @ModelAttribute User user) {
+    public ResponseEntity logIn(HttpSession session, @ModelAttribute User user) {
         try {
             User foundUser = userService.login(user.getEmail(), user.getPassword());
-            HttpSession httpSession = request.getSession();
-            httpSession.setAttribute("id", foundUser.getId());
-            return new ResponseEntity<>("User is logged.", HttpStatus.OK);
-        } catch (UnauthorizedException e) {
+
+            session.setAttribute("user", foundUser);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
             e.printStackTrace();
             return new ResponseEntity<>("Incorrect credentials.", HttpStatus.UNAUTHORIZED);
         } catch (InternalServerError e) {
@@ -66,7 +66,7 @@ public class UserController {
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
     public ResponseEntity logOut(HttpServletRequest request) throws BadRequestException {
         request.getSession().invalidate();
-        return new ResponseEntity<>("User is logged out.", HttpStatus.OK);
+        return new ResponseEntity<>( HttpStatus.OK);
     }
 
 
