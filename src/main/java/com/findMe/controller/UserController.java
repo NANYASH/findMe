@@ -6,7 +6,9 @@ import com.findMe.exception.NotFoundException;
 import com.findMe.exception.UnauthorizedException;
 import com.findMe.model.User;
 import com.findMe.service.UserService;
+import com.sun.deploy.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -47,9 +49,9 @@ public class UserController {
 
 
     @RequestMapping(path = "/login", method = RequestMethod.GET)
-    public ResponseEntity logIn(HttpSession session, @ModelAttribute User user) {
+    public ResponseEntity logIn(HttpSession session ,@RequestParam String email, @RequestParam String password) {
         try {
-            User foundUser = userService.login(user.getEmail(), user.getPassword());
+            User foundUser = userService.login(email,password);
 
             session.setAttribute("user", foundUser);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -66,7 +68,7 @@ public class UserController {
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
     public ResponseEntity logOut(HttpServletRequest request) throws BadRequestException {
         request.getSession().invalidate();
-        return new ResponseEntity<>( HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

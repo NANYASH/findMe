@@ -17,11 +17,11 @@
 
 
                             <div class="form-group">
-                                <input class="form-control" placeholder="yourmail@example.com" name="email" type="text" required>
+                                <input id="email" class="form-control" placeholder="yourmail@example.com" name="email" type="text" required>
                             </div>
 
                             <div class="form-group">
-                                <input class="form-control" placeholder="Password" name="password" type="password" required>
+                                <input id="password" class="form-control" placeholder="Password" name="password" type="password" required>
                             </div>
 
                             <div class="checkbox">
@@ -60,9 +60,9 @@
         $.ajax({
             url: "login",
             type: "GET",
-            data: $('#login-form').serialize(),
-            success: function success(data) {
-                alert(data)
+            data:  {email : $("#email").val(), password : $("#password").val()},
+            success: function success() {
+                alert("User is logged.")
             },
             error: function error(xhr) {
                 alert(xhr.responseText);
