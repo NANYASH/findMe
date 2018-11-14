@@ -148,7 +148,7 @@
 <script>
     $("#logout").click(function () {
         $.ajax({
-            url: "logout",
+            url: "/logout",
             type: "GET",
             success: function success() {
                 alert("User is logged out.")
