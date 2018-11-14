@@ -66,8 +66,8 @@ public class UserController {
 
 
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
-    public ResponseEntity logOut(HttpServletRequest request) throws BadRequestException {
-        request.getSession().invalidate();
+    public ResponseEntity logOut(HttpSession session) throws BadRequestException {
+        session.invalidate();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
