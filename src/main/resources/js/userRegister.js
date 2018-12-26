@@ -1,3 +1,4 @@
+/*ajax example for registerPage*/
 $("#registration-form").submit(function (e) {
     e.preventDefault();
     $.ajax({
