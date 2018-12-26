@@ -41,7 +41,7 @@
                             <div class="clearfix"></div>
                             <hr style="margin:5px 0 5px 0;">
 
-                            <form id="registration-form">
+                            <form id="registration-form" method="post" name="registrationForm">
 
                                 <div class="form-group">
                                     <label class="col-md-6 control-label" for="firstName">Fist Name:</label>
@@ -156,23 +156,11 @@
     </div>
 </div>
 
-<script> src="js/userRegister.js"
-   /* $("#registration-form").submit(function (e) {
-        e.preventDefault();
-        $.ajax({
-            url: "user-registration",
-            type: "POST",
-            data: $('#registration-form').serialize(),
-            success: function success(data) {
-                alert(data)
-            },
-            error: function error(xhr) {
-                alert(xhr.responseText);
-            }
 
-        })
-
-    })
-*/
+<script>
+    function placeOrder(){
+        document.registrationForm.action="user-registration";
+        document.registrationForm.submit();
+    }
 </script>
 </html>
