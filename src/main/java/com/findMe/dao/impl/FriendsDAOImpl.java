@@ -13,9 +13,6 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static com.findMe.util.Util.*;
-
-
 @Repository
 @Transactional
 public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
@@ -146,5 +143,17 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
     @Override
     Class<User> getEntityClass() {
         return User.class;
+    }
+
+    public static void validateRelationshipStatus(RelationshipStatus currentStatus, RelationshipStatus newStatus) throws BadRequestException {
+        if (currentStatus == null)
+            throw new BadRequestException("Users don't have relationship.");
+        if (currentStatus == RelationshipStatus.REQUESTED && newStatus == RelationshipStatus.ACCEPTED)
+            return;
+        if (currentStatus == RelationshipStatus.REQUESTED && newStatus == RelationshipStatus.REJECTED)
+            return;
+        if (currentStatus == RelationshipStatus.REJECTED && newStatus == RelationshipStatus.REQUESTED)
+            return;
+        throw new BadRequestException("Status cannot be changed.");
     }
 }

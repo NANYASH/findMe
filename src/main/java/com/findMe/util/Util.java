@@ -22,16 +22,4 @@ public class Util {
             throw new BadRequestException("Cannot be converted to Relationship status type");
         }
     }
-
-    public static void validateRelationshipStatus(RelationshipStatus currentStatus, RelationshipStatus newStatus) throws BadRequestException {
-        if (currentStatus == null)
-            throw new BadRequestException("Users don't have relationship.");
-        if (currentStatus == RelationshipStatus.REQUESTED && newStatus == RelationshipStatus.ACCEPTED)
-            return;
-        if (currentStatus == RelationshipStatus.REQUESTED && newStatus == RelationshipStatus.REJECTED)
-            return;
-        if (currentStatus == RelationshipStatus.REJECTED && newStatus == RelationshipStatus.REQUESTED)
-            return;
-        throw new BadRequestException("Status cannot be changed.");
-    }
 }

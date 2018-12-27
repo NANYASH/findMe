@@ -61,7 +61,6 @@ public class FriendsController {
     public ResponseEntity deleteRelationship(HttpSession session ,@RequestParam Long userFromId,@RequestParam Long userToId){
         if (session.getAttribute("user") == null)
             return new ResponseEntity<>("User should be logged in", HttpStatus.UNAUTHORIZED);
-
         try {
             friendsService.deleteRelationship(userFromId,userToId);
             return new ResponseEntity<>("User is deleted from friends.", HttpStatus.OK);
@@ -79,7 +78,6 @@ public class FriendsController {
     public ResponseEntity updateRelationship(HttpSession session ,@RequestParam Long userFromId,@RequestParam Long userToId,@RequestParam String status){
         if (session.getAttribute("user") == null)
             return new ResponseEntity<>("User should be logged in", HttpStatus.UNAUTHORIZED);
-
         try {
             friendsService.updateRelationship(userFromId,userToId,convertRelationshipStatus(status));
             return new ResponseEntity<>("Relationship status is changed to"+status.toString(), HttpStatus.OK);
