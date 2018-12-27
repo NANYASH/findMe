@@ -4,9 +4,12 @@ import com.findMe.dao.FriendsDAO;
 import com.findMe.entity.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
+import com.findMe.model.User;
 import com.findMe.service.FriendsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class FriendsServiceImpl implements FriendsService{
@@ -15,6 +18,11 @@ public class FriendsServiceImpl implements FriendsService{
     @Autowired
     public FriendsServiceImpl(FriendsDAO friendsDAO) {
         this.friendsDAO = friendsDAO;
+    }
+
+    @Override
+    public List<User> findFriendsByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError {
+        return friendsDAO.findFriendsByRelationshipStatus(userId,status);
     }
 
     @Override
