@@ -104,6 +104,7 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
         } catch (Exception e) {
             e.printStackTrace();
             throw new InternalServerError();
+
         }
     }
 
