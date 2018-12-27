@@ -29,6 +29,16 @@ public class FriendsController {
         this.friendsService = friendsService;
     }
 
+    /*@RequestMapping(path = "/getRequestedFrom", method = RequestMethod.GET)
+    public List<User> findRequestedFrom(HttpSession session,@RequestParam Long userId, @RequestParam RelationshipStatus status){
+
+
+    }*/
+
+    /*@RequestMapping(path = "/getRequestedTo", method = RequestMethod.GET)
+    public List<User> findRequestedTo(HttpSession session,@RequestParam Long userId, @RequestParam RelationshipStatus status) {
+
+    }*/
 
     @RequestMapping(path = "/addRelationship", method = RequestMethod.PUT)
     public ResponseEntity addRelationship(HttpSession session ,@RequestParam Long userFromId,@RequestParam Long userToId){

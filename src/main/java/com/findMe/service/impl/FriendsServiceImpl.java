@@ -21,8 +21,18 @@ public class FriendsServiceImpl implements FriendsService{
     }
 
     @Override
-    public List<User> findFriendsByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError {
-        return friendsDAO.findFriendsByRelationshipStatus(userId,status);
+    public List<User> findByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError {
+        return friendsDAO.findByRelationshipStatus(userId,status);
+    }
+
+    @Override
+    public List<User> findRequestedFrom(Long userId, RelationshipStatus status) throws InternalServerError {
+        return friendsDAO.findRequestedFrom(userId,status);
+    }
+
+    @Override
+    public List<User> findRequestedTo(Long userId, RelationshipStatus status) throws InternalServerError {
+        return friendsDAO.findRequestedTo(userId,status);
     }
 
     @Override
