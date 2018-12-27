@@ -22,9 +22,8 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
     private static final String FIND_STATUS_BY_ID = "SELECT STATUS FROM RELATIONSHIP" +
             " WHERE USER_FROM_ID = ? AND USER_TO_ID = ? OR USER_FROM_ID = ? AND USER_TO_ID = ?";
 
-
     private static final String FIND_BY_RELATIONSHIP_STATUS = "SELECT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = ? OR USER_TO_ID = ?" +
-            " WHERE STATUS = ? and ID <> ?";
+            " WHERE ID <> ? AND STATUS = ?";
 
     private static final String FIND_REQUESTED_FROM = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON ID = USER_TO_ID" +
             " WHERE USER_FROM_ID = ? AND STATUS = ?";
