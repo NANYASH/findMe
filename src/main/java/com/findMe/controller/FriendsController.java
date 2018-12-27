@@ -24,8 +24,9 @@ public class FriendsController {
     public FriendsController(FriendsService friendsService) {
         this.friendsService = friendsService;
     }
+
     @RequestMapping(path = "/addRelationship", method = RequestMethod.PUT)
-    public ResponseEntity addRelationship(HttpSession session , Long userFromId, Long userToId){
+    public ResponseEntity addRelationship(HttpSession session ,@RequestParam Long userFromId,@RequestParam Long userToId){
         if (session.getAttribute("user") == null)
             return new ResponseEntity<>("User should be logged in", HttpStatus.UNAUTHORIZED);
 

@@ -1,5 +1,6 @@
 package com.findMe.dao.impl;
 
+import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 
 import javax.persistence.EntityManager;
@@ -16,7 +17,7 @@ public abstract class GenericDAO<T> {
         return entityManager;
     }
 
-    public T create(T t) throws InternalServerError {
+    public T create(T t) throws InternalServerError, BadRequestException {
         try {
             getEntityManager().persist(t);
         } catch (Exception e) {

@@ -36,9 +36,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User registerUser(User user) throws InternalServerError, BadRequestException {
         user.setDateRegistered(new Date());
-        if (userDAO.findByPhoneAndEmail(user.getPhone(), user.getEmail()) == null)
-            return userDAO.create(user);
-        throw new BadRequestException("User with such phone/email already exists");
+        return userDAO.create(user);
     }
 
     @Override

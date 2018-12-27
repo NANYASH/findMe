@@ -66,8 +66,7 @@ public class UserController {
 
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
     public ResponseEntity logOut(HttpSession session) throws BadRequestException {
-        //session.setAttribute("user",null);
-        session.removeAttribute("user");
+        session.removeAttribute("user");// or session.setAttribute("user",null);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -75,10 +74,8 @@ public class UserController {
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
     public String profile(Model model, @PathVariable String userId) {
         try {
-
             User userFound = userService.findUserById(userId);
             model.addAttribute("user", userFound);
-
         } catch (BadRequestException e) {
             e.printStackTrace();
             return "page400";
