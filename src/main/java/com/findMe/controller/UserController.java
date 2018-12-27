@@ -52,7 +52,6 @@ public class UserController {
     public ResponseEntity logIn(HttpSession session ,@RequestParam String email, @RequestParam String password) {
         try {
             User foundUser = userService.login(email,password);
-
             session.setAttribute("user", foundUser);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (BadRequestException e) {

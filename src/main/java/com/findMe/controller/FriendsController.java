@@ -8,6 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpSession;
+
+import static com.findMe.util.Util.convertRelationshipStatus;
 
 @Controller
 public class FriendsController {
@@ -17,8 +24,11 @@ public class FriendsController {
     public FriendsController(FriendsService friendsService) {
         this.friendsService = friendsService;
     }
+    @RequestMapping(path = "/addRelationship", method = RequestMethod.PUT)
+    public ResponseEntity addRelationship(HttpSession session , Long userFromId, Long userToId){
+        if (session.getAttribute("user") == null)
+            return new ResponseEntity<>("User should be logged in", HttpStatus.UNAUTHORIZED);
 
-    public ResponseEntity addRelationship(Long userFromId, Long userToId){
         try {
             friendsService.addRelationship(userFromId,userToId);
             return new ResponseEntity<>("Request is sent.", HttpStatus.OK);
@@ -31,8 +41,11 @@ public class FriendsController {
         }
 
     }
+    @RequestMapping(path = "/deleteRelationship", method = RequestMethod.DELETE)
+    public ResponseEntity deleteRelationship(HttpSession session ,@RequestParam Long userFromId,@RequestParam Long userToId){
+        if (session.getAttribute("user") == null)
+            return new ResponseEntity<>("User should be logged in", HttpStatus.UNAUTHORIZED);
 
-    public ResponseEntity deleteRelationship(Long userFromId, Long userToId){
         try {
             friendsService.deleteRelationship(userFromId,userToId);
             return new ResponseEntity<>("User is deleted from friends.", HttpStatus.OK);
@@ -46,9 +59,13 @@ public class FriendsController {
 
     }
 
-    public ResponseEntity updateRelationship(Long userFromId, Long userToId, RelationshipStatus status){
+    @RequestMapping(path = "/updateRelationship", method = RequestMethod.PUT)
+    public ResponseEntity updateRelationship(HttpSession session ,@RequestParam Long userFromId,@RequestParam Long userToId,@RequestParam String status){
+        if (session.getAttribute("user") == null)
+            return new ResponseEntity<>("User should be logged in", HttpStatus.UNAUTHORIZED);
+
         try {
-            friendsService.updateRelationship(userFromId,userToId,status);
+            friendsService.updateRelationship(userFromId,userToId,convertRelationshipStatus(status));
             return new ResponseEntity<>("Relationship status is changed to"+status.toString(), HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();

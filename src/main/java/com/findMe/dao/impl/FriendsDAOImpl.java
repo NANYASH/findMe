@@ -78,7 +78,8 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
 
     @Override
     public void deleteRelationship(Long userFromId, Long userToId) throws InternalServerError, BadRequestException {
-        validateRelationshipStatus(getRelationship(userFromId,userToId));
+         if (getRelationship(userFromId,userToId) == null)
+            throw new BadRequestException("Users don't have relationship.");
         try {
             Query query = getEntityManager().createNativeQuery(DELETE_RELATIONSHIP);
             query.setParameter(1, userFromId);
@@ -104,7 +105,6 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
         } catch (Exception e) {
             e.printStackTrace();
             throw new InternalServerError();
-
         }
     }
 

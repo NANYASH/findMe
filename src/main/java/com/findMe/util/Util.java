@@ -14,6 +14,15 @@ public class Util {
         }
     }
 
+    public static RelationshipStatus convertRelationshipStatus(String status) throws BadRequestException {
+        try {
+            return RelationshipStatus.valueOf(status);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            throw new BadRequestException("Cannot be converted to Relationship status type");
+        }
+    }
+
     public static void validateRelationshipStatus(RelationshipStatus currentStatus, RelationshipStatus newStatus) throws BadRequestException {
         if (currentStatus == null)
             throw new BadRequestException("Users don't have relationship.");
@@ -24,12 +33,5 @@ public class Util {
         if (currentStatus == RelationshipStatus.REJECTED && newStatus == RelationshipStatus.REQUESTED)
             return;
         throw new BadRequestException("Status cannot be changed.");
-    }
-
-    public static void validateRelationshipStatus(RelationshipStatus currentStatus) throws BadRequestException {
-        if (currentStatus == null)
-            throw new BadRequestException("Users don't have relationship.");
-        if (currentStatus != RelationshipStatus.ACCEPTED)
-            throw new BadRequestException("Users are not friends.");
     }
 }
