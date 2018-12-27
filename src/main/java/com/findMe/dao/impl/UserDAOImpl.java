@@ -42,8 +42,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
         }
     }
 
-    @Override
-    public User create(User user) throws InternalServerError, BadRequestException {
+    public User register(User user) throws InternalServerError, BadRequestException {
         if (findByPhoneAndEmail(user.getPhone(), user.getEmail()) != null)
             throw new BadRequestException("User with such phone/email already exists");
         return super.create(user);

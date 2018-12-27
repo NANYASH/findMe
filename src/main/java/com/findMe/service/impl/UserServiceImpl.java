@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User registerUser(User user) throws InternalServerError, BadRequestException {
         user.setDateRegistered(new Date());
-        return userDAO.create(user);
+        return userDAO.register(user);
     }
 
     @Override
