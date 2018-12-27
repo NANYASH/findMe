@@ -3,7 +3,6 @@ package com.findMe.dao.impl;
 
 import com.findMe.dao.FriendsDAO;
 import com.findMe.entity.RelationShipStatus;
-import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.model.User;
 import org.springframework.stereotype.Repository;
