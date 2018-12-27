@@ -14,7 +14,7 @@ public class Util {
         }
     }
 
-    public static void validateUpdate(RelationshipStatus currentStatus, RelationshipStatus newStatus) throws BadRequestException {
+    public static void validateRelationshipStatus(RelationshipStatus currentStatus, RelationshipStatus newStatus) throws BadRequestException {
         if (currentStatus == null)
             throw new BadRequestException("Users don't have relationship.");
         if (currentStatus == RelationshipStatus.REQUESTED && newStatus == RelationshipStatus.ACCEPTED)
@@ -26,7 +26,7 @@ public class Util {
         throw new BadRequestException("Status cannot be changed.");
     }
 
-    public static void validateDelete(RelationshipStatus currentStatus) throws BadRequestException {
+    public static void validateRelationshipStatus(RelationshipStatus currentStatus) throws BadRequestException {
         if (currentStatus == null)
             throw new BadRequestException("Users don't have relationship.");
         if (currentStatus != RelationshipStatus.ACCEPTED)
