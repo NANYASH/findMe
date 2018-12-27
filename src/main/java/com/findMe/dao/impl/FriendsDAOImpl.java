@@ -23,14 +23,14 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
             " WHERE USER_FROM_ID = ? AND USER_TO_ID = ? OR USER_FROM_ID = ? AND USER_TO_ID = ?";
 
 
-    private static final String FIND_BY_RELATIONSHIP_STATUS = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = ? OR USER_TO_ID = ?" +
-            " WHERE STATUS = ?";
+    private static final String FIND_BY_RELATIONSHIP_STATUS = "SELECT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = ? OR USER_TO_ID = ?" +
+            " WHERE STATUS = ? and ID <> ?";
 
-    private static final String FIND_REQUESTED_FROM = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = ?" +
-            " WHERE STATUS = ?";
+    private static final String FIND_REQUESTED_FROM = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON ID = USER_TO_ID" +
+            " WHERE USER_FROM_ID = ? AND STATUS = ?";
 
-    private static final String FIND_REQUESTED_TO = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON USER_TO_ID = ?" +
-            " WHERE STATUS = ?";
+    private static final String FIND_REQUESTED_TO = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON ID = USER_FROM_ID" +
+            " WHERE USER_TO_ID = ? AND STATUS = ?";
 
     private static final String ADD_RELATIONSHIP = "INSERT INTO RELATIONSHIP (user_from_id, user_to_id, status) VALUES (?,?,'REQUESTED')";
 
