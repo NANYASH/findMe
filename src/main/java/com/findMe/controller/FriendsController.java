@@ -3,6 +3,7 @@ package com.findMe.controller;
 import com.findMe.entity.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
+import com.findMe.model.User;
 import com.findMe.service.FriendsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
+
+import java.util.List;
+
 import static com.findMe.util.Util.convertRelationshipStatus;
 
 @Controller
@@ -24,6 +28,7 @@ public class FriendsController {
     public FriendsController(FriendsService friendsService) {
         this.friendsService = friendsService;
     }
+
 
     @RequestMapping(path = "/addRelationship", method = RequestMethod.PUT)
     public ResponseEntity addRelationship(HttpSession session ,@RequestParam Long userFromId,@RequestParam Long userToId){

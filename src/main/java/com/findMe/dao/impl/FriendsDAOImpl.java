@@ -19,12 +19,18 @@ import static com.findMe.util.Util.*;
 @Repository
 @Transactional
 public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
-
-    private static final String FIND_FRIENDS_BY_STATUS = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = 1 OR USER_TO_ID = 1" +
-            " WHERE STATUS = 'ACCEPTED';";
-
     private static final String FIND_STATUS_BY_ID = "SELECT STATUS FROM RELATIONSHIP" +
             " WHERE USER_FROM_ID = ? AND USER_TO_ID = ? OR USER_FROM_ID = ? AND USER_TO_ID = ?";
+
+
+    private static final String FIND_BY_RELATIONSHIP_STATUS = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = ? OR USER_TO_ID = ?" +
+            " WHERE STATUS = ?";
+
+    private static final String FIND_REQUESTED_FROM = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = ?" +
+            " WHERE STATUS = ?";
+
+    private static final String FIND_REQUESTED_TO = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON USER_TO_ID = ?" +
+            " WHERE STATUS = ?";
 
     private static final String ADD_RELATIONSHIP = "INSERT INTO RELATIONSHIP (user_from_id, user_to_id, status) VALUES (?,?,'REQUESTED')";
 
@@ -32,16 +38,6 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
 
     private static final String UPDATE_RELATIONSHIP = "UPDATE RELATIONSHIP SET STATUS = ?" +
             " WHERE USER_FROM_ID = ? AND USER_TO_ID = ? OR USER_FROM_ID = ? AND USER_TO_ID = ?";
-
-    @Override
-    public List<User> findFriendsByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError {
-        try {
-            return getEntityManager().createNativeQuery(FIND_FRIENDS_BY_STATUS).getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new InternalServerError();
-        }
-    }
 
     @Override
     public RelationshipStatus getRelationship(Long userFromId, Long userToId) throws InternalServerError {
@@ -55,6 +51,46 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
         } catch (NoResultException e) {
             e.printStackTrace();
             return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
+    }
+
+    @Override
+    public List<User> findByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError {
+        try {
+            Query query =  getEntityManager().createNativeQuery(FIND_BY_RELATIONSHIP_STATUS);
+            query.setParameter(1,userId);
+            query.setParameter(2,userId);
+            query.setParameter(3,status.toString());
+            return query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
+    }
+
+    @Override
+    public List<User> findRequestedFrom(Long userId, RelationshipStatus status) throws InternalServerError {
+        try {
+            Query query =  getEntityManager().createNativeQuery(FIND_REQUESTED_FROM);
+            query.setParameter(1,userId);
+            query.setParameter(2,status.toString());
+            return query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
+    }
+
+    @Override
+    public List<User> findRequestedTo(Long userId, RelationshipStatus status) throws InternalServerError {
+        try {
+            Query query =  getEntityManager().createNativeQuery(FIND_REQUESTED_TO);
+            query.setParameter(1,userId);
+            query.setParameter(2,status.toString());
+            return query.getResultList();
         } catch (Exception e) {
             e.printStackTrace();
             throw new InternalServerError();
