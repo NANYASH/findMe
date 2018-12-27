@@ -2,7 +2,8 @@ package com.findMe.dao.impl;
 
 
 import com.findMe.dao.FriendsDAO;
-import com.findMe.entity.RelationShipStatus;
+import com.findMe.entity.RelationshipStatus;
+import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.model.User;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,9 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.List;
+
+import static com.findMe.util.Util.*;
+
 
 @Repository
 @Transactional
@@ -30,7 +34,7 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
             " WHERE USER_FROM_ID = ? AND USER_TO_ID = ? OR USER_FROM_ID = ? AND USER_TO_ID = ?";
 
     @Override
-    public List<User> findFriendsByRelationshipStatus(Long userId, RelationShipStatus status) throws InternalServerError {
+    public List<User> findFriendsByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError {
         try {
             return getEntityManager().createNativeQuery(FIND_FRIENDS_BY_STATUS).getResultList();
         } catch (Exception e) {
@@ -40,14 +44,14 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
     }
 
     @Override
-    public RelationShipStatus checkRelationship(Long userFromId, Long userToId) throws InternalServerError {
+    public RelationshipStatus getRelationship(Long userFromId, Long userToId) throws InternalServerError {
         try {
             Query query = getEntityManager().createNativeQuery(FIND_STATUS_BY_ID);
             query.setParameter(1, userFromId);
             query.setParameter(2, userToId);
             query.setParameter(3, userToId);
             query.setParameter(4, userFromId);
-            return RelationShipStatus.valueOf(query.getSingleResult().toString());
+            return RelationshipStatus.valueOf(query.getSingleResult().toString());
         } catch (NoResultException e) {
             e.printStackTrace();
             return null;
@@ -58,7 +62,10 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
     }
 
     @Override
-    public void addRelationship(Long userFromId, Long userToId) throws InternalServerError {
+    public void addRelationship(Long userFromId, Long userToId) throws InternalServerError, BadRequestException {
+        if (getRelationship(userFromId,userToId) != null)
+          throw new BadRequestException("Users already have relationship.");
+
         try {
             Query query = getEntityManager().createNativeQuery(ADD_RELATIONSHIP);
             query.setParameter(1, userFromId);
@@ -71,7 +78,8 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
     }
 
     @Override
-    public void deleteRelationship(Long userFromId, Long userToId) throws InternalServerError {
+    public void deleteRelationship(Long userFromId, Long userToId) throws InternalServerError, BadRequestException {
+        validateDelete(getRelationship(userFromId,userToId));
         try {
             Query query = getEntityManager().createNativeQuery(DELETE_RELATIONSHIP);
             query.setParameter(1, userFromId);
@@ -86,7 +94,9 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
     }
 
     @Override
-    public void updateRelationship(Long userFromId, Long userToId, RelationShipStatus status) throws InternalServerError {
+    public void updateRelationship(Long userFromId, Long userToId, RelationshipStatus status) throws InternalServerError, BadRequestException {
+        RelationshipStatus currentStatus = getRelationship(userFromId,userToId);
+        validateUpdate(currentStatus,status);
         try {
             Query query = getEntityManager().createNativeQuery(UPDATE_RELATIONSHIP);
             query.setParameter(1, status.toString());

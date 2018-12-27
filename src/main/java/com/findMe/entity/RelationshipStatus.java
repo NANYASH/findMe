@@ -1,5 +1,5 @@
 package com.findMe.entity;
 
-public enum RelationShipStatus {
+public enum RelationshipStatus {
     REQUESTED,REJECTED,ACCEPTED
 }
