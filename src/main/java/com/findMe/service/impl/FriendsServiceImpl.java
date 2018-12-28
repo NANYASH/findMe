@@ -43,13 +43,6 @@ public class FriendsServiceImpl implements FriendsService{
     }
 
     @Override
-    public void deleteRelationship(Long userFromId, Long userToId) throws BadRequestException, InternalServerError {
-        if (userFromId == userToId)
-            throw new BadRequestException("User cannot delete relationship with himself.");
-        friendsDAO.deleteRelationship(userFromId,userToId);
-    }
-
-    @Override
     public void updateRelationship(Long userFromId, Long userToId, RelationshipStatus status) throws BadRequestException, InternalServerError {
         if (userFromId == userToId)
             throw new BadRequestException("User cannot change relationship with himself.");
@@ -57,9 +50,16 @@ public class FriendsServiceImpl implements FriendsService{
     }
 
     @Override
-    public void rejectRequest(Long userFromId, Long userToId) throws InternalServerError, BadRequestException {
+    public void deleteRelationship(Long userFromId, Long userToId) throws BadRequestException, InternalServerError {
         if (userFromId == userToId)
             throw new BadRequestException("User cannot delete relationship with himself.");
+        friendsDAO.deleteRelationship(userFromId,userToId);
+    }
+
+    @Override
+    public void rejectRequest(Long userFromId, Long userToId) throws BadRequestException, InternalServerError {
+        if (userFromId == userToId)
+            throw new BadRequestException("User cannot reject relationship with himself.");
         friendsDAO.rejectRequest(userFromId,userToId);
     }
 

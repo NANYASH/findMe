@@ -39,42 +39,9 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
             " WHERE USER_FROM_ID = ? AND USER_TO_ID = ?";
 
     @Override
-    public RelationshipStatus getRelationship(Long userFromId, Long userToId) throws InternalServerError {
-        try {
-            Query query = getEntityManager().createNativeQuery(FIND_STATUS_BY_ID);
-            query.setParameter(1, userFromId);
-            query.setParameter(2, userToId);
-            query.setParameter(3,userToId);
-            query.setParameter(4,userFromId);
-            return RelationshipStatus.valueOf(query.getSingleResult().toString());
-        } catch (NoResultException e) {
-            e.printStackTrace();
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new InternalServerError();
-        }
-    }
-
-    public RelationshipStatus getRelationshipFromTo(Long userFromId, Long userToId) throws InternalServerError {
-        try {
-            Query query = getEntityManager().createNativeQuery(FIND_STATUS_BY_ID_FROM_TO);
-            query.setParameter(1, userFromId);
-            query.setParameter(2, userToId);
-            return RelationshipStatus.valueOf(query.getSingleResult().toString());
-        } catch (NoResultException e) {
-            e.printStackTrace();
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new InternalServerError();
-        }
-    }
-
-    @Override
     public List<User> findByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError {
         try {
-            Query query =  getEntityManager().createNativeQuery(FIND_BY_RELATIONSHIP_STATUS);
+            Query query = getEntityManager().createNativeQuery(FIND_BY_RELATIONSHIP_STATUS);
             query.setParameter(1,userId);
             query.setParameter(2,userId);
             query.setParameter(3,status.toString());
@@ -88,7 +55,7 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
     @Override
     public List<User> findRequestedFrom(Long userId, RelationshipStatus status) throws InternalServerError {
         try {
-            Query query =  getEntityManager().createNativeQuery(FIND_REQUESTED_FROM);
+            Query query = getEntityManager().createNativeQuery(FIND_REQUESTED_FROM);
             query.setParameter(1,userId);
             query.setParameter(2,status.toString());
             return query.getResultList();
@@ -101,7 +68,7 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
     @Override
     public List<User> findRequestedTo(Long userId, RelationshipStatus status) throws InternalServerError {
         try {
-            Query query =  getEntityManager().createNativeQuery(FIND_REQUESTED_TO);
+            Query query = getEntityManager().createNativeQuery(FIND_REQUESTED_TO);
             query.setParameter(1,userId);
             query.setParameter(2,status.toString());
             return query.getResultList();
@@ -127,24 +94,6 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
     }
 
     @Override
-    public void deleteRelationship(Long userFromId, Long userToId) throws InternalServerError, BadRequestException {
-        RelationshipStatus status = getRelationship(userFromId,userToId);
-         if (status == null || status == RelationshipStatus.REQUESTED || status == RelationshipStatus.REJECTED)
-            throw new BadRequestException("Users are not friend.");
-        try {
-            Query query = getEntityManager().createNativeQuery(DELETE_RELATIONSHIP);
-            query.setParameter(1, userFromId);
-            query.setParameter(2, userToId);
-            query.setParameter(3, userToId);
-            query.setParameter(4, userFromId);
-            query.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new InternalServerError();
-        }
-    }
-
-    @Override
     public void updateRelationship(Long userFromId, Long userToId, RelationshipStatus status) throws InternalServerError, BadRequestException {
         validateRelationshipStatus(getRelationshipFromTo(userFromId,userToId),status);
         try {
@@ -160,10 +109,57 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
     }
 
     @Override
+    public void deleteRelationship(Long userFromId, Long userToId) throws InternalServerError, BadRequestException {
+        if (getRelationship(userFromId,userToId) != RelationshipStatus.ACCEPTED)
+            throw new BadRequestException("Users are not friends.");
+        delete(userFromId,userToId);
+    }
+
+    @Override
     public void rejectRequest(Long userFromId, Long userToId) throws InternalServerError, BadRequestException {
-        RelationshipStatus status = getRelationshipFromTo(userFromId,userToId);
-        if (status == null || status != RelationshipStatus.REQUESTED)
+        if (getRelationshipFromTo(userFromId,userToId) != RelationshipStatus.REQUESTED)
             throw new BadRequestException("No requests to this user.");
+        delete(userFromId,userToId);
+    }
+
+    @Override
+    Class<User> getEntityClass() {
+        return User.class;
+    }
+
+    private RelationshipStatus getRelationship(Long userFromId, Long userToId) throws InternalServerError {
+        try {
+            Query query = getEntityManager().createNativeQuery(FIND_STATUS_BY_ID);
+            query.setParameter(1, userFromId);
+            query.setParameter(2, userToId);
+            query.setParameter(3,userToId);
+            query.setParameter(4,userFromId);
+            return RelationshipStatus.valueOf(query.getSingleResult().toString());
+        } catch (NoResultException e) {
+            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
+    }
+
+    private RelationshipStatus getRelationshipFromTo(Long userFromId, Long userToId) throws InternalServerError {
+        try {
+            Query query = getEntityManager().createNativeQuery(FIND_STATUS_BY_ID_FROM_TO);
+            query.setParameter(1, userFromId);
+            query.setParameter(2, userToId);
+            return RelationshipStatus.valueOf(query.getSingleResult().toString());
+        } catch (NoResultException e) {
+            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
+    }
+
+    private void delete(Long userFromId, Long userToId) throws InternalServerError {
         try {
             Query query = getEntityManager().createNativeQuery(DELETE_RELATIONSHIP);
             query.setParameter(1, userFromId);
@@ -177,12 +173,7 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
         }
     }
 
-    @Override
-    Class<User> getEntityClass() {
-        return User.class;
-    }
-
-    public void validateRelationshipStatus(RelationshipStatus currentStatus, RelationshipStatus newStatus) throws BadRequestException {
+    private void validateRelationshipStatus(RelationshipStatus currentStatus, RelationshipStatus newStatus) throws BadRequestException {
         if (currentStatus == null)
             throw new BadRequestException("No requests from this user.");
 
