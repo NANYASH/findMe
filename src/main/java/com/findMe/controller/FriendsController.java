@@ -79,7 +79,7 @@ public class FriendsController {
 
     @RequestMapping(path = "/updateRelationship", method = RequestMethod.PUT)
     public ResponseEntity updateRelationship(HttpSession session ,@RequestParam Long userFromId,@RequestParam Long userToId,@RequestParam String status){
-        if (session.getAttribute("user") == null)
+        if (session.getAttribute("id") == null)
             return new ResponseEntity<>("User should be logged in", HttpStatus.UNAUTHORIZED);
         try {
             friendsService.updateRelationship(userFromId,userToId,convertRelationshipStatus(status));
