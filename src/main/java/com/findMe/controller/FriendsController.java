@@ -58,7 +58,7 @@ public class FriendsController {
         }
 
     }
-    @RequestMapping(path = "/deleteRelationship", method = RequestMethod.DELETE)
+    @RequestMapping(path = "/deleteRelationship", method = RequestMethod.POST)
     public ResponseEntity deleteRelationship(HttpSession session,@RequestParam String userToId){
         Long userId = (Long) session.getAttribute("id");
         if (userId == null)
