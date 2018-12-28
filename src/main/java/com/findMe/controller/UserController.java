@@ -48,16 +48,16 @@ public class UserController {
     public ResponseEntity logIn(HttpSession session, @RequestParam String email, @RequestParam String password) {
         try {
             if (session.getAttribute("id") != null)
-                return new ResponseEntity<>("User is already logged in.", HttpStatus.FORBIDDEN);
+                return new ResponseEntity("User is already logged in.", HttpStatus.FORBIDDEN);
             User foundUser = userService.login(email, password);
             session.setAttribute("id", foundUser.getId());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (InternalServerError e) {
             e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -65,10 +65,10 @@ public class UserController {
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
     public ResponseEntity logOut(HttpSession session) throws BadRequestException {
         if (session.getAttribute("id") == null)
-            return new ResponseEntity<>("User is not logged in.", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity("User is not logged in.", HttpStatus.UNAUTHORIZED);
 
         session.setAttribute("id", null); // or session.removeAttribute("id");
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 

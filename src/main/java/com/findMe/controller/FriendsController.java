@@ -53,10 +53,10 @@ public class FriendsController {
             return new ResponseEntity<>("Request is sent.", HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (InternalServerError e) {
             e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("InternalServerError", HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -64,17 +64,17 @@ public class FriendsController {
     public ResponseEntity deleteRelationship(HttpSession session,@RequestParam String userToId){
         Long userFromId = (Long) session.getAttribute("id");
         if (userFromId == null)
-            return new ResponseEntity<>("User should be logged in.", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity("User should be logged in.", HttpStatus.UNAUTHORIZED);
 
         try {
             friendsService.deleteRelationship(userFromId,convertId(userToId));
-            return new ResponseEntity<>("User is deleted from friends./Request is deleted.", HttpStatus.OK);
+            return new ResponseEntity("User is deleted from friends./Request is deleted.", HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (InternalServerError e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (InternalServerError e){
             e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("InternalServerError", HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -83,17 +83,17 @@ public class FriendsController {
     public ResponseEntity updateRelationship(HttpSession session ,@RequestParam String userFromId,@RequestParam String status){
         Long userToId = (Long) session.getAttribute("id");
         if (userFromId == null)
-            return new ResponseEntity<>("User should be logged in.", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity("User should be logged in.", HttpStatus.UNAUTHORIZED);
 
         try {
             friendsService.updateRelationship(convertId(userFromId),userToId,convertRelationshipStatus(status));
-            return new ResponseEntity<>("Relationship status is changed to"+status.toString(), HttpStatus.OK);
+            return new ResponseEntity("Relationship status is changed to"+status.toString(), HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (InternalServerError e) {
             e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("InternalServerError", HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -101,7 +101,7 @@ public class FriendsController {
     public ResponseEntity rejectRequest(HttpSession session,@RequestParam String userToId){
         Long userFromId = (Long) session.getAttribute("id");
         if (userFromId == null)
-            return new ResponseEntity<>("User should be logged in.", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity("User should be logged in.", HttpStatus.UNAUTHORIZED);
 
         try {
             friendsService.rejectRequest(userFromId,convertId(userToId));
@@ -111,7 +111,7 @@ public class FriendsController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (InternalServerError e) {
             e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("InternalServerError", HttpStatus.BAD_REQUEST);
         }
 
     }
