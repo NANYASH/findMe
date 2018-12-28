@@ -33,7 +33,7 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
     private static final String DELETE_RELATIONSHIP = "DELETE FROM RELATIONSHIP  WHERE USER_FROM_ID = ? AND USER_TO_ID = ? OR USER_FROM_ID = ? AND USER_TO_ID = ?";
 
     private static final String UPDATE_RELATIONSHIP = "UPDATE RELATIONSHIP SET STATUS = ?" +
-            " WHERE USER_FROM_ID = ? AND USER_TO_ID = ? OR USER_FROM_ID = ? AND USER_TO_ID = ?";
+            " WHERE USER_FROM_ID = ? AND USER_TO_ID = ?";
 
     @Override
     public RelationshipStatus getRelationship(Long userFromId, Long userToId) throws InternalServerError {

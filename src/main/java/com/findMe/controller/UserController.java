@@ -3,12 +3,9 @@ package com.findMe.controller;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.NotFoundException;
-import com.findMe.exception.UnauthorizedException;
 import com.findMe.model.User;
 import com.findMe.service.UserService;
-import com.sun.deploy.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,7 +13,6 @@ import org.springframework.ui.Model;
 
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -49,24 +45,29 @@ public class UserController {
 
 
     @RequestMapping(path = "/login", method = RequestMethod.GET)
-    public ResponseEntity logIn(HttpSession session ,@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity logIn(HttpSession session, @RequestParam String email, @RequestParam String password) {
         try {
-            User foundUser = userService.login(email,password);
+            if (session.getAttribute("id") != null)
+                return new ResponseEntity<>("User ia already registered.", HttpStatus.FORBIDDEN);
+            User foundUser = userService.login(email, password);
             session.setAttribute("id", foundUser.getId());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
-            return new ResponseEntity<>("Incorrect credentials.", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (InternalServerError e) {
             e.printStackTrace();
-            return new ResponseEntity<>("InternalServerError.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
     public ResponseEntity logOut(HttpSession session) throws BadRequestException {
-        session.removeAttribute("user");// or session.setAttribute("user",null);
+        if (session.getAttribute("id") == null)
+            return new ResponseEntity<>("User is not logged in.", HttpStatus.UNAUTHORIZED);
+
+        session.setAttribute("id", null); // or session.removeAttribute("id");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

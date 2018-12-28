@@ -5,6 +5,7 @@ import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.model.User;
 import com.findMe.service.FriendsService;
+import com.findMe.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpSession;
 
 import java.util.List;
 
+import static com.findMe.util.Util.convertId;
 import static com.findMe.util.Util.convertRelationshipStatus;
 
 @Controller
@@ -42,12 +44,12 @@ public class FriendsController {
 
     @RequestMapping(path = "/addRelationship", method = RequestMethod.POST)
     public ResponseEntity addRelationship(HttpSession session ,@RequestParam String userToId){
-        Long userId = (Long) session.getAttribute("id");
-        if (userId == null)
+        Long userFromId = (Long) session.getAttribute("id");
+        if (userFromId == null)
             return new ResponseEntity<>("User should be logged in.", HttpStatus.UNAUTHORIZED);
 
         try {
-            friendsService.addRelationship(userId,Long.valueOf(userToId));
+            friendsService.addRelationship(userFromId,convertId(userToId));
             return new ResponseEntity<>("Request is sent.", HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
@@ -60,12 +62,12 @@ public class FriendsController {
     }
     @RequestMapping(path = "/deleteRelationship", method = RequestMethod.POST)
     public ResponseEntity deleteRelationship(HttpSession session,@RequestParam String userToId){
-        Long userId = (Long) session.getAttribute("id");
-        if (userId == null)
-            return new ResponseEntity<>("User should be logged in", HttpStatus.UNAUTHORIZED);
+        Long userFromId = (Long) session.getAttribute("id");
+        if (userFromId == null)
+            return new ResponseEntity<>("User should be logged in.", HttpStatus.UNAUTHORIZED);
 
         try {
-            friendsService.deleteRelationship(userId,Long.valueOf(userToId));
+            friendsService.deleteRelationship(userFromId,convertId(userToId));
             return new ResponseEntity<>("User is deleted from friends.", HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
@@ -77,12 +79,14 @@ public class FriendsController {
 
     }
 
-    @RequestMapping(path = "/updateRelationship", method = RequestMethod.PUT)
-    public ResponseEntity updateRelationship(HttpSession session ,@RequestParam Long userFromId,@RequestParam Long userToId,@RequestParam String status){
-        if (session.getAttribute("id") == null)
-            return new ResponseEntity<>("User should be logged in", HttpStatus.UNAUTHORIZED);
+    @RequestMapping(path = "/updateRelationship", method = RequestMethod.POST)
+    public ResponseEntity updateRelationship(HttpSession session ,@RequestParam String userToId,@RequestParam String status){
+        Long userFromId = (Long) session.getAttribute("id");
+        if (userFromId == null)
+            return new ResponseEntity<>("User should be logged in.", HttpStatus.UNAUTHORIZED);
+
         try {
-            friendsService.updateRelationship(userFromId,userToId,convertRelationshipStatus(status));
+            friendsService.updateRelationship(userFromId,convertId(userToId),convertRelationshipStatus(status));
             return new ResponseEntity<>("Relationship status is changed to"+status.toString(), HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
