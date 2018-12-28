@@ -6,7 +6,6 @@ import com.findMe.entity.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.model.User;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
@@ -153,6 +152,24 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
             query.setParameter(1, status.toString());
             query.setParameter(2, userFromId);
             query.setParameter(3, userToId);
+            query.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
+    }
+
+    @Override
+    public void rejectRequest(Long userFromId, Long userToId) throws InternalServerError, BadRequestException {
+        RelationshipStatus status = getRelationshipFromTo(userFromId,userToId);
+        if (status == null || status != RelationshipStatus.REQUESTED)
+            throw new BadRequestException("No requests to this user.");
+        try {
+            Query query = getEntityManager().createNativeQuery(DELETE_RELATIONSHIP);
+            query.setParameter(1, userFromId);
+            query.setParameter(2, userToId);
+            query.setParameter(3, userToId);
+            query.setParameter(4, userFromId);
             query.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

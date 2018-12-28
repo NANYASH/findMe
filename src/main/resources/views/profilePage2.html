@@ -224,11 +224,11 @@
     var userId = window.location.pathname.split('/').pop();
     $("#reject-request-button").click(function () {
         $.ajax({
-            url: "/updateRelationship",
+            url: "/rejectRequest",
             type: "POST",
-            data: {userFromId: userId.toString(), status: "REJECTED"},
+            data: {userToId: userId.toString()},
             success: function success() {
-                alert("User is rejected.")
+                alert("Request is rejected.")
             },
             error: function error(xhr) {
                 alert(xhr.responseText);

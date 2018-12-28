@@ -97,5 +97,23 @@ public class FriendsController {
         }
 
     }
+    @RequestMapping(path = "/rejectRequest", method = RequestMethod.POST)
+    public ResponseEntity rejectRequest(HttpSession session,@RequestParam String userToId){
+        Long userFromId = (Long) session.getAttribute("id");
+        if (userFromId == null)
+            return new ResponseEntity<>("User should be logged in.", HttpStatus.UNAUTHORIZED);
+
+        try {
+            friendsService.rejectRequest(userFromId,convertId(userToId));
+            return new ResponseEntity<>("Request is rejected.", HttpStatus.OK);
+        } catch (BadRequestException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (InternalServerError e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
 
 }
