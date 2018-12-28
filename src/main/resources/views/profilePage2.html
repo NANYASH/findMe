@@ -103,9 +103,10 @@
 
 
                             <button id="add-button" class="btn btn-success" type="submit">Add</button>
-                            <button id="delete-button" class="btn btn-success" type="submit">Delete</button>
+                            <button id="delete-button" class="btn btn-success" type="submit">Delete/Reject request</button>
                             <button id="accept-button" class="btn btn-success" type="submit">Accept</button>
                             <button id="reject-button" class="btn btn-success" type="submit">Reject</button>
+                            <button id="reject-request-button" class="btn btn-success" type="submit">Reject request</button>
 
                             <div class="clearfix"></div>
                             <hr style="margin:5px 0 5px 0;">
@@ -201,6 +202,41 @@
         })
     })
 </script>
+
+<script>
+    var userId = window.location.pathname.split('/').pop();
+    $("#reject-button").click(function () {
+        $.ajax({
+            url: "/updateRelationship",
+            type: "POST",
+            data: {userFromId: userId.toString(), status: "REJECTED"},
+            success: function success() {
+                alert("User is rejected.")
+            },
+            error: function error(xhr) {
+                alert(xhr.responseText);
+            }
+        })
+    })
+</script>
+
+<script>
+    var userId = window.location.pathname.split('/').pop();
+    $("#reject-request-button").click(function () {
+        $.ajax({
+            url: "/updateRelationship",
+            type: "POST",
+            data: {userFromId: userId.toString(), status: "REJECTED"},
+            success: function success() {
+                alert("User is rejected.")
+            },
+            error: function error(xhr) {
+                alert(xhr.responseText);
+            }
+        })
+    })
+</script>
+
 
 
 </html>

@@ -68,7 +68,7 @@ public class FriendsController {
 
         try {
             friendsService.deleteRelationship(userFromId,convertId(userToId));
-            return new ResponseEntity<>("User is deleted from friends.", HttpStatus.OK);
+            return new ResponseEntity<>("User is deleted from friends./Request is deleted.", HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
