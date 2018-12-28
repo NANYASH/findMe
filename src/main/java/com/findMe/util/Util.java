@@ -10,7 +10,7 @@ public class Util {
             return Long.valueOf(id);
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            throw new BadRequestException("Cannot be converted to long type");
+            throw new BadRequestException("Cannot be converted to Long type");
         }
     }
 
@@ -19,7 +19,7 @@ public class Util {
             return RelationshipStatus.valueOf(status);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            throw new BadRequestException("Cannot be converted to Relationship status type");
+            throw new BadRequestException("Cannot be converted to RelationshipStatus type");
         }
     }
 }

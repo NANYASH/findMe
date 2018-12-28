@@ -51,7 +51,7 @@ public class UserController {
                 return new ResponseEntity("User is already logged in.", HttpStatus.FORBIDDEN);
             User foundUser = userService.login(email, password);
             session.setAttribute("id", foundUser.getId());
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity(HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
