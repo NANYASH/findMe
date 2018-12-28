@@ -1,4 +1,5 @@
-$(function(){
+/*$(function(){*/
+
     $("#login-form").submit(function (e) {
         e.preventDefault();
         $.ajax({
@@ -11,7 +12,8 @@ $(function(){
             error: function error(xhr) {
                 alert(xhr.responseText);
             }
-        })
+        });
 
-    })
-});
+    });
+
+/*});*/

@@ -40,13 +40,14 @@ public class FriendsController {
 
     }*/
 
-    @RequestMapping(path = "/addRelationship", method = RequestMethod.PUT)
-    public ResponseEntity addRelationship(HttpSession session ,@RequestParam Long userFromId,@RequestParam Long userToId){
-        if (session.getAttribute("user") == null)
-            return new ResponseEntity<>("User should be logged in", HttpStatus.UNAUTHORIZED);
+    @RequestMapping(path = "/addRelationship", method = RequestMethod.POST)
+    public ResponseEntity addRelationship(HttpSession session ,@RequestParam String userToId){
+        Long userId = (Long) session.getAttribute("id");
+        if (userId == null)
+            return new ResponseEntity<>("User should be logged in.", HttpStatus.UNAUTHORIZED);
 
         try {
-            friendsService.addRelationship(userFromId,userToId);
+            friendsService.addRelationship(userId,Long.valueOf(userToId));
             return new ResponseEntity<>("Request is sent.", HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
@@ -58,11 +59,13 @@ public class FriendsController {
 
     }
     @RequestMapping(path = "/deleteRelationship", method = RequestMethod.DELETE)
-    public ResponseEntity deleteRelationship(HttpSession session ,@RequestParam Long userFromId,@RequestParam Long userToId){
-        if (session.getAttribute("user") == null)
+    public ResponseEntity deleteRelationship(HttpSession session,@RequestParam String userToId){
+        Long userId = (Long) session.getAttribute("id");
+        if (userId == null)
             return new ResponseEntity<>("User should be logged in", HttpStatus.UNAUTHORIZED);
+
         try {
-            friendsService.deleteRelationship(userFromId,userToId);
+            friendsService.deleteRelationship(userId,Long.valueOf(userToId));
             return new ResponseEntity<>("User is deleted from friends.", HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();

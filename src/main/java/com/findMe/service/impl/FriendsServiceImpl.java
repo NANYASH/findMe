@@ -37,11 +37,15 @@ public class FriendsServiceImpl implements FriendsService{
 
     @Override
     public void addRelationship(Long userFromId, Long userToId) throws BadRequestException, InternalServerError {
+        if (userFromId == userToId)
+            throw  new BadRequestException("User cannot add relationship with himself.");
         friendsDAO.addRelationship(userFromId,userToId);
     }
 
     @Override
     public void deleteRelationship(Long userFromId, Long userToId) throws BadRequestException, InternalServerError {
+        if (userFromId == userToId)
+            throw  new BadRequestException("User cannot delete relationship with himself.");
         friendsDAO.deleteRelationship(userFromId,userToId);
     }
 

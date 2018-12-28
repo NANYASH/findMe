@@ -2,7 +2,7 @@
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
-
+<body>
 <div class="container">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
@@ -17,11 +17,13 @@
 
 
                             <div class="form-group">
-                                <input id="email" class="form-control" placeholder="yourmail@example.com" name="email" type="text" required>
+                                <input id="email" class="form-control" placeholder="yourmail@example.com" name="email"
+                                       type="text" required>
                             </div>
 
                             <div class="form-group">
-                                <input id="password" class="form-control" placeholder="Password" name="password" type="password" required>
+                                <input id="password" class="form-control" placeholder="Password" name="password"
+                                       type="password" required>
                             </div>
 
                             <div class="checkbox">
@@ -47,7 +49,6 @@
                             </div>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>
@@ -60,16 +61,18 @@
         $.ajax({
             url: "login",
             type: "GET",
-            data:  {email : $("#email").val(), password : $("#password").val()},
+            data: {email: $("#email").val(), password: $("#password").val()},
             success: function success() {
                 alert("User is logged.")
             },
             error: function error(xhr) {
                 alert(xhr.responseText);
             }
-        })
+        });
 
-    })
+    });
 </script>
+
+</body>
 
 </html>

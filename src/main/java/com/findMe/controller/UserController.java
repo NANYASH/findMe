@@ -52,7 +52,7 @@ public class UserController {
     public ResponseEntity logIn(HttpSession session ,@RequestParam String email, @RequestParam String password) {
         try {
             User foundUser = userService.login(email,password);
-            session.setAttribute("user", foundUser);
+            session.setAttribute("id", foundUser.getId());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
@@ -86,7 +86,7 @@ public class UserController {
             e.printStackTrace();
             return "error500";
         }
-        return "profilePage";
+        return "profilePage2";
     }
 
 }
