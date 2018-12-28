@@ -52,7 +52,7 @@ public class FriendsServiceImpl implements FriendsService{
     @Override
     public void updateRelationship(Long userFromId, Long userToId, RelationshipStatus status) throws BadRequestException, InternalServerError {
         if (userFromId == userToId)
-            throw  new BadRequestException("User cannot change relationship with himself.");
+            throw new BadRequestException("User cannot change relationship with himself.");
         friendsDAO.updateRelationship(userFromId,userToId,status);
     }
 

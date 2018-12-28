@@ -48,7 +48,7 @@ public class UserController {
     public ResponseEntity logIn(HttpSession session, @RequestParam String email, @RequestParam String password) {
         try {
             if (session.getAttribute("id") != null)
-                return new ResponseEntity<>("User ia already registered.", HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>("User is already logged in.", HttpStatus.FORBIDDEN);
             User foundUser = userService.login(email, password);
             session.setAttribute("id", foundUser.getId());
             return new ResponseEntity<>(HttpStatus.OK);

@@ -191,7 +191,7 @@
         $.ajax({
             url: "/updateRelationship",
             type: "POST",
-            data: {userToId: userId.toString(), status: "ACCEPTED"},
+            data: {userFromId: userId.toString(), status: "ACCEPTED"},
             success: function success() {
                 alert("User is successfully accepted to friends.")
             },

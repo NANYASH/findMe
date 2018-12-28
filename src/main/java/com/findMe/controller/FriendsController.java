@@ -80,13 +80,13 @@ public class FriendsController {
     }
 
     @RequestMapping(path = "/updateRelationship", method = RequestMethod.POST)
-    public ResponseEntity updateRelationship(HttpSession session ,@RequestParam String userToId,@RequestParam String status){
-        Long userFromId = (Long) session.getAttribute("id");
+    public ResponseEntity updateRelationship(HttpSession session ,@RequestParam String userFromId,@RequestParam String status){
+        Long userToId = (Long) session.getAttribute("id");
         if (userFromId == null)
             return new ResponseEntity<>("User should be logged in.", HttpStatus.UNAUTHORIZED);
 
         try {
-            friendsService.updateRelationship(userFromId,convertId(userToId),convertRelationshipStatus(status));
+            friendsService.updateRelationship(convertId(userFromId),userToId,convertRelationshipStatus(status));
             return new ResponseEntity<>("Relationship status is changed to"+status.toString(), HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();

@@ -17,7 +17,7 @@ import java.util.List;
 @Transactional
 public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
     private static final String FIND_STATUS_BY_ID = "SELECT STATUS FROM RELATIONSHIP" +
-            " WHERE USER_FROM_ID = ? AND USER_TO_ID = ? OR USER_FROM_ID = ? AND USER_TO_ID = ?";
+            " WHERE USER_FROM_ID = ? AND USER_TO_ID = ?";
 
     private static final String FIND_BY_RELATIONSHIP_STATUS = "SELECT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = ? OR USER_TO_ID = ?" +
             " WHERE ID <> ? AND STATUS = ?";
@@ -41,8 +41,6 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
             Query query = getEntityManager().createNativeQuery(FIND_STATUS_BY_ID);
             query.setParameter(1, userFromId);
             query.setParameter(2, userToId);
-            query.setParameter(3, userToId);
-            query.setParameter(4, userFromId);
             return RelationshipStatus.valueOf(query.getSingleResult().toString());
         } catch (NoResultException e) {
             e.printStackTrace();
@@ -145,15 +143,17 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
         return User.class;
     }
 
-    public static void validateRelationshipStatus(RelationshipStatus currentStatus, RelationshipStatus newStatus) throws BadRequestException {
+    public void validateRelationshipStatus(RelationshipStatus currentStatus, RelationshipStatus newStatus) throws BadRequestException {
         if (currentStatus == null)
             throw new BadRequestException("Users don't have relationship.");
+
         if (currentStatus == RelationshipStatus.REQUESTED && newStatus == RelationshipStatus.ACCEPTED)
             return;
         if (currentStatus == RelationshipStatus.REQUESTED && newStatus == RelationshipStatus.REJECTED)
             return;
         if (currentStatus == RelationshipStatus.REJECTED && newStatus == RelationshipStatus.REQUESTED)
             return;
+
         throw new BadRequestException("Status cannot be changed.");
     }
 }
