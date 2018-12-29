@@ -95,7 +95,7 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
 
     @Override
     public void updateRelationship(Long userFromId, Long userToId, RelationshipStatus status) throws InternalServerError, BadRequestException {
-        validateRelationshipStatus(getRelationshipFromTo(userFromId,userToId),status);
+        validateUpdate(getRelationshipFromTo(userFromId,userToId),status);
         try {
             Query query = getEntityManager().createNativeQuery(UPDATE_RELATIONSHIP);
             query.setParameter(1, status.toString());
@@ -144,6 +144,7 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
         }
     }
 
+
     private RelationshipStatus getRelationshipFromTo(Long userFromId, Long userToId) throws InternalServerError {
         try {
             Query query = getEntityManager().createNativeQuery(FIND_STATUS_BY_ID_FROM_TO);
@@ -173,7 +174,7 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
         }
     }
 
-    private void validateRelationshipStatus(RelationshipStatus currentStatus, RelationshipStatus newStatus) throws BadRequestException {
+    private void validateUpdate(RelationshipStatus currentStatus, RelationshipStatus newStatus) throws BadRequestException {
         if (currentStatus == null)
             throw new BadRequestException("No requests from this user.");
 
