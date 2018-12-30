@@ -28,13 +28,13 @@ public class UserController {
     public ResponseEntity registerUser(@ModelAttribute User user) {
         try {
             userService.registerUser(user);
-            return new ResponseEntity<>("User is registered.", HttpStatus.CREATED);
+            return new ResponseEntity("User is registered.", HttpStatus.CREATED);
         } catch (BadRequestException e) {
             e.printStackTrace();
-            return new ResponseEntity<>("User with such username/email already exists.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("User with such username/email already exists.", HttpStatus.BAD_REQUEST);
         } catch (InternalServerError e) {
             e.printStackTrace();
-            return new ResponseEntity<>("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -76,7 +76,11 @@ public class UserController {
     public String profile(Model model, @PathVariable String userId) {
         try {
             User userFound = userService.findUserById(userId);
+
             model.addAttribute("user", userFound);
+            model.addAttribute("friends");
+            model.addAttribute("requestsFrom");
+            model.addAttribute("requestsTo");
         } catch (BadRequestException e) {
             e.printStackTrace();
             return "page400";
@@ -89,5 +93,4 @@ public class UserController {
         }
         return "profilePage2";
     }
-
 }

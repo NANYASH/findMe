@@ -30,11 +30,11 @@ public class FriendsController {
     public ResponseEntity addRelationship(HttpSession session, @RequestParam String userToId) {
         Long userFromId = (Long) session.getAttribute("id");
         if (userFromId == null)
-            return new ResponseEntity<>("User should be logged in.", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity("User should be logged in.", HttpStatus.UNAUTHORIZED);
 
         try {
             friendsService.addRelationship(userFromId, convertId(userToId));
-            return new ResponseEntity<>("Request is sent.", HttpStatus.OK);
+            return new ResponseEntity("Request is sent.", HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -75,7 +75,7 @@ public class FriendsController {
             return new ResponseEntity("Relationship status is changed to" + status.toString(), HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (InternalServerError e) {
             e.printStackTrace();
             return new ResponseEntity("InternalServerError", HttpStatus.BAD_REQUEST);
@@ -91,17 +91,16 @@ public class FriendsController {
 
         try {
             friendsService.rejectRequest(userFromId, convertId(userToId));
-            return new ResponseEntity<>("Request is rejected.", HttpStatus.OK);
+            return new ResponseEntity("Request is rejected.", HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (InternalServerError e) {
             e.printStackTrace();
-            return new ResponseEntity<>("InternalServerError", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("InternalServerError", HttpStatus.BAD_REQUEST);
         }
 
     }
-
 
 
     /*@RequestMapping(path = "/getRequestedFrom", method = RequestMethod.GET)
