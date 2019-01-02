@@ -143,11 +143,11 @@
     <div class="panel-heading">Incoming requests</div>
     <div class="panel-body"></div>
 
-    <tr th:each="requestFrom : ${requestsFrom}">
+    <tr th:each="requestTo : ${requestsTo}">
         <div>
             <td>
-                <a th:href="@{'/user/' + ${requestFrom.getId()}}">
-            <td th:text="${requestFrom.getFirstName()}+' '+${requestFrom.getLastName()} "/>
+                <a th:href="@{'/user/' + ${requestTo.getId()}}">
+            <td th:text="${requestTo.getFirstName()}+' '+${requestTo.getLastName()} "/>
             </a>
             </td>
         </div>
@@ -158,15 +158,16 @@
     <div class="panel-heading">Outgoing requests</div>
     <div class="panel-body"></div>
 
-    <tr th:each="requestTo : ${requestsTo}">
+    <tr th:each="requestFrom : ${requestsFrom}">
         <div>
             <td>
-                <a th:href="@{'/user/' + ${requestTo.getId()}}">
-            <td th:text="${requestTo.getFirstName()}+' '+${requestTo.getLastName()} "/>
+                <a th:href="@{'/user/' + ${requestFrom.getId()}}">
+            <td th:text="${requestFrom.getFirstName()}+' '+${requestFrom.getLastName()} "/>
             </a>
             </td>
         </div>
     </tr>
+
 
 </div>
 

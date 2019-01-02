@@ -171,7 +171,7 @@ public class UserController {
             return new ResponseEntity("Request is rejected.", HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (InternalServerError e) {
             e.printStackTrace();
             return new ResponseEntity("InternalServerError", HttpStatus.BAD_REQUEST);
