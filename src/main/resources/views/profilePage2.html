@@ -121,6 +121,40 @@
 <div class="col-sm-6 panel panel-default"  style="width: 300px">
     <div class="panel-heading">Friends</div>
     <div class="panel-body"></div>
+
+
+
+    <tr th:each="friend : ${friends}">
+        <div>
+        <td>
+            <a th:href="@{'/user/' + ${friend.getId()}}">
+                 <td th:text="${friend.getFirstName()}+' '+${friend.getLastName()} "/>
+            </a>
+        </td>
+        </div>
+    </tr>
+
+
+
+   <!-- <div th:if="${not #lists.isEmpty(friends)}">
+        <table class="table table-striped">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+            </tr>
+            <tr th:each="friend : ${friends}">
+                <td th:text="${friend.id}"></td>
+                <td th:text="${friend.firstName} +' '+${friend.lastName}"/>
+            </tr>
+        </table>
+    </div>-->
+
+    <!--<tr th:if="${friends!=null}">
+    <tr th:each="friend : ${friends}">
+        <p class="text-center" th:text="${friend.firstName}"/>
+    </tr>-->
+
+
 </div>
 
 <div class="col-sm-6 panel panel-default" style="width: 500px">
@@ -236,7 +270,5 @@
         })
     })
 </script>
-
-
 
 </html>

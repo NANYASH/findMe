@@ -26,8 +26,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserById(String id) throws InternalServerError, NotFoundException, BadRequestException {
-        User userFound = userDAO.findById(Util.convertId(id));
+    public User findUserById(Long id) throws InternalServerError, NotFoundException, BadRequestException {
+        User userFound = userDAO.findById(id);
         if (userFound == null)
             throw new NotFoundException("User with such id cannot be found.");
         return userFound;

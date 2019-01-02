@@ -22,8 +22,10 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
     private static final String FIND_STATUS_BY_ID_FROM_TO = "SELECT STATUS FROM RELATIONSHIP" +
             " WHERE USER_FROM_ID = ? AND USER_TO_ID = ?";
 
-    private static final String FIND_BY_RELATIONSHIP_STATUS = "SELECT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = ? OR USER_TO_ID = ?" +
-            " WHERE ID <> ? AND STATUS = ?";
+    private static final String FIND_BY_RELATIONSHIP_STATUS = "SELECT  USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = ? OR USER_TO_ID = ?" +
+            " WHERE  USER_FROM_ID = ID OR USER_TO_ID = ID" +
+            " GROUP BY (ID,STATUS)" +
+            " HAVING  ID <> ? AND STATUS = ?";
 
     private static final String FIND_REQUESTED_FROM = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON ID = USER_TO_ID" +
             " WHERE USER_FROM_ID = ? AND STATUS = ?";
@@ -41,10 +43,11 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
     @Override
     public List<User> findByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError {
         try {
-            Query query = getEntityManager().createNativeQuery(FIND_BY_RELATIONSHIP_STATUS);
+            Query query = getEntityManager().createNativeQuery(FIND_BY_RELATIONSHIP_STATUS,User.class);
             query.setParameter(1,userId);
             query.setParameter(2,userId);
-            query.setParameter(3,status.toString());
+            query.setParameter(3,userId);
+            query.setParameter(4,status.toString());
             return query.getResultList();
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,7 +58,7 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
     @Override
     public List<User> findRequestedFrom(Long userId, RelationshipStatus status) throws InternalServerError {
         try {
-            Query query = getEntityManager().createNativeQuery(FIND_REQUESTED_FROM);
+            Query query = getEntityManager().createNativeQuery(FIND_REQUESTED_FROM,User.class);
             query.setParameter(1,userId);
             query.setParameter(2,status.toString());
             return query.getResultList();
@@ -68,7 +71,7 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
     @Override
     public List<User> findRequestedTo(Long userId, RelationshipStatus status) throws InternalServerError {
         try {
-            Query query = getEntityManager().createNativeQuery(FIND_REQUESTED_TO);
+            Query query = getEntityManager().createNativeQuery(FIND_REQUESTED_TO,User.class);
             query.setParameter(1,userId);
             query.setParameter(2,status.toString());
             return query.getResultList();
