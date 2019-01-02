@@ -57,26 +57,12 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
 
     @Override
     public List<User> findRequestedFrom(Long userId) throws InternalServerError {
-        try {
-            Query query = getEntityManager().createNativeQuery(FIND_REQUESTED_FROM,User.class);
-            query.setParameter(1,userId);
-            return query.getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new InternalServerError();
-        }
+        return findRequested(userId,FIND_REQUESTED_FROM);
     }
 
     @Override
     public List<User> findRequestedTo(Long userId) throws InternalServerError {
-        try {
-            Query query = getEntityManager().createNativeQuery(FIND_REQUESTED_TO,User.class);
-            query.setParameter(1,userId);
-            return query.getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new InternalServerError();
-        }
+        return findRequested(userId,FIND_REQUESTED_TO);
     }
 
     @Override
@@ -155,6 +141,17 @@ public class FriendsDAOImpl extends GenericDAO<User> implements FriendsDAO {
         } catch (NoResultException e) {
             e.printStackTrace();
             return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
+    }
+
+    private List<User> findRequested(Long userId,String request) throws InternalServerError {
+        try {
+            Query query = getEntityManager().createNativeQuery(request,User.class);
+            query.setParameter(1,userId);
+            return query.getResultList();
         } catch (Exception e) {
             e.printStackTrace();
             throw new InternalServerError();
