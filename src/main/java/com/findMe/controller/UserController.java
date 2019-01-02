@@ -84,14 +84,12 @@ public class UserController {
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
     public String profile(Model model, @PathVariable String userId) {
         try {
-            Long userToId = convertId(userId);
-            User userFound = userService.findUserById(userToId);
-            List<User> friends = friendsService.findByRelationshipStatus(userToId, RelationshipStatus.ACCEPTED);
+            Long convertedUserId = convertId(userId);
 
-            model.addAttribute("user", userFound);
-            model.addAttribute("friends",friends);
-            //model.addAttribute("requestsFrom");
-            //model.addAttribute("requestsTo");
+            model.addAttribute("user", userService.findUserById(convertedUserId));
+            model.addAttribute("friends",friendsService.findByRelationshipStatus(convertedUserId, RelationshipStatus.ACCEPTED));
+            model.addAttribute("requestsFrom",friendsService.findRequestedFrom(convertedUserId));
+            model.addAttribute("requestsTo",friendsService.findRequestedTo(convertedUserId));
         } catch (BadRequestException e) {
             e.printStackTrace();
             return "page400";
