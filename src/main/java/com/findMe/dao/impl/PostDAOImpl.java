@@ -10,7 +10,7 @@ import javax.transaction.Transactional;
 
 @Transactional
 @Repository
-public class PostDAOImpl extends GenericDAO<Post> implements PostDAO{
+public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
     @Override
     public void delete(Long id) throws InternalServerError {
         super.remove(id);

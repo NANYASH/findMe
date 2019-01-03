@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 
-
 import static com.findMe.util.Util.convertId;
 import static com.findMe.util.Util.convertRelationshipStatus;
 import static com.findMe.util.Util.validateLogIn;
@@ -87,9 +86,9 @@ public class UserController {
             Long convertedUserId = convertId(userId);
 
             model.addAttribute("user", userService.findUserById(convertedUserId));
-            model.addAttribute("friends",friendsService.findByRelationshipStatus(convertedUserId, RelationshipStatus.ACCEPTED));
-            model.addAttribute("requestsFrom",friendsService.findRequestedFrom(convertedUserId));
-            model.addAttribute("requestsTo",friendsService.findRequestedTo(convertedUserId));
+            model.addAttribute("friends", friendsService.findByRelationshipStatus(convertedUserId, RelationshipStatus.ACCEPTED));
+            model.addAttribute("requestsFrom", friendsService.findRequestedFrom(convertedUserId));
+            model.addAttribute("requestsTo", friendsService.findRequestedTo(convertedUserId));
         } catch (BadRequestException e) {
             e.printStackTrace();
             return "error400";
@@ -108,7 +107,7 @@ public class UserController {
         try {
             friendsService.addRelationship(validateLogIn(session), convertId(userToId));
             return new ResponseEntity("Request is sent.", HttpStatus.OK);
-        }catch (UnauthorizedException e) {
+        } catch (UnauthorizedException e) {
             e.printStackTrace();
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BadRequestException e) {
@@ -125,7 +124,7 @@ public class UserController {
         try {
             friendsService.deleteRelationship(validateLogIn(session), convertId(userToId));
             return new ResponseEntity("User is deleted from friends./Request is deleted.", HttpStatus.OK);
-        }catch (UnauthorizedException e) {
+        } catch (UnauthorizedException e) {
             e.printStackTrace();
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BadRequestException e) {
@@ -143,7 +142,7 @@ public class UserController {
             friendsService.updateRelationship(convertId(userFromId), validateLogIn(session), convertRelationshipStatus(status));
             return new ResponseEntity("Relationship status is changed to" + status.toString(), HttpStatus.OK);
         } catch (UnauthorizedException e) {
-                e.printStackTrace();
+            e.printStackTrace();
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BadRequestException e) {
             e.printStackTrace();
@@ -159,7 +158,7 @@ public class UserController {
         try {
             friendsService.rejectRequest(validateLogIn(session), convertId(userToId));
             return new ResponseEntity("Request is rejected.", HttpStatus.OK);
-        } catch (UnauthorizedException e){
+        } catch (UnauthorizedException e) {
             e.printStackTrace();
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BadRequestException e) {

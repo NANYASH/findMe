@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class FriendsServiceImpl implements FriendsService{
+public class FriendsServiceImpl implements FriendsService {
     private FriendsDAO friendsDAO;
 
     @Autowired
@@ -22,7 +22,7 @@ public class FriendsServiceImpl implements FriendsService{
 
     @Override
     public List<User> findByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError {
-        return friendsDAO.findByRelationshipStatus(userId,status);
+        return friendsDAO.findByRelationshipStatus(userId, status);
     }
 
     @Override
@@ -38,30 +38,29 @@ public class FriendsServiceImpl implements FriendsService{
     @Override
     public void addRelationship(Long userFromId, Long userToId) throws BadRequestException, InternalServerError {
         if (userFromId == userToId)
-            throw  new BadRequestException("User cannot add relationship with himself.");
-        friendsDAO.addRelationship(userFromId,userToId);
+            throw new BadRequestException("User cannot add relationship with himself.");
+        friendsDAO.addRelationship(userFromId, userToId);
     }
 
     @Override
     public void updateRelationship(Long userFromId, Long userToId, RelationshipStatus status) throws BadRequestException, InternalServerError {
         if (userFromId == userToId)
             throw new BadRequestException("User cannot change relationship with himself.");
-        friendsDAO.updateRelationship(userFromId,userToId,status);
+        friendsDAO.updateRelationship(userFromId, userToId, status);
     }
 
     @Override
     public void deleteRelationship(Long userFromId, Long userToId) throws BadRequestException, InternalServerError {
         if (userFromId == userToId)
             throw new BadRequestException("User cannot delete relationship with himself.");
-        friendsDAO.deleteRelationship(userFromId,userToId);
+        friendsDAO.deleteRelationship(userFromId, userToId);
     }
 
     @Override
     public void rejectRequest(Long userFromId, Long userToId) throws BadRequestException, InternalServerError {
         if (userFromId == userToId)
             throw new BadRequestException("User cannot reject relationship with himself.");
-        friendsDAO.rejectRequest(userFromId,userToId);
+        friendsDAO.rejectRequest(userFromId, userToId);
     }
-
 
 }

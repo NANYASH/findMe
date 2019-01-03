@@ -1,6 +1,7 @@
 package com.findMe.dao.impl;
 
 import com.findMe.exception.InternalServerError;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
