@@ -32,6 +32,10 @@ public class FriendsDAOImpl extends GenericDAO<Relationship> implements FriendsD
         if (status == null)
             super.create(new Relationship(userFromId, userToId, RelationshipStatus.REQUESTED));
           else if (status.getRelationshipStatus() == RelationshipStatus.NOT_FRIENDS) {
+              if (status.getUserFromId() != userFromId){
+                  status.setUserFromId(userFromId);
+                  status.setUserToId(userToId);
+              }
             status.setRelationshipStatus(RelationshipStatus.REQUESTED);
             super.update(status);
         } else throw new BadRequestException("Action cannot be performed for this user.");
