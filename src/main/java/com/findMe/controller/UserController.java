@@ -51,7 +51,7 @@ public class UserController {
     @RequestMapping(path = "/login", method = RequestMethod.GET)
     public ResponseEntity logIn(HttpSession session, @RequestParam String email, @RequestParam String password) {
         try {
-            if (session.getAttribute("id") != null)
+            if (session.getAttribute("user") != null)
                 return new ResponseEntity("User is already logged in.", HttpStatus.FORBIDDEN);
 
             User foundUser = userService.login(email, password);
@@ -86,9 +86,9 @@ public class UserController {
             Long convertedUserId = convertId(userId);
 
             model.addAttribute("user", userService.findUserById(convertedUserId));
-            model.addAttribute("friends", friendsService.findByRelationshipStatus(convertedUserId, RelationshipStatus.ACCEPTED));
-            model.addAttribute("requestsFrom", friendsService.findRequestedFrom(convertedUserId));
-            model.addAttribute("requestsTo", friendsService.findRequestedTo(convertedUserId));
+            model.addAttribute("friends", userService.findByRelationshipStatus(convertedUserId, RelationshipStatus.ACCEPTED));
+            model.addAttribute("requestsFrom", userService.findRequestedFrom(convertedUserId));
+            model.addAttribute("requestsTo", userService.findRequestedTo(convertedUserId));
         } catch (BadRequestException e) {
             e.printStackTrace();
             return "error400";

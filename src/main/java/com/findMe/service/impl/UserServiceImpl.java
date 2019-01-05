@@ -2,6 +2,7 @@ package com.findMe.service.impl;
 
 
 import com.findMe.dao.UserDAO;
+import com.findMe.entity.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.NotFoundException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.NoResultException;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -44,6 +46,21 @@ public class UserServiceImpl implements UserService {
         User user = userDAO.findByPhoneAndEmail(login,login);
         if (user!=null && user.getPassword().equals(userEnteredPassword)) return user;
         throw new BadRequestException("Incorrect credentials.");
+    }
+
+    @Override
+    public List<User> findByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError {
+        return userDAO.findByRelationshipStatus(userId, status);
+    }
+
+    @Override
+    public List<User> findRequestedFrom(Long userId) throws InternalServerError {
+        return userDAO.findRequestedFrom(userId);
+    }
+
+    @Override
+    public List<User> findRequestedTo(Long userId) throws InternalServerError {
+        return userDAO.findRequestedTo(userId);
     }
 
 
