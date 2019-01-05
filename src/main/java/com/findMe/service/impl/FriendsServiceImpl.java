@@ -4,12 +4,10 @@ import com.findMe.dao.FriendsDAO;
 import com.findMe.entity.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
-import com.findMe.model.User;
 import com.findMe.service.FriendsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 public class FriendsServiceImpl implements FriendsService {
@@ -46,6 +44,11 @@ public class FriendsServiceImpl implements FriendsService {
         if (userFromId == userToId)
             throw new BadRequestException("User cannot reject relationship with himself.");
         friendsDAO.rejectRequest(userFromId, userToId);
+    }
+
+    @Override
+    public RelationshipStatus findStatusById(Long userFromId, Long userToId) throws InternalServerError {
+        return friendsDAO.getRelationship(userFromId,userToId).getRelationshipStatus();
     }
 
 }

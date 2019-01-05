@@ -70,7 +70,8 @@ public class FriendsDAOImpl extends GenericDAO<Relationship> implements FriendsD
         return Relationship.class;
     }
 
-    private Relationship getRelationship(Long userFromId, Long userToId) throws InternalServerError {
+    @Override
+    public Relationship getRelationship(Long userFromId, Long userToId) throws InternalServerError {
         try {
             Query query = getEntityManager().createNativeQuery(FIND_STATUS_BY_ID, Relationship.class);
             query.setParameter(1, userFromId);

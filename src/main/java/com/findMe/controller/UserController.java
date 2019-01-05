@@ -55,7 +55,7 @@ public class UserController {
                 return new ResponseEntity("User is already logged in.", HttpStatus.FORBIDDEN);
 
             User foundUser = userService.login(email, password);
-            session.setAttribute("user", foundUser.getId());
+            session.setAttribute("user", foundUser);
             return new ResponseEntity(HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
@@ -81,11 +81,12 @@ public class UserController {
 
 
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
-    public String profile(Model model, @PathVariable String userId) {
+    public String profile(HttpSession session,Model model, @PathVariable String userId) {
         try {
             Long convertedUserId = convertId(userId);
 
             model.addAttribute("user", userService.findUserById(convertedUserId));
+            model.addAttribute("status", friendsService.findStatusById(validateLogIn(session).getId(),convertedUserId).toString());
             model.addAttribute("friends", userService.findByRelationshipStatus(convertedUserId, RelationshipStatus.ACCEPTED));
             model.addAttribute("requestsFrom", userService.findRequestedFrom(convertedUserId));
             model.addAttribute("requestsTo", userService.findRequestedTo(convertedUserId));
@@ -98,6 +99,9 @@ public class UserController {
         } catch (InternalServerError e) {
             e.printStackTrace();
             return "error500";
+        } catch (UnauthorizedException e) {
+            e.printStackTrace();
+            return "error401";
         }
         return "profilePage2";
     }

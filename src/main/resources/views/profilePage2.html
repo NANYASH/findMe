@@ -23,7 +23,13 @@
         <div class="col-md-7 ">
 
             <div class="panel panel-default">
-                <div class="panel-heading"><h4>User Profile</h4></div>
+                <div  id="relationship-status" class="panel-heading">
+                    <h4>User Profile</h4>
+                    <h5>Relationship status:
+                        <td th:text="${status}"/>
+                    </h5>
+                </div>
+               <!-- <div id="relationship-status"><h5>Relationship status:</h5></div>-->
                 <div class="panel-body" style="min-height: 500px;">
 
 

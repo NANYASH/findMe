@@ -12,4 +12,5 @@ public interface FriendsService {
     void updateRelationship(Long userFromId, Long userToId, RelationshipStatus status) throws BadRequestException, InternalServerError;
     void deleteRelationship(Long userFromId, Long userToId) throws BadRequestException, InternalServerError;
     void rejectRequest(Long userFromId, Long userToId) throws InternalServerError, BadRequestException;
+    RelationshipStatus findStatusById(Long userFromId, Long userToId) throws InternalServerError;
 }
