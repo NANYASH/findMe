@@ -103,7 +103,7 @@ public class UserController {
             e.printStackTrace();
             return "error401";
         }
-        return "profilePage2";
+        return "profilePage";
     }
 
     @RequestMapping(path = "/addRelationship", method = RequestMethod.POST)
