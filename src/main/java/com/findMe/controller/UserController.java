@@ -99,7 +99,7 @@ public class UserController {
             e.printStackTrace();
             return "error500";
         }
-        return "profilePage";
+        return "profilePage2";
     }
 
     @RequestMapping(path = "/addRelationship", method = RequestMethod.POST)
