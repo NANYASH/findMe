@@ -2,18 +2,17 @@ package com.findMe.service.impl;
 
 
 import com.findMe.dao.UserDAO;
+import com.findMe.entity.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.NotFoundException;
-import com.findMe.exception.UnauthorizedException;
 import com.findMe.model.User;
 import com.findMe.service.UserService;
-import com.findMe.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.NoResultException;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -41,10 +40,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(String login, String userEnteredPassword) throws InternalServerError, BadRequestException {
-        User user = userDAO.findByPhoneAndEmail(login,login);
-        if (user!=null && user.getPassword().equals(userEnteredPassword)) return user;
+        User user = userDAO.findByPhoneAndEmail(login, login);
+        if (user != null && user.getPassword().equals(userEnteredPassword))
+            return user;
         throw new BadRequestException("Incorrect credentials.");
     }
 
+    @Override
+    public List<User> findByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError {
+        return userDAO.findByRelationshipStatus(userId, status);
+    }
 
+    @Override
+    public List<User> findRequestedFrom(Long userId) throws InternalServerError {
+        return userDAO.findRequestedFrom(userId);
+    }
+
+    @Override
+    public List<User> findRequestedTo(Long userId) throws InternalServerError {
+        return userDAO.findRequestedTo(userId);
+    }
 }

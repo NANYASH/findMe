@@ -4,6 +4,7 @@ package com.findMe.util;
 import com.findMe.entity.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.UnauthorizedException;
+import com.findMe.model.User;
 
 import javax.servlet.http.HttpSession;
 
@@ -26,10 +27,10 @@ public class Util {
         }
     }
 
-    public static Long validateLogIn(HttpSession session) throws UnauthorizedException {
-        Long userId = (Long) session.getAttribute("id");
-        if (userId == null)
+    public static User validateLogIn(HttpSession session) throws UnauthorizedException {
+        User user = (User) session.getAttribute("user");
+        if (user == null)
             throw new UnauthorizedException("User should be logged in.");
-        return userId;
+        return user;
     }
 }

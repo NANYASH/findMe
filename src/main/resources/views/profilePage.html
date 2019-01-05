@@ -9,30 +9,37 @@
 <header>
     <div class="form-group">
         <label class="col-md-4 control-label"></label>
-        <div class="col-md-4">
-            <button id="logout" type="submit" class="btn pull-right btn-success">Log Out</button>
-        </div>
     </div>
 </header>
 
-<div class="container" style="min-width: 1500px; max-width: 2000px; align=center">
+<div class="container" style="min-width: 1500px; max-width: 2000px;">
+    <div class="col-md-4">
+        <button id="logout" style="left: 100%" type="submit" class="btn pull-right btn-success">Log Out</button>
+    </div>
+
 
     <div class="row">
 
         <div class="col-md-7 ">
 
             <div class="panel panel-default">
-                <div class="panel-heading"><h4>User Profile</h4></div>
-                <div class="panel-body" style="min-height: 500px; max-height: 2000px;">
+                <div  id="relationship-status" class="panel-heading">
+                    <h4>User Profile</h4>
+                    <h5>Relationship status:
+                        <td th:text="${status}"/>
+                    </h5>
+                </div>
+               <!-- <div id="relationship-status"><h5>Relationship status:</h5></div>-->
+                <div class="panel-body" style="min-height: 500px;">
 
 
                     <div class="box box-info">
 
-                        <div class="box-body">
+                        <p class="box-body">
                             <div class="col-sm-6">
-                                <div align="left"><img style="float:left" alt="User Pic" width="300"
-                                                         src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg"
-                                                         id="profile-image1" class="img-circle img-responsive">
+                                <div align="left"><img style="float:left" alt="User Pic" width="350"
+                                                       src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg"
+                                                       id="profile-image1" class="img-circle img-responsive">
 
 
                                     <input id="profile-image-upload" class="hidden" type="file">
@@ -46,105 +53,131 @@
 
                                 <!-- /input-group -->
                             </div>
-                            <div class="col-sm-8">
+                            <div class="col p-2 m-0">
                                 <h4 style="color:#00b1b1;"><p th:text="${user.firstName} +' '+${user.lastName}"/></h4>
                                 </span>
 
                             </div>
+
+                            <div class="col p-2 m-0" style="display:inline">First Name:</div>
+                            <p class="text-center" style="display:inline" th:text="${user.firstName}">
+                            <div/>
+
+                            <div class="col p-2 m-0" style="display:inline">Last Name:</div>
+                            <p class="text-center" style="display:inline" th:text="${user.lastName}"/>
+                            <div/>
+
+                            <div class="col p-2 m-0" style="display:inline">Phone:</div>
+                            <p class="text-center" style="display:inline" th:text="${user.phone}"/>
+                            <div/>
+
+                            <div class="col p-2 m-0" style="display:inline">Country:</div>
+                            <p class="text-center" style="display:inline" th:text="${user.country}"/>
+                            <div/>
+
+                            <div class="col p-2 m-0" style="display:inline">City:</div>
+                            <p class="text-center" style="display:inline" th:text="${user.city}"/>
+                            <div/>
+
+                            <div class="col p-2 m-0" style="display:inline">Age:</div>
+                            <p class="text-center" style="display:inline" th:text="${user.age}"/>
+                            <div/>
+
+                            <div class="col p-2 m-0" style="display:inline">Date Registered:</div>
+                            <p class="text-center" style="display:inline" th:text="${user.dateRegistered}"/>
+                            <div/>
+
+                            <div class="col p-2 m-0" style="display:inline">Date Last Active:</div>
+                            <p class="text-center" style="display:inline" th:text="${user.dateLastActive}"/>
+                            <div/>
+
+                            <div class="col p-2 m-0" style="display:inline">Relationships Status:</div>
+                            <p class="text-center" style="display:inline" th:text="${user.relationshipsStatus}"/>
+                            <div/>
+
+                            <div class="col p-2 m-0" style="display:inline">Religion:</div>
+                            <p class="text-center" style="display:inline" th:text="${user.religion}"/>
+                            <div/>
+
+                            <div class="col p-2 m-0l" style="display:inline">School:</div>
+                            <p class="text-center" style="display:inline" th:text="${user.school}"/>
+                            <div/>
+
+                            <div class="col p-2 m-0" style="display:inline">University:</div>
+                            <p class="text-center" style="display:inline" th:text="${user.university}"/>
+                            <div/>
+
+
+                            <button id="add-button" class="btn btn-success" type="submit">Add</button>
+                            <button id="delete-button" class="btn btn-success" type="submit">Delete</button>
+                            <button id="accept-button" class="btn btn-success" type="submit">Accept</button>
+                            <button id="reject-button" class="btn btn-success" type="submit">Reject</button>
+                            <button id="reject-request-button" class="btn btn-success" type="submit">Reject request</button>
+
                             <div class="clearfix"></div>
                             <hr style="margin:5px 0 5px 0;">
-
-
-                            <div class="col-sm-5 col-xs-6 tital ">First Name:</div>
-                            <div class="col-sm-7"><p th:text="${user.firstName}"/></div>
-                            <div class="clearfix"></div>
-                            <div class="bot-border"></div>
-
-
-                            <div class="col-sm-5 col-xs-6 tital">Last Name:</div>
-                            <div class="col-sm-7 "><p th:text="${user.lastName}"/></div>
-
-                            <div class="clearfix"></div>
-                            <div class="bot-border"></div>
-
-
-                            <div class="col-sm-5 col-xs-6 tital">Phone:</div>
-                            <div class="col-sm-7">
-                                <p th:text="${user.phone}"/></div>
-
-                            <div class="clearfix"></div>
-                            <div class="bot-border"></div>
-
-                            <div class="col-sm-5 col-xs-6 tital">Country:</div>
-                            <div class="col-sm-7">
-                                <p th:text="${user.country}"/></div>
-
-                            <div class="clearfix"></div>
-                            <div class="bot-border"></div>
-
-                            <div class="col-sm-5 col-xs-6 tital">City:</div>
-                            <div class="col-sm-7">
-                                <p th:text="${user.city}"/></div>
-
-                            <div class="clearfix"></div>
-                            <div class="bot-border"></div>
-
-                            <div class="col-sm-5 col-xs-6 tital">Age:</div>
-                            <div class="col-sm-7">
-                                <p th:text="${user.age}"/></div>
-
-                            <div class="clearfix"></div>
-                            <div class="bot-border"></div>
-
-                            <div class="col-sm-5 col-xs-6 tital">Date Registered:</div>
-                            <div class="col-sm-7">
-                                <p th:text="${user.dateRegistered}"/></div>
-
-                            <div class="clearfix"></div>
-                            <div class="bot-border"></div>
-
-                            <div class="col-sm-5 col-xs-6 tital">Date Last Active:</div>
-                            <div class="col-sm-7">
-                                <p th:text="${user.dateLastActive}"/></div>
-
-                            <div class="clearfix"></div>
-                            <div class="bot-border"></div>
-
-                            <div class="col-sm-5 col-xs-6 tital">Relationships Status:</div>
-                            <div class="col-sm-7">
-                                <p th:text="${user.relationshipsStatus}"/></div>
-
-                            <div class="clearfix"></div>
-                            <div class="bot-border"></div>
-
-                            <div class="col-sm-5 col-xs-6 tital">Religion:</div>
-                            <div class="col-sm-7">
-                                <p th:text="${user.religion}"/></div>
-
-                            <div class="clearfix"></div>
-                            <div class="bot-border"></div>
-
-                            <div class="col-sm-5 col-xs-6 tital">School:</div>
-                            <div class="col-sm-7">
-                                <p th:text="${user.school}"/></div>
-
-                            <div class="clearfix"></div>
-                            <div class="bot-border"></div>
-
-
-                            <div class="col-sm-5 col-xs-6 tital">University:</div>
-                            <div class="col-sm-7">
-                                <p th:text="${user.university}"/></div>
-
-                            <div class="clearfix"></div>
-                            <div class="bot-border"></div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+<div class="col-sm-6 panel panel-default"  style="width: 300px">
+    <div class="panel-heading">Friends</div>
+    <div class="panel-body"></div>
+
+    <tr th:each="friend : ${friends}">
+        <div>
+        <td>
+            <a th:href="@{'/user/' + ${friend.getId()}}">
+                 <td th:text="${friend.getFirstName()}+' '+${friend.getLastName()} "/>
+            </a>
+        </td>
+        </div>
+    </tr>
+
+
+</div>
+
+<div class="col-sm-6 panel panel-default" style="width: 500px">
+    <div class="panel-heading">Posts</div>
+    <div class="panel-body"></div>
+</div>
+<div class="panel panel-default" style="width: 300px">
+    <div class="panel-heading">Incoming requests</div>
+    <div class="panel-body"></div>
+
+    <tr th:each="requestTo : ${requestsTo}">
+        <div>
+            <td>
+                <a th:href="@{'/user/' + ${requestTo.getId()}}">
+            <td th:text="${requestTo.getFirstName()}+' '+${requestTo.getLastName()} "/>
+            </a>
+            </td>
+        </div>
+    </tr>
+
+</div>
+<div class="panel panel-default" style="width: 300px">
+    <div class="panel-heading">Outgoing requests</div>
+    <div class="panel-body"></div>
+
+    <tr th:each="requestFrom : ${requestsFrom}">
+        <div>
+            <td>
+                <a th:href="@{'/user/' + ${requestFrom.getId()}}">
+            <td th:text="${requestFrom.getFirstName()}+' '+${requestFrom.getLastName()} "/>
+            </a>
+            </td>
+        </div>
+    </tr>
+
+
+</div>
+
+
 </div>
 <script>
     $("#logout").click(function () {
@@ -160,4 +193,89 @@
         })
     })
 </script>
+<script>
+    var userId = window.location.pathname.split('/').pop();
+    $("#add-button").click(function () {
+        $.ajax({
+            url: "/addRelationship",
+            type: "POST",
+            data: {userToId: userId.toString()},
+            success: function success() {
+                alert("User is requested to be a friend.")
+            },
+            error: function error(xhr) {
+                alert(xhr.responseText);
+            }
+        })
+    })
+</script>
+
+<script>
+    var userId = window.location.pathname.split('/').pop();
+    $("#delete-button").click(function () {
+        $.ajax({
+            url: "/deleteRelationship",
+            type: "POST",
+            data: {userToId: userId.toString()},
+            success: function success() {
+                alert("User is deleted from friends.")
+            },
+            error: function error(xhr) {
+                alert(xhr.responseText);
+            }
+        })
+    })
+</script>
+
+<script>
+    var userId = window.location.pathname.split('/').pop();
+    $("#accept-button").click(function () {
+        $.ajax({
+            url: "/updateRelationship",
+            type: "POST",
+            data: {userFromId: userId.toString(), status: "ACCEPTED"},
+            success: function success() {
+                alert("User is successfully accepted to friends.")
+            },
+            error: function error(xhr) {
+                alert(xhr.responseText);
+            }
+        })
+    })
+</script>
+
+<script>
+    var userId = window.location.pathname.split('/').pop();
+    $("#reject-button").click(function () {
+        $.ajax({
+            url: "/updateRelationship",
+            type: "POST",
+            data: {userFromId: userId.toString(), status: "REJECTED"},
+            success: function success() {
+                alert("User is rejected.")
+            },
+            error: function error(xhr) {
+                alert(xhr.responseText);
+            }
+        })
+    })
+</script>
+
+<script>
+    var userId = window.location.pathname.split('/').pop();
+    $("#reject-request-button").click(function () {
+        $.ajax({
+            url: "/rejectRequest",
+            type: "POST",
+            data: {userToId: userId.toString()},
+            success: function success() {
+                alert("Request is rejected.")
+            },
+            error: function error(xhr) {
+                alert(xhr.responseText);
+            }
+        })
+    })
+</script>
+
 </html>

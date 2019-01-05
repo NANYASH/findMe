@@ -51,11 +51,11 @@ public class UserController {
     @RequestMapping(path = "/login", method = RequestMethod.GET)
     public ResponseEntity logIn(HttpSession session, @RequestParam String email, @RequestParam String password) {
         try {
-            if (session.getAttribute("id") != null)
+            if (session.getAttribute("user") != null)
                 return new ResponseEntity("User is already logged in.", HttpStatus.FORBIDDEN);
 
             User foundUser = userService.login(email, password);
-            session.setAttribute("id", foundUser.getId());
+            session.setAttribute("user", foundUser);
             return new ResponseEntity(HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
@@ -75,20 +75,21 @@ public class UserController {
             e.printStackTrace();
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
-        session.setAttribute("id", null); // or session.removeAttribute("id");
+        session.setAttribute("user", null); // or session.removeAttribute("id");
         return new ResponseEntity(HttpStatus.OK);
     }
 
 
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
-    public String profile(Model model, @PathVariable String userId) {
+    public String profile(HttpSession session,Model model, @PathVariable String userId) {
         try {
             Long convertedUserId = convertId(userId);
 
             model.addAttribute("user", userService.findUserById(convertedUserId));
-            model.addAttribute("friends", friendsService.findByRelationshipStatus(convertedUserId, RelationshipStatus.ACCEPTED));
-            model.addAttribute("requestsFrom", friendsService.findRequestedFrom(convertedUserId));
-            model.addAttribute("requestsTo", friendsService.findRequestedTo(convertedUserId));
+            model.addAttribute("status", friendsService.findStatusById(validateLogIn(session).getId(),convertedUserId).toString());
+            model.addAttribute("friends", userService.findByRelationshipStatus(convertedUserId, RelationshipStatus.ACCEPTED));
+            model.addAttribute("requestsFrom", userService.findRequestedFrom(convertedUserId));
+            model.addAttribute("requestsTo", userService.findRequestedTo(convertedUserId));
         } catch (BadRequestException e) {
             e.printStackTrace();
             return "error400";
@@ -98,14 +99,17 @@ public class UserController {
         } catch (InternalServerError e) {
             e.printStackTrace();
             return "error500";
+        } catch (UnauthorizedException e) {
+            e.printStackTrace();
+            return "error401";
         }
-        return "profilePage2";
+        return "profilePage";
     }
 
     @RequestMapping(path = "/addRelationship", method = RequestMethod.POST)
     public ResponseEntity addRelationship(HttpSession session, @RequestParam String userToId) {
         try {
-            friendsService.addRelationship(validateLogIn(session), convertId(userToId));
+            friendsService.addRelationship(validateLogIn(session).getId(), convertId(userToId));
             return new ResponseEntity("Request is sent.", HttpStatus.OK);
         } catch (UnauthorizedException e) {
             e.printStackTrace();
@@ -122,7 +126,7 @@ public class UserController {
     @RequestMapping(path = "/deleteRelationship", method = RequestMethod.POST)
     public ResponseEntity deleteRelationship(HttpSession session, @RequestParam String userToId) {
         try {
-            friendsService.deleteRelationship(validateLogIn(session), convertId(userToId));
+            friendsService.deleteRelationship(validateLogIn(session).getId(), convertId(userToId));
             return new ResponseEntity("User is deleted from friends./Request is deleted.", HttpStatus.OK);
         } catch (UnauthorizedException e) {
             e.printStackTrace();
@@ -139,7 +143,7 @@ public class UserController {
     @RequestMapping(path = "/updateRelationship", method = RequestMethod.POST)
     public ResponseEntity updateRelationship(HttpSession session, @RequestParam String userFromId, @RequestParam String status) {
         try {
-            friendsService.updateRelationship(convertId(userFromId), validateLogIn(session), convertRelationshipStatus(status));
+            friendsService.updateRelationship(convertId(userFromId), validateLogIn(session).getId(), convertRelationshipStatus(status));
             return new ResponseEntity("Relationship status is changed to" + status.toString(), HttpStatus.OK);
         } catch (UnauthorizedException e) {
             e.printStackTrace();
@@ -156,7 +160,7 @@ public class UserController {
     @RequestMapping(path = "/rejectRequest", method = RequestMethod.POST)
     public ResponseEntity rejectRequest(HttpSession session, @RequestParam String userToId) {
         try {
-            friendsService.rejectRequest(validateLogIn(session), convertId(userToId));
+            friendsService.rejectRequest(validateLogIn(session).getId(), convertId(userToId));
             return new ResponseEntity("Request is rejected.", HttpStatus.OK);
         } catch (UnauthorizedException e) {
             e.printStackTrace();
