@@ -15,7 +15,7 @@ public abstract class GenericDAO<T> {
         return entityManager;
     }
 
-    public T create(T t) throws InternalServerError {
+    public T save(T t) throws InternalServerError {
         try {
             getEntityManager().persist(t);
         } catch (Exception e) {

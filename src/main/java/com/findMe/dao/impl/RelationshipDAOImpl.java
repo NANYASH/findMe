@@ -1,7 +1,7 @@
 package com.findMe.dao.impl;
 
 
-import com.findMe.dao.FriendsDAO;
+import com.findMe.dao.RelationshipDAO;
 import com.findMe.entity.Relationship;
 import com.findMe.entity.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
@@ -12,13 +12,16 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
-import static com.findMe.dao.impl.FriendsValidator.validateDelete;
-import static com.findMe.dao.impl.FriendsValidator.validateReject;
-import static com.findMe.dao.impl.FriendsValidator.validateUpdate;
+import static com.findMe.dao.impl.RelationshipValidator.validateDelete;
+import static com.findMe.dao.impl.RelationshipValidator.validateDelete;
+import static com.findMe.dao.impl.RelationshipValidator.validateReject;
+import static com.findMe.dao.impl.RelationshipValidator.validateReject;
+import static com.findMe.dao.impl.RelationshipValidator.validateUpdate;
+import static com.findMe.dao.impl.RelationshipValidator.validateUpdate;
 
 @Repository
 @Transactional
-public class FriendsDAOImpl extends GenericDAO<Relationship> implements FriendsDAO {
+public class RelationshipDAOImpl extends GenericDAO<Relationship> implements RelationshipDAO {
     private static final String FIND_STATUS_BY_ID = "SELECT * FROM RELATIONSHIP" +
             " WHERE USER_FROM_ID = ? AND USER_TO_ID = ? OR USER_FROM_ID = ? AND USER_TO_ID = ?";
 
@@ -28,14 +31,14 @@ public class FriendsDAOImpl extends GenericDAO<Relationship> implements FriendsD
 
     @Override
     public void addRelationship(Long userFromId, Long userToId) throws InternalServerError, BadRequestException {
-        Relationship status = getRelationship(userFromId, userToId);
-        if (status == null)
-            super.create(new Relationship(userFromId, userToId, RelationshipStatus.REQUESTED));
-        else if (status.getRelationshipStatus() == RelationshipStatus.NOT_FRIENDS) {
-            status.setUserFromId(userFromId);
-            status.setUserToId(userToId);
-            status.setRelationshipStatus(RelationshipStatus.REQUESTED);
-            super.update(status);
+        Relationship relationship = getRelationship(userFromId, userToId);
+        if (relationship == null)
+            super.save(new Relationship(userFromId, userToId, RelationshipStatus.REQUESTED));
+        else if (relationship.getRelationshipStatus() == RelationshipStatus.NOT_FRIENDS) {
+            relationship.setUserFromId(userFromId);
+            relationship.setUserToId(userToId);
+            relationship.setRelationshipStatus(RelationshipStatus.REQUESTED);
+            super.update(relationship);
         } else throw new BadRequestException("Action cannot be performed for this user.");
     }
 
@@ -85,8 +88,8 @@ public class FriendsDAOImpl extends GenericDAO<Relationship> implements FriendsD
             throw new InternalServerError();
         }
     }
-
-    private Relationship getRelationshipFromTo(Long userFromId, Long userToId) throws InternalServerError {
+    @Override
+    public Relationship getRelationshipFromTo(Long userFromId, Long userToId) throws InternalServerError {
         try {
             Query query = getEntityManager().createNativeQuery(FIND_STATUS_BY_ID_FROM_TO, Relationship.class);
             query.setParameter(1, userFromId);

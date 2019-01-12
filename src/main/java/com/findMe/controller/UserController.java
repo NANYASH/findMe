@@ -6,7 +6,7 @@ import com.findMe.exception.InternalServerError;
 import com.findMe.exception.NotFoundException;
 import com.findMe.exception.UnauthorizedException;
 import com.findMe.model.User;
-import com.findMe.service.FriendsService;
+import com.findMe.service.RelationshipService;
 import com.findMe.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,10 +26,10 @@ import static com.findMe.util.Util.validateLogIn;
 @Controller
 public class UserController {
     private UserService userService;
-    private FriendsService friendsService;
+    private RelationshipService friendsService;
 
     @Autowired
-    public UserController(UserService userService, FriendsService friendsService) {
+    public UserController(UserService userService, RelationshipService friendsService) {
         this.userService = userService;
         this.friendsService = friendsService;
     }
