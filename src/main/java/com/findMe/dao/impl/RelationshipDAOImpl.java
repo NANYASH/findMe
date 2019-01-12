@@ -3,6 +3,7 @@ package com.findMe.dao.impl;
 
 import com.findMe.dao.RelationshipDAO;
 import com.findMe.entity.Relationship;
+import com.findMe.entity.RelationshipId;
 import com.findMe.entity.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
@@ -26,11 +27,16 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     @Override
     public void addRelationship(Long userFromId, Long userToId) throws InternalServerError, BadRequestException {
         Relationship relationship = getRelationship(userFromId, userToId);
-        if (relationship == null)
-            super.save(new Relationship(userFromId, userToId, RelationshipStatus.REQUESTED));
+        if (relationship == null){
+            relationship = new Relationship();
+            relationship.setRelationshipId(new RelationshipId(userFromId,userToId));
+            relationship.setRelationshipStatus(RelationshipStatus.REQUESTED);
+            super.save(relationship);
+
+        }
         else if (relationship.getRelationshipStatus() == RelationshipStatus.DELETED) {
-            relationship.setUserFromId(userFromId);
-            relationship.setUserToId(userToId);
+            relationship.getRelationshipId().setUserFromId(userFromId);
+            relationship.getRelationshipId().setUserToId(userToId);
             relationship.setRelationshipStatus(RelationshipStatus.REQUESTED);
             super.update(relationship);
         } else throw new BadRequestException("Action cannot be performed for this user.");

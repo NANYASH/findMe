@@ -66,7 +66,10 @@ public class RelationshipServiceImpl implements RelationshipService {
 
     @Override
     public RelationshipStatus findStatusById(Long userFromId, Long userToId) throws InternalServerError {
-        return friendsDAO.getRelationship(userFromId, userToId).getRelationshipStatus();
+        Relationship relationshipStatus = friendsDAO.getRelationship(userFromId, userToId);
+        if (relationshipStatus != null)
+            return relationshipStatus.getRelationshipStatus();
+        return RelationshipStatus.NOT_FRIENDS;
     }
 
 }
