@@ -9,6 +9,7 @@ import java.io.Serializable;
 @Table(name = "RELATIONSHIP")
 @EqualsAndHashCode
 @ToString
+@AllArgsConstructor
 @NoArgsConstructor(force = true)
 public class Relationship implements Serializable{
 

@@ -10,7 +10,8 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor(force = true)
-public class RelationshipId implements Serializable{
+@AllArgsConstructor
+public class RelationshipId implements Serializable {
     @Column(name = "USER_FROM_ID")
     @Getter
     @Setter
@@ -20,10 +21,4 @@ public class RelationshipId implements Serializable{
     @Getter
     @Setter
     private Long userToId;
-
-    public RelationshipId(Long userFromId, Long userToId) {
-        this.userFromId = userFromId;
-        this.userToId = userToId;
-    }
-
 }
