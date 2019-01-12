@@ -1,4 +1,4 @@
-package com.findMe.dao.impl;
+package com.findMe.service;
 
 
 import com.findMe.entity.Relationship;
