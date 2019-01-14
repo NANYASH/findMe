@@ -151,7 +151,7 @@
     <div class="panel-heading">Posts</div>
     <div class="panel-body"></div>
 </div>
-<div class="panel panel-default" style="width: 300px">
+<div th:if="${status} eq 'MY_PROFILE'" class="panel panel-default" style="width: 300px">
     <div class="panel-heading">Incoming requests</div>
     <div class="panel-body"></div>
 
@@ -165,8 +165,8 @@
         </div>
     </tr>
 
-</div>
-<div class="panel panel-default" style="width: 300px">
+
+<div th:if="${status} eq 'MY_PROFILE'" class="panel panel-default" style="width: 300px" >
     <div class="panel-heading">Outgoing requests</div>
     <div class="panel-body"></div>
 
@@ -179,6 +179,8 @@
             </td>
         </div>
     </tr>
+</div>
+
 
 
 </div>
