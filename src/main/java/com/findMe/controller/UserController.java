@@ -88,7 +88,6 @@ public class UserController {
             User found =  userService.findUserById(convertedUserId);
 
             model.addAttribute("user", found);
-
             if (relationshipStatus != null)
                 model.addAttribute("status", relationshipStatus.toString());
             else if(session.getAttribute("user").equals(found)) {
@@ -97,9 +96,7 @@ public class UserController {
                 model.addAttribute("requestsTo", userService.findRequestedTo(convertedUserId));
             }else
                 model.addAttribute("status", RelationshipStatus.NOT_FRIENDS.toString());
-
             model.addAttribute("friends", userService.findByRelationshipStatus(convertedUserId, RelationshipStatus.ACCEPTED));
-
         } catch (BadRequestException e) {
             e.printStackTrace();
             return "error400";
