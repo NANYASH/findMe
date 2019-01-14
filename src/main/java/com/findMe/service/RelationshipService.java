@@ -7,7 +7,7 @@ import com.findMe.model.User;
 
 import java.util.List;
 
-public interface FriendsService {
+public interface RelationshipService {
     void addRelationship(Long userFromId, Long userToId) throws BadRequestException, InternalServerError;
     void updateRelationship(Long userFromId, Long userToId, RelationshipStatus status) throws BadRequestException, InternalServerError;
     void deleteRelationship(Long userFromId, Long userToId) throws BadRequestException, InternalServerError;

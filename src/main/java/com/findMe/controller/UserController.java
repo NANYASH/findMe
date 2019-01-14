@@ -6,7 +6,7 @@ import com.findMe.exception.InternalServerError;
 import com.findMe.exception.NotFoundException;
 import com.findMe.exception.UnauthorizedException;
 import com.findMe.model.User;
-import com.findMe.service.FriendsService;
+import com.findMe.service.RelationshipService;
 import com.findMe.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,10 +26,10 @@ import static com.findMe.util.Util.validateLogIn;
 @Controller
 public class UserController {
     private UserService userService;
-    private FriendsService friendsService;
+    private RelationshipService friendsService;
 
     @Autowired
-    public UserController(UserService userService, FriendsService friendsService) {
+    public UserController(UserService userService, RelationshipService friendsService) {
         this.userService = userService;
         this.friendsService = friendsService;
     }
@@ -81,15 +81,22 @@ public class UserController {
 
 
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
-    public String profile(HttpSession session,Model model, @PathVariable String userId) {
+    public String profile(HttpSession session, Model model, @PathVariable String userId) {
         try {
             Long convertedUserId = convertId(userId);
+            RelationshipStatus relationshipStatus = friendsService.findStatusById(validateLogIn(session).getId(), convertedUserId);
+            User found =  userService.findUserById(convertedUserId);
 
-            model.addAttribute("user", userService.findUserById(convertedUserId));
-            model.addAttribute("status", friendsService.findStatusById(validateLogIn(session).getId(),convertedUserId).toString());
+            model.addAttribute("user", found);
+            if (relationshipStatus != null)
+                model.addAttribute("status", relationshipStatus.toString());
+            else if(session.getAttribute("user").equals(found)) {
+                model.addAttribute("status", RelationshipStatus.MY_PROFILE.toString());
+                model.addAttribute("requestsFrom", userService.findRequestedFrom(convertedUserId));
+                model.addAttribute("requestsTo", userService.findRequestedTo(convertedUserId));
+            }else
+                model.addAttribute("status", RelationshipStatus.NOT_FRIENDS.toString());
             model.addAttribute("friends", userService.findByRelationshipStatus(convertedUserId, RelationshipStatus.ACCEPTED));
-            model.addAttribute("requestsFrom", userService.findRequestedFrom(convertedUserId));
-            model.addAttribute("requestsTo", userService.findRequestedTo(convertedUserId));
         } catch (BadRequestException e) {
             e.printStackTrace();
             return "error400";
