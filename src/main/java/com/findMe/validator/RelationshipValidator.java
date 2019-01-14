@@ -1,4 +1,4 @@
-package com.findMe.service;
+package com.findMe.validator;
 
 
 import com.findMe.entity.Relationship;

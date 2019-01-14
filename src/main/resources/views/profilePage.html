@@ -17,124 +17,130 @@
         <button id="logout" style="left: 100%" type="submit" class="btn pull-right btn-success">Log Out</button>
     </div>
 
-
     <div class="row">
 
         <div class="col-md-7 ">
 
             <div class="panel panel-default">
-                <div  id="relationship-status" class="panel-heading">
+                <div id="relationship-status" class="panel-heading">
                     <h4>User Profile</h4>
                     <h5>Relationship status:
                         <td th:text="${status}"/>
                     </h5>
                 </div>
-               <!-- <div id="relationship-status"><h5>Relationship status:</h5></div>-->
+                <!-- <div id="relationship-status"><h5>Relationship status:</h5></div>-->
                 <div class="panel-body" style="min-height: 500px;">
 
 
                     <div class="box box-info">
 
                         <p class="box-body">
-                            <div class="col-sm-6">
-                                <div align="left"><img style="float:left" alt="User Pic" width="350"
-                                                       src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg"
-                                                       id="profile-image1" class="img-circle img-responsive">
+                        <div class="col-sm-6">
+                            <div align="left"><img style="float:left" alt="User Pic" width="350"
+                                                   src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg"
+                                                   id="profile-image1" class="img-circle img-responsive">
 
 
-                                    <input id="profile-image-upload" class="hidden" type="file">
-                                    <div style="color:#999;">click here to change profile image</div>
-                                    <!--Upload Image Js And Css-->
+                                <input id="profile-image-upload" class="hidden" type="file">
+                                <div style="color:#999;">click here to change profile image</div>
+                                <!--Upload Image Js And Css-->
 
-
-                                </div>
-
-                                <br>
-
-                                <!-- /input-group -->
-                            </div>
-                            <div class="col p-2 m-0">
-                                <h4 style="color:#00b1b1;"><p th:text="${user.firstName} +' '+${user.lastName}"/></h4>
-                                </span>
 
                             </div>
 
-                            <div class="col p-2 m-0" style="display:inline">First Name:</div>
-                            <p class="text-center" style="display:inline" th:text="${user.firstName}">
-                            <div/>
+                            <br>
 
-                            <div class="col p-2 m-0" style="display:inline">Last Name:</div>
-                            <p class="text-center" style="display:inline" th:text="${user.lastName}"/>
-                            <div/>
+                            <!-- /input-group -->
+                        </div>
+                        <div class="col p-2 m-0">
+                            <h4 style="color:#00b1b1;"><p th:text="${user.firstName} +' '+${user.lastName}"/></h4>
+                            </span>
 
-                            <div class="col p-2 m-0" style="display:inline">Phone:</div>
-                            <p class="text-center" style="display:inline" th:text="${user.phone}"/>
-                            <div/>
+                        </div>
 
-                            <div class="col p-2 m-0" style="display:inline">Country:</div>
-                            <p class="text-center" style="display:inline" th:text="${user.country}"/>
-                            <div/>
+                        <div class="col p-2 m-0" style="display:inline">First Name:</div>
+                        <p class="text-center" style="display:inline" th:text="${user.firstName}">
+                        <div/>
 
-                            <div class="col p-2 m-0" style="display:inline">City:</div>
-                            <p class="text-center" style="display:inline" th:text="${user.city}"/>
-                            <div/>
+                        <div class="col p-2 m-0" style="display:inline">Last Name:</div>
+                        <p class="text-center" style="display:inline" th:text="${user.lastName}"/>
+                        <div/>
 
-                            <div class="col p-2 m-0" style="display:inline">Age:</div>
-                            <p class="text-center" style="display:inline" th:text="${user.age}"/>
-                            <div/>
+                        <div class="col p-2 m-0" style="display:inline">Phone:</div>
+                        <p class="text-center" style="display:inline" th:text="${user.phone}"/>
+                        <div/>
 
-                            <div class="col p-2 m-0" style="display:inline">Date Registered:</div>
-                            <p class="text-center" style="display:inline" th:text="${user.dateRegistered}"/>
-                            <div/>
+                        <div class="col p-2 m-0" style="display:inline">Country:</div>
+                        <p class="text-center" style="display:inline" th:text="${user.country}"/>
+                        <div/>
 
-                            <div class="col p-2 m-0" style="display:inline">Date Last Active:</div>
-                            <p class="text-center" style="display:inline" th:text="${user.dateLastActive}"/>
-                            <div/>
+                        <div class="col p-2 m-0" style="display:inline">City:</div>
+                        <p class="text-center" style="display:inline" th:text="${user.city}"/>
+                        <div/>
 
-                            <div class="col p-2 m-0" style="display:inline">Relationships Status:</div>
-                            <p class="text-center" style="display:inline" th:text="${user.relationshipsStatus}"/>
-                            <div/>
+                        <div class="col p-2 m-0" style="display:inline">Age:</div>
+                        <p class="text-center" style="display:inline" th:text="${user.age}"/>
+                        <div/>
 
-                            <div class="col p-2 m-0" style="display:inline">Religion:</div>
-                            <p class="text-center" style="display:inline" th:text="${user.religion}"/>
-                            <div/>
+                        <div class="col p-2 m-0" style="display:inline">Date Registered:</div>
+                        <p class="text-center" style="display:inline" th:text="${user.dateRegistered}"/>
+                        <div/>
 
-                            <div class="col p-2 m-0l" style="display:inline">School:</div>
-                            <p class="text-center" style="display:inline" th:text="${user.school}"/>
-                            <div/>
+                        <div class="col p-2 m-0" style="display:inline">Date Last Active:</div>
+                        <p class="text-center" style="display:inline" th:text="${user.dateLastActive}"/>
+                        <div/>
 
-                            <div class="col p-2 m-0" style="display:inline">University:</div>
-                            <p class="text-center" style="display:inline" th:text="${user.university}"/>
-                            <div/>
+                        <div class="col p-2 m-0" style="display:inline">Relationships Status:</div>
+                        <p class="text-center" style="display:inline" th:text="${user.relationshipsStatus}"/>
+                        <div/>
 
+                        <div class="col p-2 m-0" style="display:inline">Religion:</div>
+                        <p class="text-center" style="display:inline" th:text="${user.religion}"/>
+                        <div/>
 
+                        <div class="col p-2 m-0l" style="display:inline">School:</div>
+                        <p class="text-center" style="display:inline" th:text="${user.school}"/>
+                        <div/>
+
+                        <div class="col p-2 m-0" style="display:inline">University:</div>
+                        <p class="text-center" style="display:inline" th:text="${user.university}"/>
+                        <div/>
+
+                        <div th:if="${status} eq 'NOT_FRIENDS' or ${status} eq 'DELETED'">
                             <button id="add-button" class="btn btn-success" type="submit">Add</button>
+                        </div>
+                        <div th:if="${status} eq 'ACCEPTED'">
                             <button id="delete-button" class="btn btn-success" type="submit">Delete</button>
+                        </div>
+                        <div th:if="${status} eq 'REQUESTED'">
+
                             <button id="accept-button" class="btn btn-success" type="submit">Accept</button>
                             <button id="reject-button" class="btn btn-success" type="submit">Reject</button>
-                            <button id="reject-request-button" class="btn btn-success" type="submit">Reject request</button>
 
-                            <div class="clearfix"></div>
-                            <hr style="margin:5px 0 5px 0;">
+                            <button id="reject-request-button" class="btn btn-success" type="submit">Reject request</button>
                         </div>
+
+                        <div class="clearfix"></div>
+                        <hr style="margin:5px 0 5px 0;">
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 
-<div class="col-sm-6 panel panel-default"  style="width: 300px">
+<div class="col-sm-6 panel panel-default" style="width: 300px">
     <div class="panel-heading">Friends</div>
     <div class="panel-body"></div>
 
     <tr th:each="friend : ${friends}">
         <div>
-        <td>
-            <a th:href="@{'/user/' + ${friend.getId()}}">
-                 <td th:text="${friend.getFirstName()}+' '+${friend.getLastName()} "/>
+            <td>
+                <a th:href="@{'/user/' + ${friend.getId()}}">
+            <td th:text="${friend.getFirstName()}+' '+${friend.getLastName()} "/>
             </a>
-        </td>
+            </td>
         </div>
     </tr>
 
@@ -177,9 +183,11 @@
 
 </div>
 
-
 </div>
+
 <script>
+    var userId = window.location.pathname.split('/').pop();
+
     $("#logout").click(function () {
         $.ajax({
             url: "/logout",
@@ -192,9 +200,7 @@
             }
         })
     })
-</script>
-<script>
-    var userId = window.location.pathname.split('/').pop();
+
     $("#add-button").click(function () {
         $.ajax({
             url: "/addRelationship",
@@ -208,10 +214,7 @@
             }
         })
     })
-</script>
 
-<script>
-    var userId = window.location.pathname.split('/').pop();
     $("#delete-button").click(function () {
         $.ajax({
             url: "/deleteRelationship",
@@ -225,10 +228,7 @@
             }
         })
     })
-</script>
 
-<script>
-    var userId = window.location.pathname.split('/').pop();
     $("#accept-button").click(function () {
         $.ajax({
             url: "/updateRelationship",
@@ -242,10 +242,7 @@
             }
         })
     })
-</script>
 
-<script>
-    var userId = window.location.pathname.split('/').pop();
     $("#reject-button").click(function () {
         $.ajax({
             url: "/updateRelationship",
@@ -259,10 +256,7 @@
             }
         })
     })
-</script>
 
-<script>
-    var userId = window.location.pathname.split('/').pop();
     $("#reject-request-button").click(function () {
         $.ajax({
             url: "/rejectRequest",

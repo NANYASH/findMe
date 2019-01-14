@@ -9,9 +9,9 @@ import com.findMe.service.RelationshipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.findMe.service.RelationshipValidator.validateDelete;
-import static com.findMe.service.RelationshipValidator.validateReject;
-import static com.findMe.service.RelationshipValidator.validateUpdate;
+import static com.findMe.validator.RelationshipValidator.validateDelete;
+import static com.findMe.validator.RelationshipValidator.validateReject;
+import static com.findMe.validator.RelationshipValidator.validateUpdate;
 
 
 @Service
@@ -69,7 +69,7 @@ public class RelationshipServiceImpl implements RelationshipService {
         Relationship relationshipStatus = friendsDAO.getRelationship(userFromId, userToId);
         if (relationshipStatus != null)
             return relationshipStatus.getRelationshipStatus();
-        return RelationshipStatus.NOT_FRIENDS;
+        return null;
     }
 
 }
