@@ -112,14 +112,14 @@
                         <div th:if="${status} eq 'ACCEPTED'">
                             <button id="delete-button" class="btn btn-success" type="submit">Delete</button>
                         </div>
-                        <div th:if="${status} eq 'REQUESTED'">
+                        <!--<div th:if="${status} eq 'REQUESTED'">
 
                             <button id="accept-button" class="btn btn-success" type="submit">Accept</button>
                             <button id="reject-button" class="btn btn-success" type="submit">Reject</button>
 
                             <button id="reject-request-button" class="btn btn-success" type="submit">Reject request</button>
                         </div>
-
+-->
                         <div class="clearfix"></div>
                         <hr style="margin:5px 0 5px 0;">
                     </div>
@@ -160,6 +160,8 @@
             <td>
                 <a th:href="@{'/user/' + ${requestTo.getId()}}">
             <td th:text="${requestTo.getFirstName()}+' '+${requestTo.getLastName()} "/>
+            <button id="accept-button" th:onclick="'accept(\'' + ${requestTo.getId()} + '\');'" class="btn btn-success" type="submit">Accept</button>
+            <button id="reject-button" th:onclick="'reject(\'' + ${requestTo.getId()} + '\');'" class="btn btn-success" type="submit">Reject</button>
             </a>
             </td>
         </div>
@@ -175,6 +177,7 @@
             <td>
                 <a th:href="@{'/user/' + ${requestFrom.getId()}}">
             <td th:text="${requestFrom.getFirstName()}+' '+${requestFrom.getLastName()} "/>
+            <button id="reject-request-button" th:onclick="'rejectRequest(\'' + ${requestFrom.getId()} + '\');'" class="btn btn-success" type="submit">Reject request</button>
             </a>
             </td>
         </div>
@@ -231,11 +234,11 @@
         })
     })
 
-    $("#accept-button").click(function () {
+    function accept(inputId) {
         $.ajax({
             url: "/updateRelationship",
             type: "POST",
-            data: {userFromId: userId.toString(), status: "ACCEPTED"},
+            data: {userFromId: inputId.toString(), status: "ACCEPTED"},
             success: function success() {
                 alert("User is successfully accepted to friends.")
             },
@@ -243,13 +246,13 @@
                 alert(xhr.responseText);
             }
         })
-    })
+    }
 
-    $("#reject-button").click(function () {
+   function reject(inputId) {
         $.ajax({
             url: "/updateRelationship",
             type: "POST",
-            data: {userFromId: userId.toString(), status: "REJECTED"},
+            data: {userFromId: inputId.toString(), status: "REJECTED"},
             success: function success() {
                 alert("User is rejected.")
             },
@@ -257,13 +260,13 @@
                 alert(xhr.responseText);
             }
         })
-    })
+    }
 
-    $("#reject-request-button").click(function () {
+   function rejectRequest(inputId) {
         $.ajax({
             url: "/rejectRequest",
             type: "POST",
-            data: {userToId: userId.toString()},
+            data: {userToId: inputId},
             success: function success() {
                 alert("Request is rejected.")
             },
@@ -271,7 +274,7 @@
                 alert(xhr.responseText);
             }
         })
-    })
+    }
 </script>
 
 </html>
