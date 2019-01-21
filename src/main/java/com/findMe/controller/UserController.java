@@ -132,11 +132,13 @@ public class UserController {
 
     @RequestMapping(path = "/updateRelationship", method = RequestMethod.POST)
     public ResponseEntity updateRelationship(HttpSession session, @RequestParam String userFromId, @RequestParam String status) {
+        RelationshipStatus relationshipStatus;
         try {
-            if (convertRelationshipStatus(status).equals(RelationshipStatus.DELETED) || convertRelationshipStatus(status).equals(RelationshipStatus.ACCEPTED))
-                friendsService.updateRelationship(validateLogIn(session).getId(), convertId(userFromId), convertRelationshipStatus(status));
+            relationshipStatus = convertRelationshipStatus(status);
+            if (relationshipStatus.equals(RelationshipStatus.DELETED) || relationshipStatus.equals(RelationshipStatus.ACCEPTED))
+                friendsService.updateRelationship(validateLogIn(session).getId(), convertId(userFromId), relationshipStatus);
             else
-                friendsService.updateRelationship(convertId(userFromId), validateLogIn(session).getId(), convertRelationshipStatus(status));
+                friendsService.updateRelationship(convertId(userFromId), validateLogIn(session).getId(), relationshipStatus);
             return new ResponseEntity("Relationship status is changed to" + status.toString(), HttpStatus.OK);
         } catch (UnauthorizedException e) {
             e.printStackTrace();
