@@ -20,6 +20,6 @@ public class RelationshipValidator {
         if (relationship.getRelationshipStatus().equals(RelationshipStatus.ACCEPTED) && newStatus.equals(RelationshipStatus.DELETED))
             return;
 
-        throw new BadRequestException("Action cannot be performed for this user.");
+        throw new BadRequestException("Action cannot be performed to this user.");
     }
 }
