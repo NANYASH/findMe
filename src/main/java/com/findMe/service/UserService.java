@@ -4,7 +4,6 @@ import com.findMe.entity.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.NotFoundException;
-import com.findMe.exception.UnauthorizedException;
 import com.findMe.model.User;
 
 import java.util.List;
