@@ -26,16 +26,7 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
 
     @Override
     public void addRelationship(Long userFromId, Long userToId) throws InternalServerError, BadRequestException {
-        Relationship relationship = getRelationship(userFromId, userToId);
-        if (relationship == null) {
-            relationship = new Relationship(new RelationshipId(userFromId, userToId), RelationshipStatus.REQUESTED);
-            super.save(relationship);
-        } else if (relationship.getRelationshipStatus() == RelationshipStatus.DELETED) {
-            relationship.getRelationshipId().setUserFromId(userFromId);
-            relationship.getRelationshipId().setUserToId(userToId);
-            relationship.setRelationshipStatus(RelationshipStatus.REQUESTED);
-            super.update(relationship);
-        } else throw new BadRequestException("Action cannot be performed for this user.");
+        super.save(new Relationship(new RelationshipId(userFromId, userToId), RelationshipStatus.REQUESTED));
     }
 
     @Override

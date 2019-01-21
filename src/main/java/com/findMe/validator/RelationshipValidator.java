@@ -15,24 +15,11 @@ public class RelationshipValidator {
             return;
         if (relationship.getRelationshipStatus().equals(RelationshipStatus.REQUESTED) && newStatus.equals(RelationshipStatus.REJECTED))
             return;
-        /*if (relationship.getRelationshipStatus() == RelationshipStatus.REJECTED && newStatus == RelationshipStatus.REQUESTED)
-            return;*/
-
-        throw new BadRequestException("Action cannot be performed for this user.");
-    }
-
-    public static void validateDelete(Relationship relationship) throws BadRequestException {
-        if (relationship == null)
-            throw new BadRequestException("Users are not friends.");
-
-        if (relationship.getRelationshipStatus().equals(RelationshipStatus.ACCEPTED))
+        if (relationship.getRelationshipStatus().equals(RelationshipStatus.REQUESTED) && newStatus.equals(RelationshipStatus.DELETED))
+            return;
+        if (relationship.getRelationshipStatus().equals(RelationshipStatus.ACCEPTED) && newStatus.equals(RelationshipStatus.DELETED))
             return;
 
         throw new BadRequestException("Action cannot be performed for this user.");
-    }
-
-    public static void validateReject(Relationship relationship) throws BadRequestException {
-        if (relationship == null || !relationship.getRelationshipStatus().equals(RelationshipStatus.REQUESTED))
-            throw new BadRequestException("No requests to this user.");
     }
 }

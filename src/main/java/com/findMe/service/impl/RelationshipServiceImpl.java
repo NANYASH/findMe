@@ -9,8 +9,6 @@ import com.findMe.service.RelationshipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.findMe.validator.RelationshipValidator.validateDelete;
-import static com.findMe.validator.RelationshipValidator.validateReject;
 import static com.findMe.validator.RelationshipValidator.validateUpdate;
 
 
@@ -28,7 +26,14 @@ public class RelationshipServiceImpl implements RelationshipService {
         if (userFromId.equals(userToId))
             throw new BadRequestException("User cannot add relationship with himself.");
 
-        friendsDAO.addRelationship(userFromId, userToId);
+        Relationship relationship = friendsDAO.getRelationshipFromTo(userFromId, userToId);
+
+        if (relationship == null)
+            friendsDAO.addRelationship(userFromId, userToId);
+        else if (relationship.getRelationshipStatus() == RelationshipStatus.DELETED) {
+            friendsDAO.updateRelationship(relationship, RelationshipStatus.REQUESTED);
+        } else
+            throw new BadRequestException("Action cannot be performed for this user.");
     }
 
     @Override
@@ -40,28 +45,6 @@ public class RelationshipServiceImpl implements RelationshipService {
         validateUpdate(relationship, status);
 
         friendsDAO.updateRelationship(relationship, status);
-    }
-
-    @Override
-    public void deleteRelationship(Long userFromId, Long userToId) throws BadRequestException, InternalServerError {
-        if (userFromId.equals(userToId))
-            throw new BadRequestException("User cannot delete relationship with himself.");
-
-        Relationship relationship = friendsDAO.getRelationship(userFromId, userToId);
-        validateDelete(relationship);
-
-        friendsDAO.updateRelationship(relationship, RelationshipStatus.DELETED);
-    }
-
-    @Override
-    public void rejectRequest(Long userFromId, Long userToId) throws BadRequestException, InternalServerError {
-        if (userFromId.equals(userToId))
-            throw new BadRequestException("User cannot reject relationship with himself.");
-
-        Relationship relationship = friendsDAO.getRelationshipFromTo(userFromId, userToId);
-        validateReject(friendsDAO.getRelationshipFromTo(userFromId, userToId));
-
-        friendsDAO.updateRelationship(relationship, RelationshipStatus.DELETED);
     }
 
     @Override
