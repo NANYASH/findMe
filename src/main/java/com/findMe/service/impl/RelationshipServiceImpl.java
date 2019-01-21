@@ -30,7 +30,7 @@ public class RelationshipServiceImpl implements RelationshipService {
 
         if (relationship == null)
             friendsDAO.addRelationship(userFromId, userToId);
-        else if (relationship.getRelationshipStatus() == RelationshipStatus.DELETED) {
+        else if (relationship.getRelationshipStatus().equals(RelationshipStatus.DELETED)) {
             friendsDAO.updateRelationship(relationship, RelationshipStatus.REQUESTED);
         } else
             throw new BadRequestException("Action cannot be performed for this user.");
