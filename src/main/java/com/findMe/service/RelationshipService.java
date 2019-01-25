@@ -1,6 +1,6 @@
 package com.findMe.service;
 
-import com.findMe.entity.RelationshipStatus;
+import com.findMe.model.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 

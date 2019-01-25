@@ -1,8 +1,8 @@
 package com.findMe.validator;
 
 
-import com.findMe.entity.Relationship;
-import com.findMe.entity.RelationshipStatus;
+import com.findMe.model.Relationship;
+import com.findMe.model.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 
 public class RelationshipValidator {

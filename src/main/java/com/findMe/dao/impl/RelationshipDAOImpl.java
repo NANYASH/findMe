@@ -2,9 +2,9 @@ package com.findMe.dao.impl;
 
 
 import com.findMe.dao.RelationshipDAO;
-import com.findMe.entity.Relationship;
-import com.findMe.entity.RelationshipId;
-import com.findMe.entity.RelationshipStatus;
+import com.findMe.model.Relationship;
+import com.findMe.model.RelationshipId;
+import com.findMe.model.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import org.springframework.stereotype.Repository;
