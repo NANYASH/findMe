@@ -1,8 +1,8 @@
 package com.findMe.service.impl;
 
 import com.findMe.dao.RelationshipDAO;
-import com.findMe.model.Relationship;
-import com.findMe.model.RelationshipStatus;
+import com.findMe.entity.Relationship;
+import com.findMe.entity.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.service.RelationshipService;

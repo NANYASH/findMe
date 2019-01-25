@@ -1,4 +1,4 @@
-package com.findMe.model;
+package com.findMe.entity;
 
 import lombok.*;
 
