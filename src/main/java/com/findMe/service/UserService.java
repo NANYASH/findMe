@@ -1,12 +1,10 @@
 package com.findMe.service;
 
-import com.findMe.model.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.NotFoundException;
 import com.findMe.model.User;
 
-import java.util.List;
 
 public interface UserService {
     User findUserById(Long id) throws InternalServerError, NotFoundException, BadRequestException;

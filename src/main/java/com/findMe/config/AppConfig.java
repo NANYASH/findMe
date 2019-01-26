@@ -33,7 +33,6 @@ public class AppConfig implements WebMvcConfigurer{
     @Autowired
     private ApplicationContext applicationContext;
 
-
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();

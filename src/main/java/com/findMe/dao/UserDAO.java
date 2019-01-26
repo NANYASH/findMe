@@ -1,11 +1,9 @@
 package com.findMe.dao;
 
-import com.findMe.model.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.model.User;
 
-import java.util.List;
 
 public interface UserDAO {
     User register(User user) throws InternalServerError, BadRequestException;
