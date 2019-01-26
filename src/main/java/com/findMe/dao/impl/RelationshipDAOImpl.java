@@ -34,6 +34,13 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
             " GROUP BY (USER_TABLE.ID,STATUS)" +
             " HAVING   USER_TABLE.ID <> ? AND STATUS = ?";
 
+    /**
+     * FIND_BY_RELATIONSHIP_STATUS (second one)
+     * SELECT  USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = ? OR USER_TO_ID = ?
+     * WHERE  USER_FROM_ID = USER_TABLE.ID OR USER_TO_ID = USER_TABLE.ID
+     * AND USER_TABLE.ID <> ? AND STATUS = ?
+     * */
+
     private static final String FIND_REQUESTED_FROM = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON  USER_TABLE.ID = USER_TO_ID" +
             " WHERE USER_FROM_ID = ? AND STATUS = 'REQUESTED'";
 
