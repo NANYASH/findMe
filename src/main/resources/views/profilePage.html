@@ -222,7 +222,7 @@
 
     function deleted(inputId) {
         $.ajax({
-            url: "/updateRelationship",
+            url: "/deleteRelationship",
             type: "POST",
             data: {userFromId: inputId.toString(), status: "DELETED"},
             success: function success() {

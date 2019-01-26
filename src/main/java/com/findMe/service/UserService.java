@@ -12,8 +12,5 @@ public interface UserService {
     User findUserById(Long id) throws InternalServerError, NotFoundException, BadRequestException;
     User registerUser(User user) throws InternalServerError, BadRequestException;
     User login(String login, String userEnteredPassword) throws InternalServerError, BadRequestException;
-    List<User> findByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError;
-    List<User> findRequestedFrom(Long userId) throws InternalServerError;
-    List<User> findRequestedTo(Long userId) throws InternalServerError;
 
 }

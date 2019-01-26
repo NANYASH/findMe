@@ -26,13 +26,14 @@ import static com.findMe.util.Util.validateLogIn;
 @Controller
 public class UserController {
     private UserService userService;
-    private RelationshipService friendsService;
+    private RelationshipService relationshipService;
 
     @Autowired
-    public UserController(UserService userService, RelationshipService friendsService) {
+    public UserController(UserService userService, RelationshipService relationshipService) {
         this.userService = userService;
-        this.friendsService = friendsService;
+        this.relationshipService = relationshipService;
     }
+
 
     @RequestMapping(path = "/user-registration", method = RequestMethod.POST)
     public ResponseEntity registerUser(@ModelAttribute User user) {
@@ -84,7 +85,7 @@ public class UserController {
     public String profile(HttpSession session, Model model, @PathVariable String userId) {
         try {
             Long convertedUserId = convertId(userId);
-            RelationshipStatus relationshipStatus = friendsService.findStatusById(validateLogIn(session).getId(), convertedUserId);
+            RelationshipStatus relationshipStatus = relationshipService.findStatusById(validateLogIn(session).getId(), convertedUserId);
             User found = userService.findUserById(convertedUserId);
 
             model.addAttribute("user", found);
@@ -92,11 +93,11 @@ public class UserController {
                 model.addAttribute("status", relationshipStatus.toString());
             else if (session.getAttribute("user").equals(found)) {
                 model.addAttribute("status", RelationshipStatus.MY_PROFILE.toString());
-                model.addAttribute("requestsFrom", userService.findRequestedFrom(convertedUserId));
-                model.addAttribute("requestsTo", userService.findRequestedTo(convertedUserId));
+                model.addAttribute("requestsFrom", relationshipService.findRequestedFrom(convertedUserId));
+                model.addAttribute("requestsTo", relationshipService.findRequestedTo(convertedUserId));
             } else
                 model.addAttribute("status", RelationshipStatus.NOT_FRIENDS.toString());
-            model.addAttribute("friends", userService.findByRelationshipStatus(convertedUserId, RelationshipStatus.ACCEPTED));
+            model.addAttribute("friends", relationshipService.findByRelationshipStatus(convertedUserId, RelationshipStatus.ACCEPTED));
         } catch (BadRequestException e) {
             e.printStackTrace();
             return "error400";
@@ -111,45 +112,6 @@ public class UserController {
             return "error401";
         }
         return "profilePage";
-    }
-
-    @RequestMapping(path = "/addRelationship", method = RequestMethod.POST)
-    public ResponseEntity addRelationship(HttpSession session, @RequestParam String userToId) {
-        try {
-            friendsService.addRelationship(validateLogIn(session).getId(), convertId(userToId));
-            return new ResponseEntity("Request is sent.", HttpStatus.OK);
-        } catch (UnauthorizedException e) {
-            e.printStackTrace();
-            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (BadRequestException e) {
-            e.printStackTrace();
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (InternalServerError e) {
-            e.printStackTrace();
-            return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @RequestMapping(path = "/updateRelationship", method = RequestMethod.POST)
-    public ResponseEntity updateRelationship(HttpSession session, @RequestParam String userFromId, @RequestParam String status) {
-        RelationshipStatus relationshipStatus;
-        try {
-            relationshipStatus = convertRelationshipStatus(status);
-            if (relationshipStatus.equals(RelationshipStatus.DELETED) || relationshipStatus.equals(RelationshipStatus.ACCEPTED))
-                friendsService.updateRelationship(validateLogIn(session).getId(), convertId(userFromId), relationshipStatus);
-            else
-                friendsService.updateRelationship(convertId(userFromId), validateLogIn(session).getId(), relationshipStatus);
-            return new ResponseEntity("Relationship status is changed to" + status.toString(), HttpStatus.OK);
-        } catch (UnauthorizedException e) {
-            e.printStackTrace();
-            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (BadRequestException e) {
-            e.printStackTrace();
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (InternalServerError e) {
-            e.printStackTrace();
-            return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @RequestMapping(path = "/user-registration", method = RequestMethod.GET)

@@ -13,7 +13,4 @@ public interface UserDAO {
     void delete(Long id) throws InternalServerError;
     User findById(Long id) throws InternalServerError;
     User findByPhoneAndEmail(String phone,String email) throws InternalServerError;
-    List<User> findByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError;
-    List<User> findRequestedFrom(Long userId) throws InternalServerError;
-    List<User> findRequestedTo(Long userId) throws InternalServerError;
 }
