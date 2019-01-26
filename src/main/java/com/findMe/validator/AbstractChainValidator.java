@@ -27,8 +27,7 @@ public abstract class AbstractChainValidator {
     public void setNextValidator(AbstractChainValidator nextValidator) {
         this.nextValidator = nextValidator;
     }
-
-
+    
     abstract RelationshipStatus getCurrentStatus();
 
     abstract RelationshipStatus getNewStatusStatus();

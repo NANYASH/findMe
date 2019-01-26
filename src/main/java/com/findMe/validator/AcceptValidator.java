@@ -4,7 +4,6 @@ import com.findMe.model.RelationshipStatus;
 
 public class AcceptValidator extends AbstractChainValidator {
 
-
     @Override
     RelationshipStatus getCurrentStatus() {
         return RelationshipStatus.REQUESTED;

@@ -35,8 +35,8 @@ public class RelationshipServiceImpl implements RelationshipService {
         if (relationship == null)
             relationshipDAO.addRelationship(userFromId, userToId);
         else if (relationship.getRelationshipStatus().equals(RelationshipStatus.DELETED)) {
-            relationship = relationshipValidator.validateUpdate(relationship,RelationshipStatus.REQUESTED);
-            relationshipDAO.updateRelationship(userFromId, userToId,relationship);
+            relationship = relationshipValidator.validateUpdate(relationship, RelationshipStatus.REQUESTED);
+            relationshipDAO.updateRelationship(userFromId, userToId, relationship);
         } else
             throw new BadRequestException("Action cannot be performed for this user.");
     }
@@ -49,7 +49,7 @@ public class RelationshipServiceImpl implements RelationshipService {
         Relationship relationship = relationshipDAO.getRelationshipFromTo(userFromId, userToId);
 
         relationship = relationshipValidator.validateUpdate(relationship, status);
-        relationshipDAO.updateRelationship(userFromId, userToId,relationship);
+        relationshipDAO.updateRelationship(userFromId, userToId, relationship);
     }
 
     @Override
@@ -60,9 +60,8 @@ public class RelationshipServiceImpl implements RelationshipService {
         Relationship relationship = relationshipDAO.getRelationship(userFromId, userToId);
 
         relationship = relationshipValidator.validateUpdate(relationship, status);
-        relationshipDAO.updateRelationship(userFromId, userToId,relationship);
+        relationshipDAO.updateRelationship(userFromId, userToId, relationship);
     }
-
 
     @Override
     public RelationshipStatus findStatusById(Long userFromId, Long userToId) throws InternalServerError {

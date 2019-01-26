@@ -29,7 +29,6 @@ public class RelationshipController {
         this.relationshipService = relationshipService;
     }
 
-
     @RequestMapping(path = "/addRelationship", method = RequestMethod.POST)
     public ResponseEntity addRelationship(HttpSession session, @RequestParam String userToId) {
         try {

@@ -18,7 +18,6 @@ import java.util.List;
 public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
     private static final String FIND_USER_BY_PHONE_AND_EMAIL = "SELECT * FROM user_table WHERE phone = ? OR email = ?";
 
-
     @Override
     public User register(User user) throws InternalServerError, BadRequestException {
         if (findByPhoneAndEmail(user.getPhone(), user.getEmail()) != null)

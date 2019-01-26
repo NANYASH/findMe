@@ -40,9 +40,6 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     private static final String FIND_REQUESTED_TO = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON  USER_TABLE.ID = USER_FROM_ID" +
             " WHERE USER_TO_ID = ? AND STATUS = 'REQUESTED'";
 
-
-
-
     @Override
     public void addRelationship(Long userFromId, Long userToId) throws InternalServerError, BadRequestException {
         super.save(new Relationship(new RelationshipId(userFromId, userToId), RelationshipStatus.REQUESTED));
@@ -122,7 +119,6 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     public List<User> findRequestedTo(Long userId) throws InternalServerError {
         return findRequested(userId, FIND_REQUESTED_TO);
     }
-
 
     private List<User> findRequested(Long userId, String request) throws InternalServerError {
         try {

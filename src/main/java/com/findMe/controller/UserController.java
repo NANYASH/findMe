@@ -34,7 +34,6 @@ public class UserController {
         this.relationshipService = relationshipService;
     }
 
-
     @RequestMapping(path = "/user-registration", method = RequestMethod.POST)
     public ResponseEntity registerUser(@ModelAttribute User user) {
         try {
@@ -67,7 +66,6 @@ public class UserController {
         }
     }
 
-
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
     public ResponseEntity logOut(HttpSession session) throws BadRequestException {
         try {
@@ -79,7 +77,6 @@ public class UserController {
         session.setAttribute("user", null); // or session.removeAttribute("id");
         return new ResponseEntity(HttpStatus.OK);
     }
-
 
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
     public String profile(HttpSession session, Model model, @PathVariable String userId) {
