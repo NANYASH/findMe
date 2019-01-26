@@ -9,6 +9,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+
 @Entity
 @Table(name = "USER_TABLE")
 @EqualsAndHashCode(exclude = {"dateLastActive","messagesSent","messagesReceived"})

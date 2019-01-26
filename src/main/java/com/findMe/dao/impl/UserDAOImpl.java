@@ -18,18 +18,6 @@ import java.util.List;
 public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
     private static final String FIND_USER_BY_PHONE_AND_EMAIL = "SELECT * FROM user_table WHERE phone = ? OR email = ?";
 
-    private static final String FIND_BY_RELATIONSHIP_STATUS = "SELECT  USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = ? OR USER_TO_ID = ?" +
-            " WHERE  USER_FROM_ID = USER_TABLE.ID OR USER_TO_ID = USER_TABLE.ID" +
-            " GROUP BY (USER_TABLE.ID,STATUS)" +
-            " HAVING   USER_TABLE.ID <> ? AND STATUS = ?";
-
-    private static final String FIND_REQUESTED_FROM = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON  USER_TABLE.ID = USER_TO_ID" +
-            " WHERE USER_FROM_ID = ? AND STATUS = 'REQUESTED'";
-
-    private static final String FIND_REQUESTED_TO = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON  USER_TABLE.ID = USER_FROM_ID" +
-            " WHERE USER_TO_ID = ? AND STATUS = 'REQUESTED'";
-
-
     @Override
     public User register(User user) throws InternalServerError, BadRequestException {
         if (findByPhoneAndEmail(user.getPhone(), user.getEmail()) != null)
@@ -64,43 +52,7 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
     }
 
     @Override
-    public List<User> findByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError {
-        try {
-            Query query = getEntityManager().createNativeQuery(FIND_BY_RELATIONSHIP_STATUS, User.class);
-            query.setParameter(1, userId);
-            query.setParameter(2, userId);
-            query.setParameter(3, userId);
-            query.setParameter(4, status.toString());
-            return query.getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new InternalServerError();
-        }
-    }
-
-    @Override
-    public List<User> findRequestedFrom(Long userId) throws InternalServerError {
-        return findRequested(userId, FIND_REQUESTED_FROM);
-    }
-
-    @Override
-    public List<User> findRequestedTo(Long userId) throws InternalServerError {
-        return findRequested(userId, FIND_REQUESTED_TO);
-    }
-
-    @Override
     Class<User> getEntityClass() {
         return User.class;
-    }
-
-    private List<User> findRequested(Long userId, String request) throws InternalServerError {
-        try {
-            Query query = getEntityManager().createNativeQuery(request, User.class);
-            query.setParameter(1, userId);
-            return query.getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new InternalServerError();
-        }
     }
 }
