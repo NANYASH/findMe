@@ -19,7 +19,6 @@ public abstract class AbstractChainValidator {
 
         if (nextValidator != null)
             return nextValidator.validate(relationship, newStatus);
-
         else
             throw new BadRequestException("Action cannot be performed to this user.");
     }

@@ -46,9 +46,7 @@ public class RelationshipServiceImpl implements RelationshipService {
         if (userFromId.equals(userToId))
             throw new BadRequestException("User cannot change relationship with himself.");
 
-        Relationship relationship = relationshipDAO.getRelationshipFromTo(userFromId, userToId);
-
-        relationship = relationshipValidator.validateUpdate(relationship, status);
+        Relationship relationship = relationshipValidator.validateUpdate(relationshipDAO.getRelationshipFromTo(userFromId, userToId), status);
         relationshipDAO.updateRelationship(userFromId, userToId, relationship);
     }
 
@@ -57,9 +55,7 @@ public class RelationshipServiceImpl implements RelationshipService {
         if (userFromId.equals(userToId))
             throw new BadRequestException("User cannot change relationship with himself.");
 
-        Relationship relationship = relationshipDAO.getRelationship(userFromId, userToId);
-
-        relationship = relationshipValidator.validateUpdate(relationship, status);
+        Relationship relationship = relationshipValidator.validateUpdate(relationshipDAO.getRelationship(userFromId, userToId), status);
         relationshipDAO.updateRelationship(userFromId, userToId, relationship);
     }
 
