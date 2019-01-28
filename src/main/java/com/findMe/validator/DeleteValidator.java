@@ -2,25 +2,28 @@ package com.findMe.validator;
 
 
 import com.findMe.exception.BadRequestException;
+import com.findMe.model.Relationship;
 import com.findMe.model.RelationshipStatus;
 
-import java.time.LocalDate;
+public class DeleteValidator extends AbstractChainValidator{
+    private static final RelationshipStatus currentStatus = RelationshipStatus.ACCEPTED;
+    private static final RelationshipStatus newStatus = RelationshipStatus.DELETED;
 
-
-public class DeleteValidator extends AbstractChainValidator {
-    private static final RelationshipStatus CURRENT_STATUS = RelationshipStatus.ACCEPTED;
-    private static final RelationshipStatus NEW_STATUS = RelationshipStatus.DELETED;
 
     @Override
-    void validate() throws BadRequestException {
-        if (CURRENT_STATUS.equals(super.getRequestData().getRelationship().getRelationshipStatus()) && NEW_STATUS.equals(super.getRequestData().getNewStatus())) {
-            if (super.getRequestData().getRelationship().getLastUpdateDate().plusDays(3).isBefore(LocalDate.now()))
-                return;
-            else
-                throw new BadRequestException("User could be deleted in 3 days from adding. Action cannot be performed.");
+    Relationship validate(Relationship relationship, RelationshipStatus newStatus) throws BadRequestException {
+        if (relationship == null)
+            throw new BadRequestException("No requests from this user.");
+
+        if (currentStatus.equals(newStatus)) {
+            relationship.setRelationshipStatus(newStatus);
+            return relationship;
         }
 
-        checkNextValidator(super.getNextValidator());
+        if (super.getNextValidator()  != null)
+            return super.getNextValidator() .validate(relationship, newStatus);
+        else
+            throw new BadRequestException("Action cannot be performed to this user.");
     }
 
 }

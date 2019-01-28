@@ -1,21 +1,30 @@
 package com.findMe.validator;
 
 
+
 import com.findMe.exception.BadRequestException;
+import com.findMe.model.Relationship;
 import com.findMe.model.RelationshipStatus;
 
 public class RejectValidator extends AbstractChainValidator {
-    private static final RelationshipStatus CURRENT_STATUS = RelationshipStatus.REQUESTED;
-    private static final RelationshipStatus NEW_STATUS = RelationshipStatus.REJECTED;
+    private static final RelationshipStatus currentStatus = RelationshipStatus.REQUESTED;
+    private static final RelationshipStatus newStatus = RelationshipStatus.REJECTED;
 
 
     @Override
-    void validate() throws BadRequestException {
-        if (CURRENT_STATUS.equals(super.getRequestData().getRelationship().getRelationshipStatus()) && NEW_STATUS.equals(super.getRequestData().getNewStatus()))
-            if (super.getRequestData().getRelationship().getRelationshipId().getUserToId().equals(super.getRequestData().getUserToId()))
-                return;
+    Relationship validate(Relationship relationship, RelationshipStatus newStatus) throws BadRequestException {
+        if (relationship == null)
+            throw new BadRequestException("No requests from this user.");
 
-        checkNextValidator(super.getNextValidator());
+        if (currentStatus.equals(newStatus)) {
+            relationship.setRelationshipStatus(newStatus);
+            return relationship;
+        }
+
+        if (super.getNextValidator()  != null)
+            return super.getNextValidator() .validate(relationship, newStatus);
+        else
+            throw new BadRequestException("Action cannot be performed to this user.");
     }
 
 }
