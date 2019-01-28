@@ -48,7 +48,7 @@ public class AppConfig implements WebMvcConfigurer{
     @Bean
     public DriverManagerDataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setDriverClassName("");
         dataSource.setUrl("");
         dataSource.setUsername("");
         dataSource.setPassword("");
