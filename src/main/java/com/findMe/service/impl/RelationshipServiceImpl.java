@@ -2,7 +2,6 @@ package com.findMe.service.impl;
 
 import com.findMe.dao.RelationshipDAO;
 import com.findMe.model.Relationship;
-import com.findMe.model.RelationshipId;
 import com.findMe.model.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
@@ -12,7 +11,6 @@ import com.findMe.validator.RelationshipValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -34,17 +32,14 @@ public class RelationshipServiceImpl implements RelationshipService {
 
         Relationship relationship = relationshipDAO.getRelationship(userFromId, userToId);
 
-        relationshipValidator.validateUpdate(userFromId, userToId, relationship, RelationshipStatus.REQUESTED,
-                relationshipDAO.getNumberOfRelationships(userFromId, RelationshipStatus.ACCEPTED),
-                relationshipDAO.getNumberOfOutgoingRequests(userFromId));
-
-        if (relationship == null) {
-            relationshipDAO.addRelationship(new Relationship(new RelationshipId(userFromId, userToId), RelationshipStatus.REQUESTED, LocalDate.now()));
-        } else {
+        if (relationship == null)
+            relationshipDAO.addRelationship(userFromId, userToId);
+        else if (relationship.getRelationshipStatus().equals(RelationshipStatus.DELETED)) {
+            relationshipValidator.validateUpdate(relationship, RelationshipStatus.REQUESTED);
             relationship.setRelationshipStatus(RelationshipStatus.REQUESTED);
-            relationship.setLastUpdateDate(LocalDate.now());
             relationshipDAO.updateRelationship(userFromId, userToId, relationship);
-        }
+        } else
+            throw new BadRequestException("Action cannot be performed for this user.");
     }
 
     @Override
@@ -52,14 +47,20 @@ public class RelationshipServiceImpl implements RelationshipService {
         if (userFromId.equals(userToId))
             throw new BadRequestException("User cannot change relationship with himself.");
 
-        Relationship relationship = relationshipDAO.getRelationship(userFromId, userToId);
-
-        relationshipValidator.validateUpdate(userFromId, userToId, relationship, status,
-                relationshipDAO.getNumberOfRelationships(userToId, RelationshipStatus.ACCEPTED),
-                relationshipDAO.getNumberOfOutgoingRequests(userFromId));
-
+        Relationship relationship = relationshipDAO.getRelationshipFromTo(userFromId, userToId);
+        relationshipValidator.validateUpdate(relationship, status);
         relationship.setRelationshipStatus(status);
-        relationship.setLastUpdateDate(LocalDate.now());
+        relationshipDAO.updateRelationship(userFromId, userToId, relationship);
+    }
+
+    @Override
+    public void deleteRelationship(Long userFromId, Long userToId, RelationshipStatus status) throws BadRequestException, InternalServerError {
+        if (userFromId.equals(userToId))
+            throw new BadRequestException("User cannot change relationship with himself.");
+
+        Relationship relationship = relationshipDAO.getRelationship(userFromId, userToId);
+        relationshipValidator.validateUpdate(relationship, status);
+        relationship.setRelationshipStatus(status);
         relationshipDAO.updateRelationship(userFromId, userToId, relationship);
     }
 
@@ -77,13 +78,13 @@ public class RelationshipServiceImpl implements RelationshipService {
     }
 
     @Override
-    public List<User> findOutgoingRequests(Long userId) throws InternalServerError {
-        return relationshipDAO.findOutgoingRequests(userId);
+    public List<User> findRequestedFrom(Long userId) throws InternalServerError {
+        return relationshipDAO.findRequestedFrom(userId);
     }
 
     @Override
-    public List<User> findIncomingRequests(Long userId) throws InternalServerError {
-        return relationshipDAO.findIncomingRequests(userId);
+    public List<User> findRequestedTo(Long userId) throws InternalServerError {
+        return relationshipDAO.findRequestedTo(userId);
     }
 
 }
