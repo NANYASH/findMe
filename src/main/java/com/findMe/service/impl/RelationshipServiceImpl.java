@@ -35,7 +35,8 @@ public class RelationshipServiceImpl implements RelationshipService {
         if (relationship == null)
             relationshipDAO.addRelationship(userFromId, userToId);
         else if (relationship.getRelationshipStatus().equals(RelationshipStatus.DELETED)) {
-            relationship = relationshipValidator.validateUpdate(relationship, RelationshipStatus.REQUESTED);
+            relationshipValidator.validateUpdate(relationship, RelationshipStatus.REQUESTED);
+            relationship.setRelationshipStatus(RelationshipStatus.REQUESTED);
             relationshipDAO.updateRelationship(userFromId, userToId, relationship);
         } else
             throw new BadRequestException("Action cannot be performed for this user.");
@@ -46,7 +47,9 @@ public class RelationshipServiceImpl implements RelationshipService {
         if (userFromId.equals(userToId))
             throw new BadRequestException("User cannot change relationship with himself.");
 
-        Relationship relationship = relationshipValidator.validateUpdate(relationshipDAO.getRelationshipFromTo(userFromId, userToId), status);
+        Relationship relationship = relationshipDAO.getRelationshipFromTo(userFromId, userToId);
+        relationshipValidator.validateUpdate(relationship, status);
+        relationship.setRelationshipStatus(status);
         relationshipDAO.updateRelationship(userFromId, userToId, relationship);
     }
 
@@ -55,7 +58,9 @@ public class RelationshipServiceImpl implements RelationshipService {
         if (userFromId.equals(userToId))
             throw new BadRequestException("User cannot change relationship with himself.");
 
-        Relationship relationship = relationshipValidator.validateUpdate(relationshipDAO.getRelationship(userFromId, userToId), status);
+        Relationship relationship = relationshipDAO.getRelationship(userFromId, userToId);
+        relationshipValidator.validateUpdate(relationship, status);
+        relationship.setRelationshipStatus(status);
         relationshipDAO.updateRelationship(userFromId, userToId, relationship);
     }
 

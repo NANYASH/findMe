@@ -6,22 +6,17 @@ import com.findMe.model.Relationship;
 import com.findMe.model.RelationshipStatus;
 
 public class CancelValidator extends AbstractChainValidator{
-    private static final RelationshipStatus currentStatus = RelationshipStatus.REQUESTED;
-    private static final RelationshipStatus newStatus = RelationshipStatus.DELETED;
+    private static final RelationshipStatus CURRENT_STATUS = RelationshipStatus.REQUESTED;
+    private static final RelationshipStatus NEW_STATUS = RelationshipStatus.DELETED;
 
 
     @Override
-    Relationship validate(Relationship relationship, RelationshipStatus newStatus) throws BadRequestException {
-        if (relationship == null)
-            throw new BadRequestException("No requests from this user.");
-
-        if (currentStatus.equals(newStatus)) {
-            relationship.setRelationshipStatus(newStatus);
-            return relationship;
-        }
+    void validate(Relationship relationship, RelationshipStatus newStatus) throws BadRequestException {
+        if (CURRENT_STATUS.equals(relationship.getRelationshipStatus()) && NEW_STATUS.equals(newStatus))
+            return;
 
         if (super.getNextValidator()  != null)
-            return super.getNextValidator() .validate(relationship, newStatus);
+            super.getNextValidator() .validate(relationship, newStatus);
         else
             throw new BadRequestException("Action cannot be performed to this user.");
     }
