@@ -8,7 +8,7 @@ import com.findMe.model.RelationshipStatus;
 public abstract class AbstractChainValidator {
     private AbstractChainValidator nextValidator;
 
-    abstract void validate(Relationship relationship, RelationshipStatus newStatus) throws BadRequestException;
+    abstract void validate(Relationship relationship, RelationshipStatus newStatus, Long numberOfFriends, Long numberOfOutgoingRequests) throws BadRequestException;
 
     public AbstractChainValidator getNextValidator() {
         return nextValidator;

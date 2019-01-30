@@ -10,15 +10,16 @@ public class AcceptValidator extends AbstractChainValidator {
 
 
     @Override
-    void validate(Relationship relationship, RelationshipStatus newStatus) throws BadRequestException {
-        if (relationship == null)
-            throw new BadRequestException("No requests from this user.");
-
-        if (CURRENT_STATUS.equals(relationship.getRelationshipStatus()) && NEW_STATUS.equals(newStatus))
-            return;
+    void validate(Relationship relationship, RelationshipStatus newStatus, Long numberOfFriends, Long numberOfOutgoingRequests) throws BadRequestException {
+        if (CURRENT_STATUS.equals(relationship.getRelationshipStatus()) && NEW_STATUS.equals(newStatus)) {
+            if (numberOfFriends < 100)
+                return;
+            else
+                throw new BadRequestException("Max number of friends. Action cannot be performed.");
+        }
 
         if (super.getNextValidator() != null)
-            super.getNextValidator() .validate(relationship, newStatus);
+            super.getNextValidator().validate(relationship, newStatus, numberOfFriends, numberOfOutgoingRequests);
         else
             throw new BadRequestException("Action cannot be performed to this user.");
     }

@@ -11,12 +11,12 @@ public class CancelValidator extends AbstractChainValidator{
 
 
     @Override
-    void validate(Relationship relationship, RelationshipStatus newStatus) throws BadRequestException {
+    void validate(Relationship relationship, RelationshipStatus newStatus, Long numberOfFriends, Long numberOfOutgoingRequests) throws BadRequestException {
         if (CURRENT_STATUS.equals(relationship.getRelationshipStatus()) && NEW_STATUS.equals(newStatus))
             return;
 
         if (super.getNextValidator()  != null)
-            super.getNextValidator() .validate(relationship, newStatus);
+            super.getNextValidator().validate(relationship, newStatus, numberOfFriends, numberOfOutgoingRequests);
         else
             throw new BadRequestException("Action cannot be performed to this user.");
     }
