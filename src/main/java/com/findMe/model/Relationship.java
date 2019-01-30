@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "RELATIONSHIP")
@@ -23,5 +24,10 @@ public class Relationship implements Serializable{
     @Getter
     @Setter
     private RelationshipStatus relationshipStatus;
+
+    @Column(name = "LAST_UPDATE_DATE")
+    @Getter
+    @Setter
+    private LocalDate lastUpdateDate;
 
 }

@@ -49,12 +49,14 @@ public class RelationshipController {
     @RequestMapping(path = "/updateRelationship", method = RequestMethod.POST)
     public ResponseEntity updateRelationship(HttpSession session, @RequestParam String userFromId, @RequestParam String status) {
         RelationshipStatus relationshipStatus;
+        Long userSessionId;
         try {
             relationshipStatus = convertRelationshipStatus(status);
+            userSessionId = validateLogIn(session).getId();
             if (relationshipStatus.equals(RelationshipStatus.DELETED))
-                relationshipService.updateRelationship(validateLogIn(session).getId(), convertId(userFromId), relationshipStatus);
+                relationshipService.updateRelationship(userSessionId,userSessionId, convertId(userFromId), relationshipStatus);
             else
-                relationshipService.updateRelationship(convertId(userFromId), validateLogIn(session).getId(), relationshipStatus);
+                relationshipService.updateRelationship(userSessionId,convertId(userFromId), userSessionId, relationshipStatus);
             return new ResponseEntity("Relationship status is changed to" + status.toString(), HttpStatus.OK);
         } catch (UnauthorizedException e) {
             e.printStackTrace();

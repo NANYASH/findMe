@@ -3,7 +3,6 @@ package com.findMe.dao.impl;
 
 import com.findMe.dao.RelationshipDAO;
 import com.findMe.model.Relationship;
-import com.findMe.model.RelationshipId;
 import com.findMe.model.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
@@ -26,17 +25,18 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     private static final String FIND_STATUS_BY_ID_FROM_TO = "SELECT * FROM RELATIONSHIP" +
             " WHERE USER_FROM_ID = ? AND USER_TO_ID = ?";
 
-    private static final String UPDATE_RELATIONSHIP = "UPDATE RELATIONSHIP SET USER_FROM_ID = ?, USER_TO_ID = ?, STATUS = ?" +
+    private static final String UPDATE_RELATIONSHIP = "UPDATE RELATIONSHIP SET USER_FROM_ID = ?, USER_TO_ID = ?, STATUS = ?, LAST_UPDATE_DATE = ?" +
             " WHERE USER_FROM_ID = ? AND USER_TO_ID = ?";
 
-    private static final String FIND_BY_RELATIONSHIP_STATUS = "SELECT  USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = USER_TABLE.ID OR USER_TO_ID = USER_TABLE.ID" +
-            " WHERE  USER_FROM_ID = ? OR USER_TO_ID = ?" +
-            " AND USER_TABLE.ID <> ? AND STATUS = ?";
+    private static final String FIND_BY_RELATIONSHIP_STATUS = "SELECT  USER_TABLE.*" +
+            " FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = USER_TABLE.ID OR USER_TO_ID = USER_TABLE.ID" +
+            " WHERE  STATUS = ?" +
+            " AND ((USER_FROM_ID = ? AND USER_TO_ID = user_table.id) OR (USER_TO_ID = ? AND USER_FROM_ID = user_table.id))";
 
     /**
      * FIND_BY_RELATIONSHIP_STATUS (second one)
-     * SELECT  USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = ? OR USER_TO_ID = ?
-     * WHERE  USER_FROM_ID = USER_TABLE.ID OR USER_TO_ID = USER_TABLE.ID
+     * SELECT  USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = USER_TABLE.ID OR USER_TO_ID = USER_TABLE.ID
+     * WHERE USER_FROM_ID = ? OR USER_TO_ID = ?
      * GROUP BY (USER_TABLE.ID,STATUS)
      * HAVING   USER_TABLE.ID <> ? AND STATUS = ?
      * */
@@ -47,9 +47,30 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     private static final String FIND_REQUESTED_TO = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON  USER_TABLE.ID = USER_FROM_ID" +
             " WHERE USER_TO_ID = ? AND STATUS = 'REQUESTED'";
 
+    //Can't handle result (returns list)
+    private static final String COUNT_NUMBER_OF_RELATIONSHIPS_BY_STATUS_NATIVE = "SELECT COUNT(RELATIONSHIP.*)" +
+            " FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = USER_TABLE.ID OR USER_TO_ID = USER_TABLE.ID" +
+            " WHERE  STATUS = ?" +
+            " AND ((USER_FROM_ID = ? AND USER_TO_ID = user_table.id) OR (USER_TO_ID = ? AND USER_FROM_ID = user_table.id))";
+
+    private static final String COUNT_NUMBER_OF_RELATIONSHIPS_BY_STATUS = "SELECT COUNT(r) FROM User u,Relationship r " +
+            " WHERE r.relationshipStatus = :status " +
+            " AND ((r.relationshipId.userFromId = :userId AND r.relationshipId.userToId = u.id) OR (r.relationshipId.userToId = :userId AND r.relationshipId.userFromId = u.id))";
+
+    //Can't handle result (returns list)
+    private static final String COUNT_NUMBER_OF_OUTGOING_REQUESTS_NATIVE = "SELECT COUNT(*)" +
+            " FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = USER_TABLE.ID OR USER_TO_ID = USER_TABLE.ID" +
+            " WHERE STATUS = 'REQUESTED'" +
+            " AND USER_FROM_ID = ? AND USER_TO_ID = USER_TABLE.ID";
+
+    private static final String COUNT_NUMBER_OF_OUTGOING_REQUESTS = "SELECT COUNT(r) FROM User u,Relationship r " +
+            " WHERE r.relationshipStatus = 'REQUESTED' " +
+            " AND r.relationshipId.userFromId = :userId AND r.relationshipId.userToId = u.id";
+
+
     @Override
-    public void addRelationship(Long userFromId, Long userToId) throws InternalServerError, BadRequestException {
-        super.save(new Relationship(new RelationshipId(userFromId, userToId), RelationshipStatus.REQUESTED));
+    public void addRelationship(Relationship relationship) throws InternalServerError, BadRequestException {
+        super.save(relationship);
     }
 
     @Override
@@ -59,8 +80,9 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
             query.setParameter(1, userFromId);
             query.setParameter(2, userToId);
             query.setParameter(3, relationship.getRelationshipStatus().toString());
-            query.setParameter(4, relationship.getRelationshipId().getUserFromId());
-            query.setParameter(5, relationship.getRelationshipId().getUserToId());
+            query.setParameter(4, relationship.getLastUpdateDate());
+            query.setParameter(5, relationship.getRelationshipId().getUserFromId());
+            query.setParameter(6, relationship.getRelationshipId().getUserToId());
             query.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -106,10 +128,9 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     public List<User> findByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError {
         try {
             Query query = getEntityManager().createNativeQuery(FIND_BY_RELATIONSHIP_STATUS, User.class);
-            query.setParameter(1, userId);
+            query.setParameter(1, status.toString());
             query.setParameter(2, userId);
             query.setParameter(3, userId);
-            query.setParameter(4, status.toString());
             return query.getResultList();
         } catch (Exception e) {
             e.printStackTrace();
@@ -127,6 +148,37 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
         return findRequested(userId, FIND_REQUESTED_TO);
     }
 
+    @Override
+    public Long getNumberOfRelationships(Long userId, RelationshipStatus status) throws InternalServerError {
+        try {
+            Query query = getEntityManager().createQuery(COUNT_NUMBER_OF_RELATIONSHIPS_BY_STATUS);
+            query.setParameter("status", status);
+            query.setParameter("userId", userId);
+            return (Long) query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
+    }
+
+    @Override
+    public Long getNumberOfOutgoingRequests(Long userId) throws InternalServerError {
+        try {
+            Query query = getEntityManager().createQuery(COUNT_NUMBER_OF_OUTGOING_REQUESTS);
+            query.setParameter("userId", userId);
+            return (Long) query.getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
+    }
+
+
+    @Override
+    Class<Relationship> getEntityClass() {
+        return Relationship.class;
+    }
+
     private List<User> findRequested(Long userId, String request) throws InternalServerError {
         try {
             Query query = getEntityManager().createNativeQuery(request, User.class);
@@ -136,10 +188,5 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
             e.printStackTrace();
             throw new InternalServerError();
         }
-    }
-
-    @Override
-    Class<Relationship> getEntityClass() {
-        return Relationship.class;
     }
 }
