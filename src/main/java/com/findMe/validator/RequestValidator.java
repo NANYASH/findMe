@@ -11,23 +11,23 @@ public class RequestValidator extends AbstractChainValidator {
 
 
     @Override
-    void validate(Relationship relationship, RelationshipStatus newStatus, Long numberOfFriends, Long numberOfOutgoingRequests) throws BadRequestException {
-        if (relationship == null) {
-            if (newStatus.equals(NEW_STATUS) && numberOfOutgoingRequests < 1)
+    void validate() throws BadRequestException {
+        if (super.getRequestData().getRelationship()== null) {
+            if (super.getRequestData().getNewStatus().equals(NEW_STATUS) && super.getRequestData().getNumberOfOutgoingRequests() < 10)
                 return;
             else
                 throw new BadRequestException("Max number of outgoing requests. Action cannot be performed.");
         }
 
-        if (CURRENT_STATUS.equals(relationship.getRelationshipStatus()) && NEW_STATUS.equals(newStatus)) {
-            if (numberOfOutgoingRequests < 10)
+        if (CURRENT_STATUS.equals(super.getRequestData().getRelationship().getRelationshipStatus()) && NEW_STATUS.equals(super.getRequestData().getNewStatus())) {
+            if (super.getRequestData().getNumberOfOutgoingRequests() < 10)
                 return;
             else
                 throw new BadRequestException("Max number of outgoing requests. Action cannot be performed.");
         }
 
         if (super.getNextValidator() != null)
-            super.getNextValidator().validate(relationship, newStatus, numberOfFriends, numberOfOutgoingRequests);
+            super.getNextValidator().validate();
         else
             throw new BadRequestException("Action cannot be performed to this user.");
     }
