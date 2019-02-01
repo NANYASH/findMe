@@ -14,16 +14,16 @@ public class DeleteValidator extends AbstractChainValidator {
 
 
     @Override
-    void validate(Relationship relationship, RelationshipStatus newStatus, Long numberOfFriends, Long numberOfOutgoingRequests) throws BadRequestException {
-        if (CURRENT_STATUS.equals(relationship.getRelationshipStatus()) && NEW_STATUS.equals(newStatus)) {
-            if (relationship.getLastUpdateDate().plusDays(3).isBefore(LocalDate.now()))
+    void validate() throws BadRequestException {
+        if (CURRENT_STATUS.equals(super.getRequestData().getRelationship().getRelationshipStatus()) && NEW_STATUS.equals(super.getRequestData().getNewStatus())) {
+            if (super.getRequestData().getRelationship().getLastUpdateDate().plusDays(3).isBefore(LocalDate.now()))
                 return;
             else
                 throw new BadRequestException("User could be deleted in 3 days from adding. Action cannot be performed.");
         }
 
         if (super.getNextValidator() != null)
-            super.getNextValidator().validate(relationship, newStatus, numberOfFriends, numberOfOutgoingRequests);
+            super.getNextValidator().validate();
         else
             throw new BadRequestException("Action cannot be performed to this user.");
     }

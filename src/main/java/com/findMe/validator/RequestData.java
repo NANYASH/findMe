@@ -10,13 +10,17 @@ import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
-@Getter
-@Setter
 public class RequestData {
-    private Long userFromId;
-    private Long userToId;
+    @Getter
+    @Setter
     private Relationship relationship;
+    @Getter
+    @Setter
     private RelationshipStatus newStatus;
+    @Getter
+    @Setter
     private Long numberOfFriends;
+    @Getter
+    @Setter
     private Long numberOfOutgoingRequests;
 }
