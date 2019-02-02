@@ -2,7 +2,6 @@ package com.findMe.validator;
 
 
 import com.findMe.exception.BadRequestException;
-import com.findMe.model.Relationship;
 import com.findMe.model.RelationshipStatus;
 
 import java.time.LocalDate;
@@ -22,10 +21,7 @@ public class DeleteValidator extends AbstractChainValidator {
                 throw new BadRequestException("User could be deleted in 3 days from adding. Action cannot be performed.");
         }
 
-        if (super.getNextValidator() != null)
-            super.getNextValidator().validate();
-        else
-            throw new BadRequestException("Action cannot be performed to this user.");
+        checkNextValidator(super.getNextValidator());
     }
 
 }

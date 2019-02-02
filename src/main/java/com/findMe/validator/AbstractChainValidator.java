@@ -16,4 +16,11 @@ public abstract class AbstractChainValidator {
     private RequestData requestData;
 
     abstract void validate() throws BadRequestException;
+
+    void checkNextValidator(AbstractChainValidator nextValidator) throws BadRequestException {
+        if (nextValidator!= null)
+            nextValidator.validate();
+        else
+            throw new BadRequestException("Action cannot be performed to this user.");
+    }
 }

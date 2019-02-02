@@ -2,7 +2,6 @@ package com.findMe.validator;
 
 
 import com.findMe.exception.BadRequestException;
-import com.findMe.model.Relationship;
 import com.findMe.model.RelationshipStatus;
 
 public class RequestValidator extends AbstractChainValidator {
@@ -13,23 +12,20 @@ public class RequestValidator extends AbstractChainValidator {
     @Override
     void validate() throws BadRequestException {
         if (super.getRequestData().getRelationship()== null) {
-            if (super.getRequestData().getNewStatus().equals(NEW_STATUS) && super.getRequestData().getNumberOfOutgoingRequests() < 10)
+            if (super.getRequestData().getNewStatus().equals(NEW_STATUS) && super.getRequestData().getNumberOfOutgoingRequests() < 1)
                 return;
             else
                 throw new BadRequestException("Max number of outgoing requests. Action cannot be performed.");
         }
 
         if (CURRENT_STATUS.equals(super.getRequestData().getRelationship().getRelationshipStatus()) && NEW_STATUS.equals(super.getRequestData().getNewStatus())) {
-            if (super.getRequestData().getNumberOfOutgoingRequests() < 10)
+            if (super.getRequestData().getNumberOfOutgoingRequests() < 1)
                 return;
             else
                 throw new BadRequestException("Max number of outgoing requests. Action cannot be performed.");
         }
 
-        if (super.getNextValidator() != null)
-            super.getNextValidator().validate();
-        else
-            throw new BadRequestException("Action cannot be performed to this user.");
+        checkNextValidator(super.getNextValidator());
     }
 
 }
