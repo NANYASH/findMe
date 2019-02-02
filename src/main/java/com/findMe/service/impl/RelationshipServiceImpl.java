@@ -56,7 +56,7 @@ public class RelationshipServiceImpl implements RelationshipService {
         Relationship relationship = relationshipDAO.getRelationshipFromTo(userFromId, userToId);
 
         if (userSessionId.equals(userToId))
-            relationshipValidator.validateUpdate(relationship, status, relationshipDAO.getNumberOfRelationships(userToId, status),
+            relationshipValidator.validateUpdate(relationship, status, relationshipDAO.getNumberOfRelationships(userToId, RelationshipStatus.ACCEPTED),
                     relationshipDAO.getNumberOfOutgoingRequests(userFromId));
         else
             relationshipValidator.validateUpdate(relationship, status, relationshipDAO.getNumberOfRelationships(userFromId, RelationshipStatus.ACCEPTED),
