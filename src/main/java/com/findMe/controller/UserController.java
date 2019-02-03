@@ -20,7 +20,6 @@ import javax.servlet.http.HttpSession;
 
 
 import static com.findMe.util.Util.convertId;
-import static com.findMe.util.Util.convertRelationshipStatus;
 import static com.findMe.util.Util.validateLogIn;
 
 @Controller
@@ -90,8 +89,8 @@ public class UserController {
                 model.addAttribute("status", relationshipStatus.toString());
             else if (session.getAttribute("user").equals(found)) {
                 model.addAttribute("status", RelationshipStatus.MY_PROFILE.toString());
-                model.addAttribute("requestsFrom", relationshipService.findRequestedFrom(convertedUserId));
-                model.addAttribute("requestsTo", relationshipService.findRequestedTo(convertedUserId));
+                model.addAttribute("outgoingRequests", relationshipService.findOutgoingRequests(convertedUserId));
+                model.addAttribute("incomingRequests", relationshipService.findIncomingRequests(convertedUserId));
             } else
                 model.addAttribute("status", RelationshipStatus.NOT_FRIENDS.toString());
             model.addAttribute("friends", relationshipService.findByRelationshipStatus(convertedUserId, RelationshipStatus.ACCEPTED));

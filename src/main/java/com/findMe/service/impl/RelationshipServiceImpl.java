@@ -86,13 +86,13 @@ public class RelationshipServiceImpl implements RelationshipService {
     }
 
     @Override
-    public List<User> findRequestedFrom(Long userId) throws InternalServerError {
-        return relationshipDAO.findRequestedFrom(userId);
+    public List<User> findOutgoingRequests(Long userId) throws InternalServerError {
+        return relationshipDAO.findOutgoingRequests(userId);
     }
 
     @Override
-    public List<User> findRequestedTo(Long userId) throws InternalServerError {
-        return relationshipDAO.findRequestedTo(userId);
+    public List<User> findIncomingRequests(Long userId) throws InternalServerError {
+        return relationshipDAO.findIncomingRequests(userId);
     }
 
 }
