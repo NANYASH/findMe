@@ -15,8 +15,8 @@ public interface RelationshipDAO {
     Relationship getRelationship(Long userFromId, Long userToId) throws InternalServerError;
     Relationship getRelationshipFromTo(Long userFromId, Long userToId) throws InternalServerError;
     List<User> findByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError;
-    List<User> findRequestedFrom(Long userId) throws InternalServerError;
-    List<User> findRequestedTo(Long userId) throws InternalServerError;
+    List<User> findOutgoingRequests(Long userId) throws InternalServerError;
+    List<User> findIncomingRequests(Long userId) throws InternalServerError;
     Long getNumberOfRelationships(Long userId, RelationshipStatus status) throws InternalServerError;
     Long getNumberOfOutgoingRequests(Long userId) throws InternalServerError;
 }

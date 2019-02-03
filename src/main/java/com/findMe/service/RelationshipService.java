@@ -12,6 +12,6 @@ public interface RelationshipService {
     void updateRelationship(Long userFromId, Long userToId, RelationshipStatus status) throws BadRequestException, InternalServerError;
     RelationshipStatus findStatusById(Long userFromId, Long userToId) throws InternalServerError;
     List<User> findByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError;
-    List<User> findRequestedFrom(Long userId) throws InternalServerError;
-    List<User> findRequestedTo(Long userId) throws InternalServerError;
+    List<User> findOutgoingRequests(Long userId) throws InternalServerError;
+    List<User> findIncomingRequests(Long userId) throws InternalServerError;
 }
