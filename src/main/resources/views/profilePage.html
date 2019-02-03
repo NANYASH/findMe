@@ -110,7 +110,7 @@
                             <button id="add-button" class="btn btn-success" type="submit">Add</button>
                         </div>
                         <div th:if="${status} eq 'ACCEPTED'">
-                            <button id="delete-button" class="btn btn-success" type="submit">Delete</button>
+                            <button id="delete-button" th:onclick="'remove(\'' + ${user.getId()} + '\');'" class="btn btn-success" type="submit">Delete</button>
                         </div>
                         <!--<div th:if="${status} eq 'REQUESTED'">
 
@@ -137,7 +137,7 @@
     <tr th:each="friend : ${friends}">
         <div>
             <td>
-                <a th:href="@{'/user/' + ${friend.getId()}}">
+               <!-- <a th:href="@{'/user/' + ${friend.getId()}}">-->
             <td th:text="${friend.getFirstName()}+' '+${friend.getLastName()} "/>
             </a>
             </td>
@@ -155,13 +155,13 @@
     <div class="panel-heading">Incoming requests</div>
     <div class="panel-body"></div>
 
-    <tr th:each="requestTo : ${requestsTo}">
+    <tr th:each="incomingRequest : ${incomingRequests}">
         <div>
             <td>
-                <a th:href="@{'/user/' + ${requestTo.getId()}}">
-            <td th:text="${requestTo.getFirstName()}+' '+${requestTo.getLastName()} "/>
-            <button id="accept-button" th:onclick="'accept(\'' + ${requestTo.getId()} + '\');'" class="btn btn-success" type="submit">Accept</button>
-            <button id="reject-button" th:onclick="'reject(\'' + ${requestTo.getId()} + '\');'" class="btn btn-success" type="submit">Reject</button>
+               <!-- <a th:href="@{'/user/' + ${requestTo.getId()}}">-->
+            <td th:text="${incomingRequest.getFirstName()}+' '+${incomingRequest.getLastName()} "/>
+            <button id="accept-button" th:onclick="'accept(\'' + ${incomingRequest.getId()} + '\');'" class="btn btn-success" type="submit">Accept</button>
+            <button id="reject-button" th:onclick="'reject(\'' + ${incomingRequest.getId()} + '\');'" class="btn btn-success" type="submit">Reject</button>
             </a>
             </td>
         </div>
@@ -172,12 +172,12 @@
     <div class="panel-heading">Outgoing requests</div>
     <div class="panel-body"></div>
 
-    <tr th:each="requestFrom : ${requestsFrom}">
+    <tr th:each="outgoingRequest : ${outgoingRequests}">
         <div>
             <td>
-                <a th:href="@{'/user/' + ${requestFrom.getId()}}">
-            <td th:text="${requestFrom.getFirstName()}+' '+${requestFrom.getLastName()} "/>
-            <button id="reject-request-button" th:onclick="'rejectRequest(\'' + ${requestFrom.getId()} + '\');'" class="btn btn-success" type="submit">Reject request</button>
+               <!-- <a th:href="@{'/user/' + ${requestFrom.getId()}}">-->
+            <td th:text="${outgoingRequest.getFirstName()}+' '+${outgoingRequest.getLastName()} "/>
+            <button id="reject-request-button" th:onclick="'cancel(\'' + ${outgoingRequest.getId()} + '\');'" class="btn btn-success" type="submit">Reject request</button>
             </a>
             </td>
         </div>
@@ -220,11 +220,11 @@
         })
     })
 
-    $("#delete-button").click(function () {
+    function remove(inputId) {
         $.ajax({
-            url: "/deleteRelationship",
+            url: "/updateRelationship",
             type: "POST",
-            data: {userToId: userId.toString()},
+            data: {userFromId: inputId.toString(), status: "DELETED"},
             success: function success() {
                 alert("User is deleted from friends.")
             },
@@ -232,7 +232,7 @@
                 alert(xhr.responseText);
             }
         })
-    })
+    }
 
     function accept(inputId) {
         $.ajax({
@@ -262,11 +262,11 @@
         })
     }
 
-   function rejectRequest(inputId) {
+   function cancel(inputId) {
         $.ajax({
-            url: "/rejectRequest",
+            url: "/updateRelationship",
             type: "POST",
-            data: {userToId: inputId},
+            data: {userFromId: inputId.toString(), status: "CANCELED"},
             success: function success() {
                 alert("Request is rejected.")
             },

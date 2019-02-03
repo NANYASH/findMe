@@ -1,38 +1,38 @@
 package com.findMe.validator;
 
 
-import com.findMe.entity.Relationship;
-import com.findMe.entity.RelationshipStatus;
+import com.findMe.model.Relationship;
+import com.findMe.model.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RelationshipValidator {
 
-    public static void validateUpdate(Relationship relationship, RelationshipStatus newStatus) throws BadRequestException {
-        if (relationship == null)
-            throw new BadRequestException("No requests from this user.");
+    public Relationship validateUpdate(Relationship relationship, RelationshipStatus newStatus, Long numberOfFriends, Long numberOfOutgoingRequests) throws BadRequestException {
+        RequestData requestData = new RequestData(relationship,newStatus,numberOfFriends,numberOfOutgoingRequests);
+        AbstractChainValidator requestValidator = new RequestValidator();
+        AbstractChainValidator rejectValidator = new RejectValidator();
+        AbstractChainValidator cancelValidator = new CancelValidator();
+        AbstractChainValidator deleteValidator = new DeleteValidator();
+        AbstractChainValidator acceptValidator = new AcceptValidator();
 
-        if (relationship.getRelationshipStatus().equals(RelationshipStatus.REQUESTED) && newStatus.equals(RelationshipStatus.ACCEPTED))
-            return;
-        if (relationship.getRelationshipStatus().equals(RelationshipStatus.REQUESTED) && newStatus.equals(RelationshipStatus.REJECTED))
-            return;
-        /*if (relationship.getRelationshipStatus() == RelationshipStatus.REJECTED && newStatus == RelationshipStatus.REQUESTED)
-            return;*/
+        requestValidator.setNextValidator(rejectValidator);
+        requestValidator.setRequestData(requestData);
 
-        throw new BadRequestException("Action cannot be performed for this user.");
-    }
+        rejectValidator.setNextValidator(cancelValidator);
+        rejectValidator.setRequestData(requestData);
 
-    public static void validateDelete(Relationship relationship) throws BadRequestException {
-        if (relationship == null)
-            throw new BadRequestException("Users are not friends.");
+        cancelValidator.setNextValidator(deleteValidator);
+        cancelValidator.setRequestData(requestData);
 
-        if (relationship.getRelationshipStatus().equals(RelationshipStatus.ACCEPTED))
-            return;
+        deleteValidator.setNextValidator(acceptValidator);
+        deleteValidator.setRequestData(requestData);
 
-        throw new BadRequestException("Action cannot be performed for this user.");
-    }
+        acceptValidator.setRequestData(requestData);
 
-    public static void validateReject(Relationship relationship) throws BadRequestException {
-        if (relationship == null || !relationship.getRelationshipStatus().equals(RelationshipStatus.REQUESTED))
-            throw new BadRequestException("No requests to this user.");
+        requestValidator.validate();
+
+        return relationship;
     }
 }

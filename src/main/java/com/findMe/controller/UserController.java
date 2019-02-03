@@ -1,6 +1,6 @@
 package com.findMe.controller;
 
-import com.findMe.entity.RelationshipStatus;
+import com.findMe.model.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.NotFoundException;
@@ -20,18 +20,17 @@ import javax.servlet.http.HttpSession;
 
 
 import static com.findMe.util.Util.convertId;
-import static com.findMe.util.Util.convertRelationshipStatus;
 import static com.findMe.util.Util.validateLogIn;
 
 @Controller
 public class UserController {
     private UserService userService;
-    private RelationshipService friendsService;
+    private RelationshipService relationshipService;
 
     @Autowired
-    public UserController(UserService userService, RelationshipService friendsService) {
+    public UserController(UserService userService, RelationshipService relationshipService) {
         this.userService = userService;
-        this.friendsService = friendsService;
+        this.relationshipService = relationshipService;
     }
 
     @RequestMapping(path = "/user-registration", method = RequestMethod.POST)
@@ -66,7 +65,6 @@ public class UserController {
         }
     }
 
-
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
     public ResponseEntity logOut(HttpSession session) throws BadRequestException {
         try {
@@ -79,24 +77,23 @@ public class UserController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
     public String profile(HttpSession session, Model model, @PathVariable String userId) {
         try {
             Long convertedUserId = convertId(userId);
-            RelationshipStatus relationshipStatus = friendsService.findStatusById(validateLogIn(session).getId(), convertedUserId);
-            User found =  userService.findUserById(convertedUserId);
+            RelationshipStatus relationshipStatus = relationshipService.findStatusById(validateLogIn(session).getId(), convertedUserId);
+            User found = userService.findUserById(convertedUserId);
 
             model.addAttribute("user", found);
             if (relationshipStatus != null)
                 model.addAttribute("status", relationshipStatus.toString());
-            else if(session.getAttribute("user").equals(found)) {
+            else if (session.getAttribute("user").equals(found)) {
                 model.addAttribute("status", RelationshipStatus.MY_PROFILE.toString());
-                model.addAttribute("requestsFrom", userService.findRequestedFrom(convertedUserId));
-                model.addAttribute("requestsTo", userService.findRequestedTo(convertedUserId));
-            }else
+                model.addAttribute("outgoingRequests", relationshipService.findOutgoingRequests(convertedUserId));
+                model.addAttribute("incomingRequests", relationshipService.findIncomingRequests(convertedUserId));
+            } else
                 model.addAttribute("status", RelationshipStatus.NOT_FRIENDS.toString());
-            model.addAttribute("friends", userService.findByRelationshipStatus(convertedUserId, RelationshipStatus.ACCEPTED));
+            model.addAttribute("friends", relationshipService.findByRelationshipStatus(convertedUserId, RelationshipStatus.ACCEPTED));
         } catch (BadRequestException e) {
             e.printStackTrace();
             return "error400";
@@ -111,74 +108,6 @@ public class UserController {
             return "error401";
         }
         return "profilePage";
-    }
-
-    @RequestMapping(path = "/addRelationship", method = RequestMethod.POST)
-    public ResponseEntity addRelationship(HttpSession session, @RequestParam String userToId) {
-        try {
-            friendsService.addRelationship(validateLogIn(session).getId(), convertId(userToId));
-            return new ResponseEntity("Request is sent.", HttpStatus.OK);
-        } catch (UnauthorizedException e) {
-            e.printStackTrace();
-            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (BadRequestException e) {
-            e.printStackTrace();
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (InternalServerError e) {
-            e.printStackTrace();
-            return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @RequestMapping(path = "/deleteRelationship", method = RequestMethod.POST)
-    public ResponseEntity deleteRelationship(HttpSession session, @RequestParam String userToId) {
-        try {
-            friendsService.deleteRelationship(validateLogIn(session).getId(), convertId(userToId));
-            return new ResponseEntity("User is deleted from friends./Request is deleted.", HttpStatus.OK);
-        } catch (UnauthorizedException e) {
-            e.printStackTrace();
-            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (BadRequestException e) {
-            e.printStackTrace();
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (InternalServerError e) {
-            e.printStackTrace();
-            return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @RequestMapping(path = "/updateRelationship", method = RequestMethod.POST)
-    public ResponseEntity updateRelationship(HttpSession session, @RequestParam String userFromId, @RequestParam String status) {
-        try {
-            friendsService.updateRelationship(convertId(userFromId), validateLogIn(session).getId(), convertRelationshipStatus(status));
-            return new ResponseEntity("Relationship status is changed to" + status.toString(), HttpStatus.OK);
-        } catch (UnauthorizedException e) {
-            e.printStackTrace();
-            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (BadRequestException e) {
-            e.printStackTrace();
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (InternalServerError e) {
-            e.printStackTrace();
-            return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @RequestMapping(path = "/rejectRequest", method = RequestMethod.POST)
-    public ResponseEntity rejectRequest(HttpSession session, @RequestParam String userToId) {
-        try {
-            friendsService.rejectRequest(validateLogIn(session).getId(), convertId(userToId));
-            return new ResponseEntity("Request is rejected.", HttpStatus.OK);
-        } catch (UnauthorizedException e) {
-            e.printStackTrace();
-            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (BadRequestException e) {
-            e.printStackTrace();
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (InternalServerError e) {
-            e.printStackTrace();
-            return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @RequestMapping(path = "/user-registration", method = RequestMethod.GET)

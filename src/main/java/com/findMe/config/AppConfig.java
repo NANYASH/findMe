@@ -33,7 +33,6 @@ public class AppConfig implements WebMvcConfigurer{
     @Autowired
     private ApplicationContext applicationContext;
 
-
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
@@ -50,9 +49,9 @@ public class AppConfig implements WebMvcConfigurer{
     public DriverManagerDataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://findme.cnrx1jkycv8d.us-east-2.rds.amazonaws.com:5432/postgres");
-        dataSource.setUsername("main");
-        dataSource.setPassword("asol1998");
+        dataSource.setUrl("");
+        dataSource.setUsername("");
+        dataSource.setPassword("");
         return dataSource;
     }
 

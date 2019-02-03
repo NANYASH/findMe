@@ -1,4 +1,4 @@
-package com.findMe.entity;
+package com.findMe.model;
 
 import lombok.*;
 
@@ -11,14 +11,13 @@ import java.io.Serializable;
 @ToString
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
+@Getter
+@Setter
 public class RelationshipId implements Serializable {
+
     @Column(name = "USER_FROM_ID")
-    @Getter
-    @Setter
     private Long userFromId;
 
     @Column(name = "USER_TO_ID")
-    @Getter
-    @Setter
     private Long userToId;
 }

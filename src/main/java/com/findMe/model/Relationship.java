@@ -1,9 +1,10 @@
-package com.findMe.entity;
+package com.findMe.model;
 
 import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "RELATIONSHIP")
@@ -11,17 +12,18 @@ import java.io.Serializable;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
+@Getter
+@Setter
 public class Relationship implements Serializable{
 
     @EmbeddedId
-    @Getter
-    @Setter
     private RelationshipId relationshipId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS")
-    @Getter
-    @Setter
     private RelationshipStatus relationshipStatus;
+
+    @Column(name = "LAST_UPDATE_DATE")
+    private LocalDate lastUpdateDate;
 
 }
