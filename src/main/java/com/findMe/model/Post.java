@@ -13,30 +13,24 @@ import java.util.Date;
 @Table(name = "POST")
 @EqualsAndHashCode
 @ToString
+@Getter
+@Setter
 public class Post {
 
     @SequenceGenerator(name = "POST_SEQ", sequenceName = "POST_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "POST_SEQ")
     @Id
     @Column(name = "ID")
-    @Getter
-    @Setter
     private Long id;
 
     @Column(name = "TEXT")
-    @Getter
-    @Setter
     private String text;
 
     @Column(name = "DATE_POSTED")
-    @Getter
-    @Setter
     private Date datePosted;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "ID_USER_POSTED")
-    @Getter
-    @Setter
     private User userPosted;
     //TODO
     // levels permissions
