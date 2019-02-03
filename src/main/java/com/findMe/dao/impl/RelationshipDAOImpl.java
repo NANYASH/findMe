@@ -39,12 +39,12 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
      * WHERE USER_FROM_ID = ? OR USER_TO_ID = ?
      * GROUP BY (USER_TABLE.ID,STATUS)
      * HAVING   USER_TABLE.ID <> ? AND STATUS = ?
-     * */
+     */
 
-    private static final String FIND_REQUESTED_FROM = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON  USER_TABLE.ID = USER_TO_ID" +
+    private static final String FIND_OUTGOING_REQUESTS = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON  USER_TABLE.ID = USER_TO_ID" +
             " WHERE USER_FROM_ID = ? AND STATUS = 'REQUESTED'";
 
-    private static final String FIND_REQUESTED_TO = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON  USER_TABLE.ID = USER_FROM_ID" +
+    private static final String FIND_INCOMING_REQUESTS = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON  USER_TABLE.ID = USER_FROM_ID" +
             " WHERE USER_TO_ID = ? AND STATUS = 'REQUESTED'";
 
     //Can't handle result (returns list)
@@ -74,7 +74,7 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     }
 
     @Override
-    public void updateRelationship(Long userFromId, Long userToId,Relationship relationship) throws InternalServerError, BadRequestException {
+    public void updateRelationship(Long userFromId, Long userToId, Relationship relationship) throws InternalServerError, BadRequestException {
         try {
             Query query = getEntityManager().createNativeQuery(UPDATE_RELATIONSHIP, Relationship.class);
             query.setParameter(1, userFromId);
@@ -139,13 +139,13 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     }
 
     @Override
-    public List<User> findRequestedFrom(Long userId) throws InternalServerError {
-        return findRequested(userId, FIND_REQUESTED_FROM);
+    public List<User> findOutgoingRequests(Long userId) throws InternalServerError {
+        return findRequested(userId, FIND_OUTGOING_REQUESTS);
     }
 
     @Override
-    public List<User> findRequestedTo(Long userId) throws InternalServerError {
-        return findRequested(userId, FIND_REQUESTED_TO);
+    public List<User> findIncomingRequests(Long userId) throws InternalServerError {
+        return findRequested(userId, FIND_INCOMING_REQUESTS);
     }
 
     @Override

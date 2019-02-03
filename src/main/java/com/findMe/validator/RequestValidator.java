@@ -19,7 +19,8 @@ public class RequestValidator extends AbstractChainValidator {
                 throw new BadRequestException("Max number of outgoing requests. Action cannot be performed.");
         }
 
-        if ((CURRENT_STATUS1.equals(super.getRequestData().getRelationship().getRelationshipStatus()) || CURRENT_STATUS2.equals(super.getRequestData().getRelationship().getRelationshipStatus()))
+        if ((CURRENT_STATUS1.equals(super.getRequestData().getRelationship().getRelationshipStatus())
+                || CURRENT_STATUS2.equals(super.getRequestData().getRelationship().getRelationshipStatus()))
                 && NEW_STATUS.equals(super.getRequestData().getNewStatus())){
             if (super.getRequestData().getNumberOfOutgoingRequests() < 10)
                 return;
