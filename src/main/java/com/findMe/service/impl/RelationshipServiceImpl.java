@@ -49,32 +49,24 @@ public class RelationshipServiceImpl implements RelationshipService {
     }
 
     @Override
-    public void updateRelationship(Long userSessionId, Long userFromId, Long userToId, RelationshipStatus status) throws BadRequestException, InternalServerError {
+    public void updateRelationship(Long userFromId, Long userToId, RelationshipStatus status) throws BadRequestException, InternalServerError {
         if (userFromId.equals(userToId))
             throw new BadRequestException("User cannot change relationship with himself.");
 
-        Relationship relationship = relationshipDAO.getRelationshipFromTo(userFromId, userToId);
+        Relationship relationship;
 
-        if (userSessionId.equals(userToId))
+        if (status.equals(RelationshipStatus.DELETED))
+            relationship = relationshipDAO.getRelationship(userFromId, userToId);
+        else
+            relationship = relationshipDAO.getRelationshipFromTo(userFromId, userToId);
+
+        if (status.equals(RelationshipStatus.CANCELED))
             relationshipValidator.validateUpdate(relationship, status, relationshipDAO.getNumberOfRelationships(userToId, RelationshipStatus.ACCEPTED),
                     relationshipDAO.getNumberOfOutgoingRequests(userFromId));
         else
             relationshipValidator.validateUpdate(relationship, status, relationshipDAO.getNumberOfRelationships(userFromId, RelationshipStatus.ACCEPTED),
                     relationshipDAO.getNumberOfOutgoingRequests(userFromId));
 
-        relationship.setRelationshipStatus(status);
-        relationship.setLastUpdateDate(LocalDate.now());
-        relationshipDAO.updateRelationship(userFromId, userToId, relationship);
-    }
-
-    @Override
-    public void deleteRelationship(Long userFromId, Long userToId, RelationshipStatus status) throws BadRequestException, InternalServerError {
-        if (userFromId.equals(userToId))
-            throw new BadRequestException("User cannot change relationship with himself.");
-
-        Relationship relationship = relationshipDAO.getRelationship(userFromId, userToId);
-        relationshipValidator.validateUpdate(relationship, status, relationshipDAO.getNumberOfRelationships(userFromId, status),
-                relationshipDAO.getNumberOfOutgoingRequests(userFromId));
         relationship.setRelationshipStatus(status);
         relationship.setLastUpdateDate(LocalDate.now());
         relationshipDAO.updateRelationship(userFromId, userToId, relationship);
