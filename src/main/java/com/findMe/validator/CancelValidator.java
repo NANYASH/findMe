@@ -6,7 +6,7 @@ import com.findMe.model.RelationshipStatus;
 
 public class CancelValidator extends AbstractChainValidator{
     private static final RelationshipStatus CURRENT_STATUS = RelationshipStatus.REQUESTED;
-    private static final RelationshipStatus NEW_STATUS = RelationshipStatus.DELETED;
+    private static final RelationshipStatus NEW_STATUS = RelationshipStatus.CANCELED;
 
     @Override
     void validate() throws BadRequestException {

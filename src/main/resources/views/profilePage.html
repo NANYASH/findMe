@@ -137,7 +137,7 @@
     <tr th:each="friend : ${friends}">
         <div>
             <td>
-                <a th:href="@{'/user/' + ${friend.getId()}}">
+               <!-- <a th:href="@{'/user/' + ${friend.getId()}}">-->
             <td th:text="${friend.getFirstName()}+' '+${friend.getLastName()} "/>
             </a>
             </td>
@@ -158,7 +158,7 @@
     <tr th:each="requestTo : ${requestsTo}">
         <div>
             <td>
-                <a th:href="@{'/user/' + ${requestTo.getId()}}">
+               <!-- <a th:href="@{'/user/' + ${requestTo.getId()}}">-->
             <td th:text="${requestTo.getFirstName()}+' '+${requestTo.getLastName()} "/>
             <button id="accept-button" th:onclick="'accept(\'' + ${requestTo.getId()} + '\');'" class="btn btn-success" type="submit">Accept</button>
             <button id="reject-button" th:onclick="'reject(\'' + ${requestTo.getId()} + '\');'" class="btn btn-success" type="submit">Reject</button>
@@ -175,7 +175,7 @@
     <tr th:each="requestFrom : ${requestsFrom}">
         <div>
             <td>
-                <a th:href="@{'/user/' + ${requestFrom.getId()}}">
+               <!-- <a th:href="@{'/user/' + ${requestFrom.getId()}}">-->
             <td th:text="${requestFrom.getFirstName()}+' '+${requestFrom.getLastName()} "/>
             <button id="reject-request-button" th:onclick="'rejectRequest(\'' + ${requestFrom.getId()} + '\');'" class="btn btn-success" type="submit">Reject request</button>
             </a>
@@ -222,7 +222,7 @@
 
     function deleted(inputId) {
         $.ajax({
-            url: "/deleteRelationship",
+            url: "/updateRelationship",
             type: "POST",
             data: {userFromId: inputId.toString(), status: "DELETED"},
             success: function success() {
@@ -266,7 +266,7 @@
         $.ajax({
             url: "/updateRelationship",
             type: "POST",
-            data: {userFromId: inputId.toString(), status: "DELETED"},
+            data: {userFromId: inputId.toString(), status: "CANCELED"},
             success: function success() {
                 alert("Request is rejected.")
             },
