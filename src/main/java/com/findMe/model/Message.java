@@ -7,7 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -28,10 +27,10 @@ public class Message {
     private String text;
 
     @Column(name = "DATE_SENT")
-    private LocalDate dateSent;
+    private Date dateSent;
 
     @Column(name = "DATE_READ")
-    private LocalDate dateRead;
+    private Date dateRead;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "ID_USER_FROM")
