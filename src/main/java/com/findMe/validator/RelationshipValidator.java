@@ -29,6 +29,8 @@ public class RelationshipValidator {
         deleteValidator.setNextValidator(acceptValidator);
         deleteValidator.setRequestData(requestData);
 
+        acceptValidator.setRequestData(requestData);
+
         requestValidator.validate();
 
         return relationship;
