@@ -34,7 +34,7 @@ public class RelationshipServiceImpl implements RelationshipService {
 
         Relationship relationship = relationshipDAO.getRelationship(userFromId, userToId);
 
-        relationshipValidator.validateUpdate(relationship, RelationshipStatus.REQUESTED, relationshipDAO.getNumberOfRelationships(userFromId, RelationshipStatus.ACCEPTED),
+        relationshipValidator.validateUpdate(userFromId, userToId, relationship, RelationshipStatus.REQUESTED, relationshipDAO.getNumberOfRelationships(userFromId, RelationshipStatus.ACCEPTED),
                 relationshipDAO.getNumberOfOutgoingRequests(userFromId));
 
         if (relationship == null) {
@@ -53,12 +53,8 @@ public class RelationshipServiceImpl implements RelationshipService {
 
         Relationship relationship = relationshipDAO.getRelationship(userFromId, userToId);
 
-        if (status.equals(RelationshipStatus.CANCELED))
-            relationshipValidator.validateUpdate(relationship, status, relationshipDAO.getNumberOfRelationships(userToId, RelationshipStatus.ACCEPTED),
-                    relationshipDAO.getNumberOfOutgoingRequests(userFromId));
-        else
-            relationshipValidator.validateUpdate(relationship, status, relationshipDAO.getNumberOfRelationships(userFromId, RelationshipStatus.ACCEPTED),
-                    relationshipDAO.getNumberOfOutgoingRequests(userFromId));
+        relationshipValidator.validateUpdate(userFromId, userToId, relationship, status, relationshipDAO.getNumberOfRelationships(userToId, RelationshipStatus.ACCEPTED),
+                relationshipDAO.getNumberOfOutgoingRequests(userFromId));
 
         relationship.setRelationshipStatus(status);
         relationship.setLastUpdateDate(LocalDate.now());
