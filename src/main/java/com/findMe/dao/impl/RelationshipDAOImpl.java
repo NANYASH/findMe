@@ -22,9 +22,6 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     private static final String FIND_STATUS_BY_ID = "SELECT * FROM RELATIONSHIP" +
             " WHERE USER_FROM_ID = ? AND USER_TO_ID = ? OR USER_FROM_ID = ? AND USER_TO_ID = ?";
 
-    private static final String FIND_STATUS_BY_ID_FROM_TO = "SELECT * FROM RELATIONSHIP" +
-            " WHERE USER_FROM_ID = ? AND USER_TO_ID = ?";
-
     private static final String UPDATE_RELATIONSHIP = "UPDATE RELATIONSHIP SET USER_FROM_ID = ?, USER_TO_ID = ?, STATUS = ?, LAST_UPDATE_DATE = ?" +
             " WHERE USER_FROM_ID = ? AND USER_TO_ID = ?";
 
@@ -98,22 +95,6 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
             query.setParameter(2, userToId);
             query.setParameter(3, userToId);
             query.setParameter(4, userFromId);
-            return (Relationship) query.getSingleResult();
-        } catch (NoResultException e) {
-            e.printStackTrace();
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new InternalServerError();
-        }
-    }
-
-    @Override
-    public Relationship getRelationshipFromTo(Long userFromId, Long userToId) throws InternalServerError {
-        try {
-            Query query = getEntityManager().createNativeQuery(FIND_STATUS_BY_ID_FROM_TO, Relationship.class);
-            query.setParameter(1, userFromId);
-            query.setParameter(2, userToId);
             return (Relationship) query.getSingleResult();
         } catch (NoResultException e) {
             e.printStackTrace();

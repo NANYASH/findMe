@@ -1,7 +1,6 @@
 package com.findMe.validator;
 
 
-
 import com.findMe.exception.BadRequestException;
 import com.findMe.model.RelationshipStatus;
 
@@ -13,7 +12,8 @@ public class RejectValidator extends AbstractChainValidator {
     @Override
     void validate() throws BadRequestException {
         if (CURRENT_STATUS.equals(super.getRequestData().getRelationship().getRelationshipStatus()) && NEW_STATUS.equals(super.getRequestData().getNewStatus()))
-            return;
+            if (super.getRequestData().getRelationship().getRelationshipId().getUserToId().equals(super.getRequestData().getUserToId()))
+                return;
 
         checkNextValidator(super.getNextValidator());
     }
