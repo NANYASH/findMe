@@ -1,7 +1,6 @@
 package com.findMe.validator;
 
 
-
 import com.findMe.exception.BadRequestException;
 import com.findMe.model.RelationshipStatus;
 
