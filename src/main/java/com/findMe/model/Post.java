@@ -8,7 +8,6 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -24,16 +23,14 @@ public class Post {
     @Id
     @Column(name = "ID")
     private Long id;
-
-
+    
     @Column(name = "TEXT", length = 200)
-    //200 symbols max
     private String text;
 
     @Column(name = "DATE_POSTED")
     private LocalDate datePosted;
 
-    //no validation
+    @Column(name = "LOCATION")
     private String location;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
