@@ -106,7 +106,7 @@
                         <p class="text-center" style="display:inline" th:text="${user.university}"/>
                         <div/>
 
-                        <div th:if="${status} eq 'NOT_FRIENDS' or ${status} eq 'DELETED'">
+                        <div th:if="${status} eq 'NOT_FRIENDS' or ${status} eq 'CANCELED'">
                             <button id="add-button" class="btn btn-success" type="submit">Add</button>
                         </div>
                         <div th:if="${status} eq 'ACCEPTED'">
@@ -177,7 +177,7 @@
             <td>
                <!-- <a th:href="@{'/user/' + ${requestFrom.getId()}}">-->
             <td th:text="${outgoingRequest.getFirstName()}+' '+${outgoingRequest.getLastName()} "/>
-            <button id="reject-request-button" th:onclick="'cancel(\'' + ${outgoingRequest.getId()} + '\');'" class="btn btn-success" type="submit">Reject request</button>
+            <button id="reject-request-button" th:onclick="'cancel(\'' + ${outgoingRequest.getId()} + '\');'" class="btn btn-success" type="submit">Cancel request</button>
             </a>
             </td>
         </div>
@@ -268,7 +268,7 @@
             type: "POST",
             data: {userFromId: inputId.toString(), status: "CANCELED"},
             success: function success() {
-                alert("Request is rejected.")
+                alert("Request is canceled.")
             },
             error: function error(xhr) {
                 alert(xhr.responseText);
