@@ -2,8 +2,6 @@ package com.findMe.validator;
 
 
 import com.findMe.exception.BadRequestException;
-import com.findMe.model.Relationship;
-import com.findMe.model.RelationshipStatus;
 import lombok.Getter;
 import lombok.Setter;
 
