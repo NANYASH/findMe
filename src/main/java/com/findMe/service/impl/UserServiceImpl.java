@@ -10,6 +10,7 @@ import com.findMe.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Service
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(User user) throws InternalServerError, BadRequestException {
-        user.setDateRegistered(new Date());
+        user.setDateRegistered(LocalDate.now());
         return userDAO.register(user);
     }
 
@@ -42,6 +43,12 @@ public class UserServiceImpl implements UserService {
         if (user != null && user.getPassword().equals(userEnteredPassword))
             return user;
         throw new BadRequestException("Incorrect credentials.");
+    }
+
+    @Override
+    public User logout(User user, LocalDate localDate) throws InternalServerError, BadRequestException {
+        user.setDateLastActive(LocalDate.now());
+        return userDAO.update(user);
     }
 
 }
