@@ -13,6 +13,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RequestData {
+    private Long userFromId;
+    private Long userToId;
     private Relationship relationship;
     private RelationshipStatus newStatus;
     private Long numberOfFriends;

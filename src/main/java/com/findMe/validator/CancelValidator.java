@@ -11,7 +11,8 @@ public class CancelValidator extends AbstractChainValidator {
     @Override
     void validate() throws BadRequestException {
         if (CURRENT_STATUS.equals(super.getRequestData().getRelationship().getRelationshipStatus()) && NEW_STATUS.equals(super.getRequestData().getNewStatus()))
-            return;
+            if (super.getRequestData().getRelationship().getRelationshipId().getUserFromId().equals(super.getRequestData().getUserFromId()))
+                return;
 
         checkNextValidator(super.getNextValidator());
     }

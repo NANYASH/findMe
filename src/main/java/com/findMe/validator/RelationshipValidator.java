@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class RelationshipValidator {
 
-    public Relationship validateUpdate(Relationship relationship, RelationshipStatus newStatus, Long numberOfFriends, Long numberOfOutgoingRequests) throws BadRequestException {
-        RequestData requestData = new RequestData(relationship,newStatus,numberOfFriends,numberOfOutgoingRequests);
+    public Relationship validateUpdate(Long userFromId, Long userToId,Relationship relationship, RelationshipStatus newStatus, Long numberOfFriends, Long numberOfOutgoingRequests) throws BadRequestException {
+        RequestData requestData = new RequestData(userFromId, userToId, relationship,newStatus,numberOfFriends,numberOfOutgoingRequests);
         AbstractChainValidator requestValidator = new RequestValidator();
         AbstractChainValidator rejectValidator = new RejectValidator();
         AbstractChainValidator cancelValidator = new CancelValidator();
