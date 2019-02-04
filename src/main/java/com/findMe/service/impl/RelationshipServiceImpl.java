@@ -34,18 +34,16 @@ public class RelationshipServiceImpl implements RelationshipService {
 
         Relationship relationship = relationshipDAO.getRelationship(userFromId, userToId);
 
+        relationshipValidator.validateUpdate(relationship, RelationshipStatus.REQUESTED, relationshipDAO.getNumberOfRelationships(userFromId, RelationshipStatus.ACCEPTED),
+                relationshipDAO.getNumberOfOutgoingRequests(userFromId));
+
         if (relationship == null) {
-            relationshipValidator.validateUpdate(relationship, RelationshipStatus.REQUESTED, relationshipDAO.getNumberOfRelationships(userFromId, RelationshipStatus.REQUESTED),
-                    relationshipDAO.getNumberOfOutgoingRequests(userFromId));
             relationshipDAO.addRelationship(new Relationship(new RelationshipId(userFromId, userToId), RelationshipStatus.REQUESTED, LocalDate.now()));
-        } else if (relationship.getRelationshipStatus().equals(RelationshipStatus.DELETED)) {
-            relationshipValidator.validateUpdate(relationship, RelationshipStatus.REQUESTED, relationshipDAO.getNumberOfRelationships(userFromId, RelationshipStatus.ACCEPTED),
-                    relationshipDAO.getNumberOfOutgoingRequests(userFromId));
+        } else {
             relationship.setRelationshipStatus(RelationshipStatus.REQUESTED);
             relationship.setLastUpdateDate(LocalDate.now());
             relationshipDAO.updateRelationship(userFromId, userToId, relationship);
-        } else
-            throw new BadRequestException("Action cannot be performed for this user.");
+        }
     }
 
     @Override
@@ -53,12 +51,7 @@ public class RelationshipServiceImpl implements RelationshipService {
         if (userFromId.equals(userToId))
             throw new BadRequestException("User cannot change relationship with himself.");
 
-        Relationship relationship;
-
-        if (status.equals(RelationshipStatus.DELETED))
-            relationship = relationshipDAO.getRelationship(userFromId, userToId);
-        else
-            relationship = relationshipDAO.getRelationshipFromTo(userFromId, userToId);
+        Relationship relationship = relationshipDAO.getRelationship(userFromId, userToId);
 
         if (status.equals(RelationshipStatus.CANCELED))
             relationshipValidator.validateUpdate(relationship, status, relationshipDAO.getNumberOfRelationships(userToId, RelationshipStatus.ACCEPTED),

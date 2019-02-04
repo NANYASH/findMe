@@ -11,10 +11,10 @@ public class AcceptValidator extends AbstractChainValidator {
     @Override
     void validate() throws BadRequestException {
         if (CURRENT_STATUS.equals(super.getRequestData().getRelationship().getRelationshipStatus()) && NEW_STATUS.equals(super.getRequestData().getNewStatus())) {
-            if (super.getRequestData().getNumberOfFriends() < 100)
-                return;
-            else
-                throw new BadRequestException("Max number of friends. Action cannot be performed.");
+                if (super.getRequestData().getNumberOfFriends() < 100)
+                    return;
+                else
+                    throw new BadRequestException("Max number of friends. Action cannot be performed.");
         }
 
         checkNextValidator(super.getNextValidator());
