@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -47,10 +48,10 @@ public class User {
     private Integer age;
 
     @Column(name = "DATE_REGISTERED")
-    private Date dateRegistered;
+    private LocalDate dateRegistered;
 
     @Column(name = "DATE_LAST_ACTIVE")
-    private Date dateLastActive;
+    private LocalDate dateLastActive;
 
     //TODO enum
     @Column(name = "RELATIONSHIPS_STATUS")

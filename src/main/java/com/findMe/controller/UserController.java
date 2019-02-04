@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 
+import java.time.LocalDate;
+
 import static com.findMe.util.Util.convertId;
 import static com.findMe.util.Util.validateLogIn;
 
@@ -66,13 +68,15 @@ public class UserController {
     }
 
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
-    public ResponseEntity logOut(HttpSession session) throws BadRequestException {
+    public ResponseEntity logOut(HttpSession session) throws BadRequestException, InternalServerError {
+        User user;
         try {
-            validateLogIn(session);
+            user = validateLogIn(session);
         } catch (UnauthorizedException e) {
             e.printStackTrace();
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
+        userService.logout(user, LocalDate.now());
         session.setAttribute("user", null); // or session.removeAttribute("id");
         return new ResponseEntity(HttpStatus.OK);
     }
