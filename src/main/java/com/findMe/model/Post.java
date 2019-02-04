@@ -7,7 +7,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "POST")
@@ -23,18 +25,31 @@ public class Post {
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "TEXT")
+
+    @Column(name = "TEXT", length = 200)
+    //200 symbols max
     private String text;
 
     @Column(name = "DATE_POSTED")
-    private Date datePosted;
+    private LocalDate datePosted;
+
+    //no validation
+    private String location;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "ID_USER_POSTED")
+    @JoinColumn(name = "USER_POSTED_ID")
     private User userPosted;
     //TODO
     // levels permissions
 
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "USER_PAGE_ID")
+    private User userPagePosted;
+
     //TODO
     //comments
+
+    @OneToMany(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "USER_TAGGED_ID")
+    List<User> usersTagged;
 }
