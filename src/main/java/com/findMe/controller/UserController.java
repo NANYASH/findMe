@@ -111,7 +111,7 @@ public class UserController {
             e.printStackTrace();
             return "error401";
         }
-        return "profilePage";
+        return "profile";
     }
 
     @RequestMapping(path = "/user-registration", method = RequestMethod.GET)
