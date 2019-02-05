@@ -23,7 +23,7 @@ public class Post {
     @Id
     @Column(name = "ID")
     private Long id;
-    
+
     @Column(name = "TEXT", length = 200)
     private String text;
 

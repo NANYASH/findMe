@@ -1,0 +1,363 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"
+      xmlns:th="http://www.thymeleaf.org">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Find me</title>
+
+    <!-- Custom styles  -->
+    <link href="../css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+<header>
+    <div class="container">
+        <h2>Find me
+            <form class="form-inline">
+                <button id="logout-button" th:onclick="'logout();'" class="btn btn-default">Log out</button>
+                <br>
+            </form>
+        </h2>
+    </div>
+</header>
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="profile">
+                    <h1 class="page-header"><p th:text="${user.firstName} +' '+${user.lastName}"></h1>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="../img/user.png" class="img-thumbnail" alt="">
+                        </div>
+                        <div class="col-md-8">
+                            <ul>
+                                <li><strong>First name:</strong>
+                                    <p th:text="${user.firstName}"></p></li>
+                                <li><strong>Last name:</strong>
+                                    <p th:text="${user.lastName}"></p></li>
+                                <li><strong>Phone:</strong>
+                                    <p th:text="${user.phone}"></p></li>
+                                <li><strong>Country:</strong>
+                                    <p th:text="${user.country}"></p></li>
+                                <li><strong>City:</strong>
+                                    <p th:text="${user.city}"></p></li>
+                                <li><strong>Age:</strong>
+                                    <p th:text="${user.age}"></p></li>
+                                <li><strong>Date registered:</strong>
+                                    <p th:text="${user.dateRegistered}"></p></li>
+                                <li><strong>Date last active:</strong>
+                                    <p th:text="${user.dateLastActive}"></p></li>
+                                <li><strong>Relationship status:</strong>
+                                    <p th:text="${user.relationshipsStatus}"></p></li>
+                                <li><strong>Religion:</strong>
+                                    <p th:text="${user.religion}"></p></li>
+                                <li><strong>School:</strong>
+                                    <p th:text="${user.school}"></p></li>
+                                <li><strong>University:</strong>
+                                    <p th:text="${user.university}"></p></li>
+                            </ul>
+
+
+                            <div class="row member-row">
+                                <div class="col-md-3" th:if="${status} eq 'NOT_FRIENDS' or ${status} eq 'CANCELED'">
+                                    <p>
+                                        <button id="add-button" th:onclick="'add(\'' + ${user.getId()} + '\');'"
+                                                class="btn btn-success">
+                                            <i class="fa fa-users"></i>
+                                            Add
+                                        </button>
+                                    </p>
+                                </div>
+
+                                <div class="col-md-3" th:if="${status} eq 'ACCEPTED'">
+                                    <p>
+                                        <button id="delete-button" th:onclick="'remove(\'' + ${user.getId()} + '\');'"
+                                                class="btn btn-danger">
+                                            <i class="fa fa-envelope"></i>
+                                            Remove
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Profile Wall</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <textarea class="form-control" placeholder="Write on the wall"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-default">Submit</button>
+                                        <div class="pull-right">
+                                            <div class="btn-toolbar">
+                                                <button type="button" class="btn btn-default"><i
+                                                        class="fa fa-pencil"></i>Text
+                                                </button>
+                                                <button type="button" class="btn btn-default"><i
+                                                        class="fa fa-file-image-o"></i>Image
+                                                </button>
+                                                <button type="button" class="btn btn-default"><i
+                                                        class="fa fa-file-video-o"></i>Video
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-5">
+                <div class="panel panel-default friends">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">My Friends</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <tr th:each="friend : ${friends}">
+                            <div class="row member-row">
+                                <div class="col-md-3">
+                                    <li><a href="profile.html" class="thumbnail"><img src="../img/user.png" alt=""></a>
+                                    </li>
+                                    <div class="text-center">
+                                        <td th:text="${friend.getFirstName()}+' '+${friend.getLastName()} "/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <p><a href="#" class="btn btn-default"><i class="fa fa-users"></i> Send Message </a>
+                                    </p>
+                                </div>
+                            </div>
+                            <hr style="margin:5px 0 5px 0;">
+                        </tr>
+
+
+                    </div>
+                </div>
+
+
+                <div th:if="${status} eq 'MY_PROFILE'">
+
+
+                    <div class="panel panel-default friends">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Incoming Requests</h3>
+                        </div>
+
+                        <tr th:each="incomingRequest : ${incomingRequests}">
+                            <div class="panel-body">
+
+                                <div class="row member-row">
+                                    <div class="col-md-3">
+                                        <li><a href="profile.html" class="thumbnail"><img src="../img/user.png" alt=""></a>
+                                        </li>
+                                        <div class="text-center">
+                                            <td th:text="${incomingRequest.getFirstName()}+' '+${incomingRequest.getLastName()} "/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p>
+                                            <button id="accept-button"
+                                                    th:onclick="'accept(\'' + ${incomingRequest.getId()} + '\');'"
+                                                    class="btn btn-success"><i class="fa fa-users"></i> Accept
+                                                Request
+                                            </button>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p>
+                                            <button id="reject-button"
+                                                    th:onclick="'reject(\'' + ${incomingRequest.getId()} + '\');'"
+                                                    class="btn btn-danger"><i class="fa fa-envelope"></i> Reject Request
+                                            </button>
+                                        </p>
+                                    </div>
+                                    <hr style="margin:5px 0 5px 0;">
+                                </div>
+
+                            </div>
+                        </tr>
+
+
+                    </div>
+
+
+                    <div class="panel panel-default friends">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Outgoing Requests</h3>
+                        </div>
+
+                        <tr th:each="outgoingRequest : ${outgoingRequests}">
+                            <div class="panel-body">
+
+                                <div class="row member-row">
+                                    <div class="col-md-3">
+                                        <li><a href="profile.html" class="thumbnail"><img src="../img/user.png" alt=""></a>
+                                        </li>
+                                        <div class="text-center">
+                                            <td th:text="${outgoingRequest.getFirstName()}+' '+${outgoingRequest.getLastName()} "/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p>
+                                            <button id="reject-request-button"
+                                                    th:onclick="'cancel(\'' + ${outgoingRequest.getId()} + '\');'"
+                                                    class="btn btn-danger"><i class="fa fa-users"></i> Cancel Request
+                                            </button>
+                                        </p>
+
+                                    </div>
+                                    <hr style="margin:5px 0 5px 0;">
+
+                                </div>
+
+                            </div>
+                        </tr>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</section>
+
+<footer>
+    <div class="container">
+        <p>Dobble Copyright &copy, 2019</p>
+    </div>
+</footer>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script>
+    var userId = window.location.pathname.split('/').pop();
+
+    function logout() {
+        $.ajax({
+            url: "/logout",
+            type: "GET",
+            success: function success() {
+                alert("User is logged out.")
+            },
+            error: function error(xhr) {
+                alert(xhr.responseText);
+            }
+        })
+    }
+
+    function add(inputId) {
+        $.ajax({
+            url: "/addRelationship",
+            type: "POST",
+            data: {userToId: userId.toString()},
+            success: function success() {
+                alert("User is requested to be a friend.")
+            },
+            error: function error(xhr) {
+                alert(xhr.responseText);
+            }
+        })
+    }
+
+    function remove(inputId) {
+        $.ajax({
+            url: "/updateRelationship",
+            type: "POST",
+            data: {userFromId: inputId.toString(), status: "DELETED"},
+            success: function success() {
+                alert("User is deleted from friends.")
+            },
+            error: function error(xhr) {
+                alert(xhr.responseText);
+            }
+        })
+    }
+
+    function accept(inputId) {
+        $.ajax({
+            url: "/updateRelationship",
+            type: "POST",
+            data: {userFromId: inputId.toString(), status: "ACCEPTED"},
+            success: function success() {
+                alert("User is successfully accepted to friends.")
+            },
+            error: function error(xhr) {
+                alert(xhr.responseText);
+            }
+        })
+    }
+
+    function reject(inputId) {
+        $.ajax({
+            url: "/updateRelationship",
+            type: "POST",
+            data: {userFromId: inputId.toString(), status: "REJECTED"},
+            success: function success() {
+                alert("User is rejected.")
+            },
+            error: function error(xhr) {
+                alert(xhr.responseText);
+            }
+        })
+    }
+
+    function cancel(inputId) {
+        $.ajax({
+            url: "/updateRelationship",
+            type: "POST",
+            data: {userFromId: inputId.toString(), status: "CANCELED"},
+            success: function success() {
+                alert("Request is canceled.")
+            },
+            error: function error(xhr) {
+                alert(xhr.responseText);
+            }
+        })
+    }
+</script>
+</body>
+</html>
