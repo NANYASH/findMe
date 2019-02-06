@@ -33,13 +33,13 @@ public class Post {
     @Column(name = "LOCATION")
     private String location;
 
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "USER_POSTED_ID")
     private User userPosted;
     //TODO
     // levels permissions
 
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "USER_PAGE_ID")
     private User userPagePosted;
 

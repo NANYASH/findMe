@@ -23,8 +23,10 @@
     <div class="container">
         <h2>Find me
             <form class="form-inline">
-                <button id="logout-button" th:onclick="'logout();'" class="btn btn-default">Log out</button>
-                <br>
+                <div th:if="${status} != null">
+                    <button id="logout-button" th:onclick="'logout();'" class="btn btn-default">Log out</button>
+                    <br>
+                </div>
             </form>
         </h2>
     </div>
@@ -54,7 +56,12 @@
         <div class="row">
             <div class="col-md-7">
                 <div class="profile">
-                    <h1 class="page-header"><p th:text="${user.firstName} +' '+${user.lastName}"></h1>
+                    <div class="page-header">
+                        <h1><p th:text="${user.firstName} +' '+${user.lastName}"></h1>
+                        <div th:if="${status} eq 'REQUESTED' or ${status} eq 'CANCELED' or ${status} eq 'REJECTED' or ${status} eq 'ACCEPTED' or ${status} eq 'DELETED'">
+                            <h5>Relationship status:<p th:text="${status}"></h5>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-4">
                             <img src="../img/user.png" class="img-thumbnail" alt="">
@@ -109,8 +116,6 @@
                                     </p>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                     <br><br>
@@ -120,65 +125,99 @@
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Profile Wall</h3>
                                 </div>
-                                <div class="panel-body">
-                                    <form id = "post-id">
-                                        <div class="form-group">
-                                            <textarea class="form-control" placeholder="Write on the wall"></textarea>
-                                        </div>
-                                        <button type="submit" class="btn btn-default">Submit</button>
-                                        <div class="pull-right">
-                                            <div class="btn-toolbar">
-                                                <button type="button" class="btn btn-default"><i
-                                                        class="fa fa-pencil"></i>Text
-                                                </button>
-                                                <button type="button" class="btn btn-default"><i
-                                                        class="fa fa-map-marker"></i>Image
-                                                </button>
-                                                <button type="button" class="btn btn-default"><i
-                                                        class="fa fa-file-video-o"></i>Video
-                                                </button>
+                                <div th:if=" ${status} eq 'ACCEPTED' or ${status} eq 'MY_PROFILE'">
+                                    <div class="panel-body">
+
+                                        <form id="create-post">
+                                            <div class="form-group">
+                                                <textarea class="form-control"
+                                                          placeholder="Write on the wall"></textarea>
                                             </div>
-                                        </div>
-                                    </form>
+                                            <button type="submit" class="btn btn-default">Submit</button>
+                                            <div class="pull-right">
+                                                <div class="btn-toolbar">
+                                                    <select class="form-group" id="selectFriend">
+                                                        <option selected="selected">
+                                                            Friends
+                                                        </option>
+                                                        <tr th:each="friend : ${friends}">
+                                                            <option th:text="${friend.getFirstName()}+' '+${friend.getLastName()}"/>
+                                                        </tr>
+                                                    </select>
+                                                    <button type="button" class="btn btn-link"><i
+                                                            class="fa fa-map-marker"></i>
+                                                    </button>
+
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
 
-            <div class="col-md-5">
-                <div class="panel panel-default friends">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">My Friends</h3>
-                    </div>
-                    <div class="panel-body">
-
-                        <tr th:each="friend : ${friends}">
-                            <div class="row member-row">
-                                <div class="col-md-3">
-                                    <li><a href="profile.html" class="thumbnail"><img src="../img/user.png" alt=""></a>
-                                    </li>
-                                    <div class="text-center">
-                                        <td th:text="${friend.getFirstName()}+' '+${friend.getLastName()} "/>
-                                    </div>
+                <tr th:each="post : ${posts}">
+                    <div class="panel panel-default post">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <a href="" class="post-avatar thumbnail"><img src="../img/user.png" alt="">
+                                    </a>
+                                    <div class="text-center"
+                                         th:text="${post.getUserPosted().getFirstName()}+' '+${post.getUserPosted().getLastName()}"></div>
                                 </div>
-                                <div class="col-md-4">
-                                    <p><a href="#" class="btn btn-default"><i class="fa fa-users"></i> Send Message </a>
-                                    </p>
+                                <div class="col-sm-10">
+                                    <div class="bubble">
+                                        <div class="pointer">
+                                            <p th:text="${post.getText()}"></p>
+                                        </div>
+                                        <div class="pointer-border"></div>
+                                    </div>
+                                    <div class="clearfix"></div>
                                 </div>
                             </div>
-                            <hr style="margin:5px 0 5px 0;">
-                        </tr>
 
+                            <div class="text-right"
+                                 th:text="${post.getLocation()}+' '+${post.getDatePosted()}"></div>
+                        </div>
+                    </div>
+                </tr>
+            </div>
+            <div class="col-md-5">
+                <div th:if="${status} eq 'MY_PROFILE' or ${status} eq 'ACCEPTED'">
+                    <div class="panel panel-default friends">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Friends</h3>
+                        </div>
+                        <div class="panel-body">
 
+                            <tr th:each="friend : ${friends}">
+                                <div class="row member-row">
+                                    <div class="col-md-3">
+                                        <li><a th:href="@{'/user/' + ${friend.getId()}}" class="thumbnail"><img
+                                                src="../img/user.png" alt=""></a>
+                                        </li>
+                                        <div class="text-center">
+                                            <td th:text="${friend.getFirstName()}+' '+${friend.getLastName()} "/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p><a href="#" class="btn btn-default"><i class="fa fa-users"></i> Send Message
+                                        </a>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr style="margin:5px 0 5px 0;">
+                            </tr>
+                        </div>
                     </div>
                 </div>
 
 
                 <div th:if="${status} eq 'MY_PROFILE'">
-
 
                     <div class="panel panel-default friends">
                         <div class="panel-heading">
@@ -190,7 +229,8 @@
 
                                 <div class="row member-row">
                                     <div class="col-md-3">
-                                        <li><a href="profile.html" class="thumbnail"><img src="../img/user.png" alt=""></a>
+                                        <li><a th:href="@{'/user/' + ${incomingRequest.getId()}}" class="thumbnail"><img
+                                                src="../img/user.png" alt=""></a>
                                         </li>
                                         <div class="text-center">
                                             <td th:text="${incomingRequest.getFirstName()}+' '+${incomingRequest.getLastName()} "/>
@@ -209,7 +249,8 @@
                                         <p>
                                             <button id="reject-button"
                                                     th:onclick="'reject(\'' + ${incomingRequest.getId()} + '\');'"
-                                                    class="btn btn-danger"><i class="fa fa-envelope"></i> Reject Request
+                                                    class="btn btn-danger"><i class="fa fa-envelope"></i> Reject
+                                                Request
                                             </button>
                                         </p>
                                     </div>
@@ -218,7 +259,6 @@
 
                             </div>
                         </tr>
-
 
                     </div>
 
@@ -233,7 +273,8 @@
 
                                 <div class="row member-row">
                                     <div class="col-md-3">
-                                        <li><a href="profile.html" class="thumbnail"><img src="../img/user.png" alt=""></a>
+                                        <li><a th:href="@{'/user/' + ${outgoingRequest.getId()}}" class="thumbnail"><img
+                                                src="../img/user.png" alt=""></a>
                                         </li>
                                         <div class="text-center">
                                             <td th:text="${outgoingRequest.getFirstName()}+' '+${outgoingRequest.getLastName()} "/>
@@ -243,18 +284,16 @@
                                         <p>
                                             <button id="reject-request-button"
                                                     th:onclick="'cancel(\'' + ${outgoingRequest.getId()} + '\');'"
-                                                    class="btn btn-danger"><i class="fa fa-users"></i> Cancel Request
+                                                    class="btn btn-danger"><i class="fa fa-users"></i> Cancel
+                                                Request
                                             </button>
                                         </p>
 
                                     </div>
                                     <hr style="margin:5px 0 5px 0;">
-
                                 </div>
-
                             </div>
                         </tr>
-
                     </div>
                 </div>
             </div>
