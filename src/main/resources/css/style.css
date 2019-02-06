@@ -18,9 +18,10 @@ header .logo{
     color: #fff !important;
 }
 
+
 .bubble{
 	position: relative;
-	width: 580px;
+	width: 520px;
 	min-height: 65px;
 	padding: 15px;
 	background: #fff;
@@ -159,8 +160,10 @@ footer{
 }
 
 #bg {
-	min-height: 100%;
-	min-width: 100%;
-	-webkit-background-size: cover;
-	background-size: cover;
+	width: 100%;
 }
+.input-xs, select.input-xs {
+	height: 50px;
+	line-height: 50px;
+}
+
