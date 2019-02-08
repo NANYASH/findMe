@@ -46,9 +46,9 @@ public class Post {
     //TODO
     //comments
 
-    @ManyToMany(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinTable(name = "USERS_TAGGED",
-            joinColumns = @JoinColumn(name = "USER_ID"),
-            inverseJoinColumns = @JoinColumn(name = "POST_ID"))
+            joinColumns = @JoinColumn(name = "POST_ID"),
+            inverseJoinColumns = @JoinColumn(name = "USER_ID"))
     private List<User> usersTagged;
 }

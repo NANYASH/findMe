@@ -1,6 +1,6 @@
 package com.findMe.controller;
 
-import com.findMe.model.RelationshipStatus;
+import com.findMe.model.enums.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.NotFoundException;
@@ -61,7 +61,7 @@ public class UserController {
 
             User foundUser = userService.login(email, password);
             session.setAttribute("user", foundUser);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(foundUser.getId(),HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
