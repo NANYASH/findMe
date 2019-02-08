@@ -3,7 +3,7 @@ package com.findMe.controller;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.UnauthorizedException;
-import com.findMe.model.RelationshipStatus;
+import com.findMe.model.enums.RelationshipStatus;
 import com.findMe.service.RelationshipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -167,3 +167,13 @@ footer{
 	line-height: 50px;
 }
 
+.input-md, select.input-md {
+	height: 60px;
+	line-height: 50px;
+}
+
+.input-xxs, select.input-xxs {
+	height: 30px;
+	line-height: 50px;
+}
+

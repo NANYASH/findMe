@@ -129,36 +129,58 @@
                                     <div class="panel-body">
 
                                         <form id="create-post">
+
+                                            <!-- <div class="form-group">
+                                                 <textarea class="form-control" placeholder="Write on the wall"></textarea>
+                                             </div>-->
+
                                             <div class="form-group">
-                                                <textarea class="form-control"
-                                                          placeholder="Write on the wall"></textarea>
+                                                <input id="text" name="text" type="text"
+                                                       class="form-control input-md" placeholder="Write on the wall"
+                                                       required/>
                                             </div>
-                                            <button type="submit" class="btn btn-default">Submit</button>
+
+
+                                            <button id="submitPost" type="submit" class="btn btn-default">Submit
+                                            </button>
+
+
                                             <div class="pull-right">
                                                 <div class="btn-toolbar">
-                                                    <select class="form-group" id="selectFriend">
+                                                   <!-- <select class="form-group" id="usersTagged">
                                                         <option selected="selected">
                                                             Friends
                                                         </option>
                                                         <tr th:each="friend : ${friends}">
                                                             <option th:text="${friend.getFirstName()}+' '+${friend.getLastName()}"/>
                                                         </tr>
-                                                    </select>
-                                                    <button type="button" class="btn btn-link"><i
-                                                            class="fa fa-map-marker"></i>
-                                                    </button>
+                                                    </select>-->
+
+                                                    <div class="form-group">
+                                                            <input id="location" name="location" type="text"
+                                                                   placeholder="Location"
+                                                                   class="form-control input-xxs"/>
+                                                    </div>
+
+
+                                                    <div class="form-group">
+                                                        <input id="usersTagged" name="usersTagged" type="text"
+                                                               placeholder="Tagged users"
+                                                               class="form-control input-xxs"/>
+                                                    </div>
+
 
                                                 </div>
                                             </div>
+
                                         </form>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
                 <tr th:each="post : ${posts}">
                     <div class="panel panel-default post">
                         <div class="panel-body">
@@ -179,7 +201,6 @@
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
-
                             <div class="text-right"
                                  th:text="${post.getLocation()}+' '+${post.getDatePosted()}"></div>
                         </div>
@@ -193,7 +214,6 @@
                             <h3 class="panel-title">Friends</h3>
                         </div>
                         <div class="panel-body">
-
                             <tr th:each="friend : ${friends}">
                                 <div class="row member-row">
                                     <div class="col-md-3">
@@ -215,8 +235,6 @@
                         </div>
                     </div>
                 </div>
-
-
                 <div th:if="${status} eq 'MY_PROFILE'">
 
                     <div class="panel panel-default friends">
@@ -259,10 +277,7 @@
 
                             </div>
                         </tr>
-
                     </div>
-
-
                     <div class="panel panel-default friends">
                         <div class="panel-heading">
                             <h3 class="panel-title">Outgoing Requests</h3>
@@ -299,8 +314,6 @@
             </div>
         </div>
     </div>
-
-
 </section>
 
 <footer>
@@ -320,7 +333,7 @@
             url: "/logout",
             type: "GET",
             success: function success() {
-                alert("User is logged out.")
+                window.location.replace("/");
             },
             error: function error(xhr) {
                 alert(xhr.responseText);
@@ -334,7 +347,7 @@
             type: "POST",
             data: {userToId: userId.toString()},
             success: function success() {
-                alert("User is requested to be a friend.")
+                window.location.reload(true)
             },
             error: function error(xhr) {
                 alert(xhr.responseText);
@@ -348,7 +361,7 @@
             type: "POST",
             data: {userFromId: inputId.toString(), status: "DELETED"},
             success: function success() {
-                alert("User is deleted from friends.")
+                window.location.reload(true)
             },
             error: function error(xhr) {
                 alert(xhr.responseText);
@@ -362,7 +375,7 @@
             type: "POST",
             data: {userFromId: inputId.toString(), status: "ACCEPTED"},
             success: function success() {
-                alert("User is successfully accepted to friends.")
+                window.location.reload(true)
             },
             error: function error(xhr) {
                 alert(xhr.responseText);
@@ -376,7 +389,7 @@
             type: "POST",
             data: {userFromId: inputId.toString(), status: "REJECTED"},
             success: function success() {
-                alert("User is rejected.")
+                window.location.reload(true)
             },
             error: function error(xhr) {
                 alert(xhr.responseText);
@@ -390,13 +403,31 @@
             type: "POST",
             data: {userFromId: inputId.toString(), status: "CANCELED"},
             success: function success() {
-                alert("Request is canceled.")
+                window.location.reload(true)
             },
             error: function error(xhr) {
                 alert(xhr.responseText);
             }
         })
     }
+
+
+    $("#create-post").submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: "/add-post",
+            type: "POST",
+
+            data: {text: $("#text").val(), userPageId: userId, usersTagged: $("#usersTagged").val(), location: $("#location").val()},
+            success: function success() {
+                alert("Post has been created.")
+                window.location.reload(true);
+            },
+            error: function error(xhr) {
+                alert(xhr.responseText);
+            }
+        });
+    });
 </script>
 </body>
 </html>

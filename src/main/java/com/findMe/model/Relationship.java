@@ -1,5 +1,6 @@
 package com.findMe.model;
 
+import com.findMe.model.enums.RelationshipStatus;
 import lombok.*;
 
 import javax.persistence.*;

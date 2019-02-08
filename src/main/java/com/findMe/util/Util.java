@@ -1,7 +1,7 @@
 package com.findMe.util;
 
 
-import com.findMe.model.RelationshipStatus;
+import com.findMe.model.enums.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.UnauthorizedException;
 import com.findMe.model.User;
@@ -32,5 +32,23 @@ public class Util {
         if (user == null)
             throw new UnauthorizedException("User should be logged in.");
         return user;
+    }
+
+    public static Long[] validateIds(String ids) throws BadRequestException {
+        if (ids == null || ids.isEmpty())
+            return new Long[0];
+
+        String[] idsStringArray = ids.split(",");
+        Long[] idsArray = new Long[idsStringArray.length];
+
+        for (int i = 0; i < idsStringArray.length; i++) {
+            char[] symbols = idsStringArray[i].toCharArray();
+            for (char symbol : symbols) {
+                if (!Character.isDigit(symbol))
+                    throw new BadRequestException("Incorrect string. Action cannot be performed.");
+            }
+            idsArray[i] = Long.valueOf(idsStringArray[i]);
+        }
+        return idsArray;
     }
 }

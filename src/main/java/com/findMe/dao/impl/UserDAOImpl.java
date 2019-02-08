@@ -2,7 +2,6 @@ package com.findMe.dao.impl;
 
 
 import com.findMe.dao.UserDAO;
-import com.findMe.model.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.model.User;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.util.List;
 
 @Transactional
 @Repository

@@ -79,15 +79,17 @@
 </div>
 
 
+
+
 <script>
     $("#login-form").submit(function (e) {
         e.preventDefault();
         $.ajax({
-            url: "login",
+            url: "/login",
             type: "GET",
             data: {email: $("#email").val(), password: $("#password").val()},
-            success: function success() {
-                alert("User is logged.")
+            success: function success(data) {
+                window.location.replace("/user/"+data.toString());
             },
             error: function error(xhr) {
                 alert(xhr.responseText);
