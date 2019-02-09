@@ -18,11 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
+
 import java.util.List;
 
-import static com.findMe.util.Util.convertId;
-import static com.findMe.util.Util.validateIds;
-import static com.findMe.util.Util.validateLogIn;
+import static com.findMe.util.Util.*;
 
 @Controller
 public class PostController {
@@ -42,8 +41,7 @@ public class PostController {
             userPosted = validateLogIn(session);
             usersTaggedIds = validateIds(usersTagged);
             post = new Post();
-            if (location != null || !location.isEmpty())
-                post.setLocation(location);
+            post.setLocation(location);
             post.setUserPosted(userPosted);
             post.setText(text);
             postService.addPost(post, convertId(userPageId), usersTaggedIds);
@@ -58,7 +56,6 @@ public class PostController {
             e.printStackTrace();
             return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
 
