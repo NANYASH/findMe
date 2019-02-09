@@ -11,8 +11,8 @@ public class RelationshipValidator extends AbstractPostChainValidator {
 
         if (!super.getPostValidatorRequestData().getPost().getUserPosted().equals(super.getPostValidatorRequestData().getPost().getUserPagePosted())) {
 
-            if (super.getPostValidatorRequestData().getRelationship() != null
-                    && super.getPostValidatorRequestData().getRelationship().getRelationshipStatus().equals(RelationshipStatus.ACCEPTED)) {
+            if (super.getPostValidatorRequestData().getRelationshipStatus() != null
+                    && super.getPostValidatorRequestData().getRelationshipStatus().equals(RelationshipStatus.ACCEPTED)) {
                 checkNextValidator(super.getNextValidator());
 
             } else

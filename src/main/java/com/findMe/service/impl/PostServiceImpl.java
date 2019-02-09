@@ -45,7 +45,7 @@ public class PostServiceImpl implements PostService {
             relationship = relationshipDAO.getRelationship(userPageId, post.getUserPosted().getId());
             post.setUserPagePosted(userDAO.findById(userPageId));
         }
-        postValidator.validatePost(post, usersTaggedIds, relationship);
+        postValidator.validatePost(post, usersTaggedIds, relationship.getRelationshipStatus());
         post.setDatePosted(LocalDate.now());
         return postDAO.save(post);
     }
