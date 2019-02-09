@@ -8,6 +8,7 @@ import com.findMe.model.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
+import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -39,9 +40,26 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
     }
 
     @Override
+    public List<User> findUsersTagged(Long[] usersTaggedIds) throws InternalServerError {
+        try {
+            CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+            CriteriaQuery<User> criteria = builder.createQuery(User.class);
+            Root<User> root = criteria.from(User.class);
+            Expression<String> exp = root.get("id");
+            Predicate predicate = exp.in(usersTaggedIds);
+            return getEntityManager().createQuery(criteria.select(root)
+                    .where(predicate)).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
+    }
+
+    @Override
     Class<Post> getEntityClass() {
         return Post.class;
     }
+
 
     private List<Post> findById(Long id, String request) throws InternalServerError {
         try {
@@ -53,4 +71,5 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
             throw new InternalServerError();
         }
     }
+
 }

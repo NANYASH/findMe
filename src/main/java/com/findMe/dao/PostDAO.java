@@ -3,6 +3,7 @@ package com.findMe.dao;
 
 import com.findMe.exception.InternalServerError;
 import com.findMe.model.Post;
+import com.findMe.model.User;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface PostDAO {
     List<Post> findByUserPageId(Long id) throws InternalServerError;
 
     List<Post> findByUserPageIdWithoutOwner(Long id) throws InternalServerError;
+
+    List<User> findUsersTagged(Long[] usersTaggedIds) throws InternalServerError;
 }
