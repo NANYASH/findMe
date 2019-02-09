@@ -96,9 +96,9 @@
 
 
                             <div class="row member-row">
-                                <div class="col-md-3" th:if="${status} eq 'NOT_FRIENDS' or ${status} eq 'CANCELED'">
+                                <div class="col-md-3" th:if="${status} eq 'NOT_FRIENDS' or ${status} eq 'CANCELED' or ${status} eq 'DELETED'">
                                     <p>
-                                        <button id="add-button" th:onclick="'add(\'' + ${user.getId()} + '\');'"
+                                        <button id="add-button" th:onclick="'add();'"
                                                 class="btn btn-success">
                                             <i class="fa fa-users"></i>
                                             Add
@@ -141,9 +141,8 @@
                                             </div>
 
 
-                                            <button id="submitPost" type="submit" class="btn btn-default">Submit
+                                            <button id="submitPost" th:onclick="'createPost();'" type="submit" class="btn btn-default">Submit
                                             </button>
-
 
                                             <div class="pull-right">
                                                 <div class="btn-toolbar">
@@ -341,7 +340,7 @@
         })
     }
 
-    function add(inputId) {
+    function add() {
         $.ajax({
             url: "/addRelationship",
             type: "POST",
@@ -411,23 +410,20 @@
         })
     }
 
-
-    $("#create-post").submit(function (e) {
-        e.preventDefault();
+    function createPost() {
         $.ajax({
             url: "/add-post",
             type: "POST",
 
             data: {text: $("#text").val(), userPageId: userId, usersTagged: $("#usersTagged").val(), location: $("#location").val()},
             success: function success() {
-                alert("Post has been created.")
                 window.location.reload(true);
             },
             error: function error(xhr) {
                 alert(xhr.responseText);
             }
         });
-    });
+    };
 </script>
 </body>
 </html>

@@ -7,6 +7,8 @@ import com.findMe.exception.UnauthorizedException;
 import com.findMe.model.User;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Util {
     public static Long convertId(String id) throws BadRequestException {
@@ -32,6 +34,13 @@ public class Util {
         if (user == null)
             throw new UnauthorizedException("User should be logged in.");
         return user;
+    }
+
+    public static void validateText(String text) throws BadRequestException {
+        if (text.length() > 200)
+            throw new BadRequestException("Too long text. Action cannot be performed");
+        if (text.contains("http") || text.contains("www"))
+            throw new BadRequestException("Invalid text. Action cannot be performed");
     }
 
     public static Long[] validateIds(String ids) throws BadRequestException {

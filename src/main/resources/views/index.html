@@ -79,8 +79,6 @@
 </div>
 
 
-
-
 <script>
     $("#login-form").submit(function (e) {
         e.preventDefault();
@@ -89,7 +87,7 @@
             type: "GET",
             data: {email: $("#email").val(), password: $("#password").val()},
             success: function success(data) {
-                window.location.replace("/user/"+data.toString());
+                window.location.replace("/user/" + data.toString());
             },
             error: function error(xhr) {
                 alert(xhr.responseText);
