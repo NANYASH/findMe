@@ -7,7 +7,6 @@ import com.findMe.exception.UnauthorizedException;
 import com.findMe.model.User;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Util {
@@ -36,13 +35,6 @@ public class Util {
         return user;
     }
 
-    public static void validateText(String text) throws BadRequestException {
-        if (text.length() > 200)
-            throw new BadRequestException("Too long text. Action cannot be performed");
-        if (text.contains("http") || text.contains("www"))
-            throw new BadRequestException("Invalid text. Action cannot be performed");
-    }
-
     public static Long[] validateIds(String ids) throws BadRequestException {
         if (ids == null || ids.isEmpty())
             return new Long[0];
@@ -59,5 +51,21 @@ public class Util {
             idsArray[i] = Long.valueOf(idsStringArray[i]);
         }
         return idsArray;
+    }
+
+    public static String createUsersTaggedNamesString(List<User> usersTagged){
+        StringBuffer resultString = new StringBuffer();
+        resultString.append("Tagged users : ");
+        for (int i = 0; i < usersTagged.size(); i++) {
+            resultString.append(usersTagged.get(i).getFirstName())
+                    .append(" ")
+                    .append(usersTagged.get(i).getLastName());
+
+            if(i < usersTagged.size()-1)
+                resultString.append(", ");
+            else
+                resultString.append(".");
+        }
+        return resultString.toString();
     }
 }

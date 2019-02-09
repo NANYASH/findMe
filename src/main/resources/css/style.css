@@ -159,9 +159,7 @@ footer{
 	}
 }
 
-#bg {
-	width: 100%;
-}
+
 .input-xs, select.input-xs {
 	height: 50px;
 	line-height: 50px;
@@ -176,4 +174,6 @@ footer{
 	height: 30px;
 	line-height: 50px;
 }
+
+
 

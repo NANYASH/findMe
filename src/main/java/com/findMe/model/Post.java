@@ -10,6 +10,8 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.findMe.util.Util.createUsersTaggedNamesString;
+
 @Entity
 @Table(name = "POST")
 @EqualsAndHashCode
@@ -36,19 +38,22 @@ public class Post {
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "USER_POSTED_ID")
     private User userPosted;
-    //TODO
-    // levels permissions
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "USER_PAGE_ID")
     private User userPagePosted;
 
-    //TODO
-    //comments
+    //TODO comments
 
     @ManyToMany(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinTable(name = "USERS_TAGGED",
             joinColumns = @JoinColumn(name = "POST_ID"),
             inverseJoinColumns = @JoinColumn(name = "USER_ID"))
     private List<User> usersTagged;
+
+
+    //TODO Change tagged users names output approach.
+    public String getUsersTaggedNames() {
+        return createUsersTaggedNamesString(usersTagged);
+    }
 }
