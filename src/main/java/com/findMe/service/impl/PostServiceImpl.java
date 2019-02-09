@@ -8,14 +8,13 @@ import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.model.Post;
 import com.findMe.model.Relationship;
-import com.findMe.model.User;
-import com.findMe.model.enums.RelationshipStatus;
 import com.findMe.service.PostService;
+import com.findMe.validator.postValidator.PostValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+
 import java.util.List;
 
 @Service
@@ -23,36 +22,33 @@ public class PostServiceImpl implements PostService {
     private PostDAO postDAO;
     private RelationshipDAO relationshipDAO;
     private UserDAO userDAO;
+    private PostValidator postValidator;
 
     @Autowired
-    public PostServiceImpl(PostDAO postDAO, RelationshipDAO relationshipDAO, UserDAO userDAO) {
+    public PostServiceImpl(PostDAO postDAO, RelationshipDAO relationshipDAO, UserDAO userDAO, PostValidator postValidator) {
         this.postDAO = postDAO;
         this.relationshipDAO = relationshipDAO;
         this.userDAO = userDAO;
+        this.postValidator = postValidator;
     }
-
 
     @Override
     public Post addPost(Post post, Long userPageId, Long[] usersTaggedIds) throws InternalServerError, BadRequestException {
+        Relationship relationship = null;
+
         if (usersTaggedIds.length != 0)
-            post.setUsersTagged(getUsersTagged(usersTaggedIds));
+            post.setUsersTagged(postDAO.findUsersTagged(usersTaggedIds));
 
         if (post.getUserPosted().getId().equals(userPageId)) {
             post.setUserPagePosted(post.getUserPosted());
-            post.setDatePosted(LocalDate.now());
-            return postDAO.save(post);
         } else {
-
-            Relationship relationship = relationshipDAO.getRelationship(userPageId, post.getUserPosted().getId());
-            if (relationship != null && relationship.getRelationshipStatus().equals(RelationshipStatus.ACCEPTED)) {
-                post.setUserPagePosted(userDAO.findById(userPageId));
-                post.setDatePosted(LocalDate.now());
-                return postDAO.save(post);
-            }
+            relationship = relationshipDAO.getRelationship(userPageId, post.getUserPosted().getId());
+            post.setUserPagePosted(userDAO.findById(userPageId));
         }
-        throw new BadRequestException("Users are not friends. Action cannot be performed.");
+        postValidator.validatePost(post, usersTaggedIds, relationship);
+        post.setDatePosted(LocalDate.now());
+        return postDAO.save(post);
     }
-
 
     @Override
     public List<Post> findByUserId(Long id) throws InternalServerError {
@@ -68,18 +64,4 @@ public class PostServiceImpl implements PostService {
     public List<Post> findByUserPageIdWithoutOwner(Long id) throws InternalServerError {
         return postDAO.findByUserPageIdWithoutOwner(id);
     }
-
-    private List<User> getUsersTagged(Long[] usersTaggedIds) throws InternalServerError, BadRequestException {
-        List<User> usersTagged = new ArrayList<>();
-
-        for (Long userTagged : usersTaggedIds){
-            User userFound = userDAO.findById(userTagged);
-            if (userFound == null)
-                throw new BadRequestException("User with id "+userTagged+" does not exist.");
-            usersTagged.add(userFound);
-        }
-        return usersTagged;
-    }
-
-
 }
