@@ -36,11 +36,11 @@ public class PostController {
     public ResponseEntity createNewPost(HttpSession session, @RequestParam String text, @RequestParam String userPageId, @RequestParam String usersTagged, @RequestParam String location) {
         User userPosted;
         Long[] usersTaggedIds;
-        Post post;
+        Post post = new Post();
         try {
             userPosted = validateLogIn(session);
             usersTaggedIds = validateIds(usersTagged);
-            post = new Post();
+
             post.setLocation(location);
             post.setUserPosted(userPosted);
             post.setText(text);
