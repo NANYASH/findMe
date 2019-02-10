@@ -86,14 +86,14 @@ public class UserController {
     }
 
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
-    public String profile(HttpSession session, Model model, @PathVariable String userId, @RequestParam(required=false) String friendId, @RequestParam(defaultValue = "false",required=false) String byFriends, @RequestParam(defaultValue = "false",required=false) String byOwner) {
+    public String profile(HttpSession session, Model model, @PathVariable String userId, @RequestParam(required=false) String userPostedId, @RequestParam(defaultValue = "false",required=false) String byFriends) {
         try {
             Long userProfileId = convertId(userId);
             User userSession = (User) session.getAttribute("user");
             User foundUserProfile = userService.findUserById(userProfileId);
 
             model.addAttribute("user", foundUserProfile);
-            model.addAttribute("posts", postService.findPosts(userProfileId, friendId, byFriends, byOwner));
+            model.addAttribute("posts", postService.findPosts(userProfileId, userPostedId, byFriends));
 
             if (userSession != null) {
 

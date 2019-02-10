@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface PostService {
     Post addPost(Post post, Long userPageId, Long[]  usersTaggedIds) throws InternalServerError, BadRequestException;
-    List<Post> findPosts(Long userPageId, String friendId, String byFriends, String byOwner) throws InternalServerError;
+    List<Post> findPosts(Long userPageId, String userPostedId, String byFriends) throws InternalServerError;
 }
