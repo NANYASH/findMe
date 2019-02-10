@@ -12,7 +12,7 @@ public interface PostDAO {
 
     Post update(Post post) throws InternalServerError;
 
-    List<Post> findPosts(Long userPageId, String friendId, String byFriends, String byOwner) throws InternalServerError;
+    List<Post> findPosts(Long userPageId, String userPostedId, String byFriends) throws InternalServerError;
 
     List<User> findUsersTagged(Long[] usersTaggedIds) throws InternalServerError;
 }

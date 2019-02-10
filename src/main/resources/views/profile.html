@@ -187,16 +187,19 @@
 
 
                                         <h3 class="panel-title">Filter by:
-                                            <input id="byOwner" type="checkbox" class="inline w3-margin-left"/>
-                                            <th th:text="${user.firstName} +' '+${user.lastName}"></th>
+                                            <!--<input id="byOwner" type="checkbox" class="inline w3-margin-left"/>
+                                            <th th:text="${user.firstName} +' '+${user.lastName}"></th>-->
 
 
                                             <input type="checkbox" class="inline w3-margin-left"/>
                                             <th>All friends</th>
 
                                             <select class="form-group" id="friendId">
-                                                <option th:value="null" disabled selected>Select friend</option>
+                                                <option th:value="null" disabled selected>Select user</option>
                                                 <tr th:each="friend : ${friends}">
+                                                    <option th:value="${user.getId()}">
+                                                        <td th:text="${user.firstName} +' '+${user.lastName}"/>
+                                                    </option>
                                                     <option th:value="${friend.getId()}">
                                                         <td th:text="${friend.getFirstName()}+' '+${friend.getLastName()} "/>
                                                     </option>
@@ -210,13 +213,9 @@
                                                 </button>
                                             </div>
                                         </h3>
-
-
                                     </div>
                                 </form>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -371,7 +370,6 @@
 <script>
     var userId = window.location.pathname.split('/').pop();
 
-
     function logout() {
         $.ajax({
             url: "/logout",
@@ -384,8 +382,6 @@
             }
         })
     }
-
-
 
     $("#login-form").submit(function (e) {
         e.preventDefault();
@@ -401,25 +397,6 @@
             }
         });
     });
-
-
-    function filter() {
-        $.ajax({
-            url: "/user/" + userId,
-            type: "GET",
-            data: {
-                friendId: $("#friendId option:selected").val()
-            },
-            success: function (result) {
-                $(function () {
-                    $("body").html(result);
-                });
-            },
-            error: function error(xhr) {
-                alert(xhr.responseText);
-            }
-        });
-    };
 
     function add() {
         $.ajax({
@@ -504,6 +481,24 @@
             },
             success: function success() {
                 window.location.reload(true);
+            },
+            error: function error(xhr) {
+                alert(xhr.responseText);
+            }
+        });
+    };
+
+    function filter() {
+        $.ajax({
+            url: "/user/" + userId,
+            type: "GET",
+            data: {
+                userPostedId: $("#friendId option:selected").val()
+            },
+            success: function (result) {
+                $(function () {
+                    $("body").html(result);
+                });
             },
             error: function error(xhr) {
                 alert(xhr.responseText);

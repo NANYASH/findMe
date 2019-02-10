@@ -19,7 +19,7 @@ import static com.findMe.util.Util.convertToBoolean;
 public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
 
     @Override
-    public List<Post> findPosts(Long userPageId, String friendId, String byFriends, String byOwner) throws InternalServerError {
+    public List<Post> findPosts(Long userPageId, String userPostedId, String byFriends) throws InternalServerError {
         try {
             CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
             CriteriaQuery<Post> criteria = builder.createQuery(Post.class);
@@ -28,12 +28,10 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
 
             predicate = builder.and(predicate, builder.equal(root.get("userPagePosted").get("id"), userPageId));
 
-            if (friendId != null)
-                predicate = builder.and(predicate, builder.equal(root.get("userPosted").get("id"), convertId(friendId)));
+            if (userPostedId != null)
+                predicate = builder.and(predicate, builder.equal(root.get("userPosted").get("id"), convertId(userPostedId)));
             else if (convertToBoolean(byFriends).equals(true))
                 predicate = builder.and(predicate, builder.notEqual(root.get("userPosted").get("id"), userPageId));
-            else if (convertToBoolean(byOwner).equals(true))
-                predicate = builder.and(predicate, builder.equal(root.get("userPosted").get("id"), userPageId));
 
             return getEntityManager().createQuery(criteria.select(root)
                     .where(predicate)).getResultList();
