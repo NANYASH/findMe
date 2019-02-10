@@ -28,7 +28,7 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
 
             predicate = builder.and(predicate, builder.equal(root.get("userPagePosted").get("id"), userPageId));
 
-            if (userPostedId != null)
+            if (userPostedId != null && !userPostedId.isEmpty())
                 predicate = builder.and(predicate, builder.equal(root.get("userPosted").get("id"), convertId(userPostedId)));
             else if (convertToBoolean(byFriends).equals(true))
                 predicate = builder.and(predicate, builder.notEqual(root.get("userPosted").get("id"), userPageId));

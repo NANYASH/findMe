@@ -187,15 +187,11 @@
 
 
                                         <h3 class="panel-title">Filter by:
-                                            <!--<input id="byOwner" type="checkbox" class="inline w3-margin-left"/>
-                                            <th th:text="${user.firstName} +' '+${user.lastName}"></th>-->
-
-
-                                            <input type="checkbox" class="inline w3-margin-left"/>
+                                             <input id="allFriends" type="checkbox" class="inline w3-margin-left"/>
                                             <th>All friends</th>
 
                                             <select class="form-group" id="friendId">
-                                                <option th:value="null" disabled selected>Select user</option>
+                                                <option th:value="null">Select user</option>
                                                 <tr th:each="friend : ${friends}">
                                                     <option th:value="${user.getId()}">
                                                         <td th:text="${user.firstName} +' '+${user.lastName}"/>
@@ -207,9 +203,8 @@
                                             </select>
 
                                             <div class="pull-right">
-                                                <button type="button" class="btn btn-default" th:onclick="'filter();'">
-                                                    <i
-                                                            class="glyphicon glyphicon-filter"></i>Filter
+                                                <button id="filter-button" type="button" class="btn btn-default" th:onclick="'filter();'">
+                                                    <i class="glyphicon glyphicon-filter"></i>Filter
                                                 </button>
                                             </div>
                                         </h3>
@@ -505,6 +500,32 @@
             }
         });
     };
+
+
+    $(function() {
+        $('#allFriends').change(function() {
+            var disabled =$(this).is(':checked')
+            $('#friendId').prop('disabled', disabled);
+        });
+    });
+
+
+    $(function() {
+        $('#friendId').change(function() {
+            var disabled = this.value != 'Select user'
+            $('#allFriends').prop('disabled', disabled);
+        });
+    });
+
+
+    $(function() {
+        $('#friendId,#allFriends').change(function() {
+            var disabled =  $("#friendId").is(":not(:disabled)") &&  $("#allFriends").is(":not(:disabled)");
+            $('#filter-button').prop('disabled', disabled);
+        });
+    });
+
+
 
 </script>
 </body>
