@@ -61,7 +61,7 @@ public class UserController {
 
             User foundUser = userService.login(email, password);
             session.setAttribute("user", foundUser);
-            return new ResponseEntity<>(foundUser.getId(),HttpStatus.OK);
+            return new ResponseEntity<>(foundUser.getId(), HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
@@ -86,14 +86,14 @@ public class UserController {
     }
 
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
-    public String profile(HttpSession session, Model model, @PathVariable String userId) {
+    public String profile(HttpSession session, Model model, @PathVariable String userId, @RequestParam(required=false) String friendId, @RequestParam(defaultValue = "false",required=false) String byFriends, @RequestParam(defaultValue = "false",required=false) String byOwner) {
         try {
             Long userProfileId = convertId(userId);
             User userSession = (User) session.getAttribute("user");
             User foundUserProfile = userService.findUserById(userProfileId);
 
             model.addAttribute("user", foundUserProfile);
-            model.addAttribute("posts", postService.findByUserPageId(userProfileId));
+            model.addAttribute("posts", postService.findPosts(userProfileId, friendId, byFriends, byOwner));
 
             if (userSession != null) {
 

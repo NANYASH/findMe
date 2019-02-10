@@ -19,6 +19,15 @@ public class Util {
         }
     }
 
+    public static Boolean convertToBoolean(String booleanValue) throws BadRequestException {
+        try {
+            return Boolean.valueOf(booleanValue);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            throw new BadRequestException("Cannot be converted to Long type");
+        }
+    }
+
     public static RelationshipStatus convertRelationshipStatus(String status) throws BadRequestException {
         try {
             return RelationshipStatus.valueOf(status);

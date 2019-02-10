@@ -179,11 +179,48 @@
                                     </div>
                                 </div>
                             </div>
+
+
+                            <div class="row">
+                                <form id="filter-post">
+                                    <div class="col-md-12">
+
+
+                                        <h3 class="panel-title">Filter by:
+                                            <input id="byOwner" type="checkbox" class="inline w3-margin-left"/>
+                                            <th th:text="${user.firstName} +' '+${user.lastName}"></th>
+
+
+                                            <input type="checkbox" class="inline w3-margin-left"/>
+                                            <th>All friends</th>
+
+                                            <select class="form-group" id="friendId">
+                                                <option th:value="null" disabled selected>Select friend</option>
+                                                <tr th:each="friend : ${friends}">
+                                                    <option th:value="${friend.getId()}">
+                                                        <td th:text="${friend.getFirstName()}+' '+${friend.getLastName()} "/>
+                                                    </option>
+                                                </tr>
+                                            </select>
+
+                                            <div class="pull-right">
+                                                <button type="button" class="btn btn-default" th:onclick="'filter();'">
+                                                    <i
+                                                            class="glyphicon glyphicon-filter"></i>Filter
+                                                </button>
+                                            </div>
+                                        </h3>
+
+
+                                    </div>
+                                </form>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
-
-
+                <br>
                 <tr th:each="post : ${posts}">
                     <div class="panel panel-default post">
                         <div class="panel-body">
@@ -334,6 +371,7 @@
 <script>
     var userId = window.location.pathname.split('/').pop();
 
+
     function logout() {
         $.ajax({
             url: "/logout",
@@ -346,6 +384,42 @@
             }
         })
     }
+
+
+
+    $("#login-form").submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: "/login",
+            type: "GET",
+            data: {email: $("#email").val(), password: $("#password").val()},
+            success: function success(data) {
+                window.location.replace("/user/" + data.toString());
+            },
+            error: function error(xhr) {
+                alert(xhr.responseText);
+            }
+        });
+    });
+
+
+    function filter() {
+        $.ajax({
+            url: "/user/" + userId,
+            type: "GET",
+            data: {
+                friendId: $("#friendId option:selected").val()
+            },
+            success: function (result) {
+                $(function () {
+                    $("body").html(result);
+                });
+            },
+            error: function error(xhr) {
+                alert(xhr.responseText);
+            }
+        });
+    };
 
     function add() {
         $.ajax({
@@ -436,6 +510,7 @@
             }
         });
     };
+
 </script>
 </body>
 </html>
