@@ -7,36 +7,40 @@ import com.findMe.model.Post;
 import com.findMe.model.User;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.Query;
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
 import java.util.List;
+
+import static com.findMe.util.Util.convertId;
+import static com.findMe.util.Util.convertToBoolean;
 
 @Transactional
 @Repository
 public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
 
-    private static final String FIND_BY_USER_ID = "SELECT * FROM POST WHERE USER_POSTED_ID = ?" +
-            " ORDER BY DATE_POSTED DESC";
-    private static final String FIND_BY_USER_PAGE_ID = "SELECT * FROM POST WHERE USER_PAGE_ID = ?" +
-            " ORDER BY DATE_POSTED DESC";
-    private static final String FIND_BY_USER_PAGE_ID_WITHOUT_OWNER = "SELECT * FROM POST" +
-            " WHERE USER_PAGE_ID = ? AND USER_PAGE_ID <> USER_POSTED_ID" +
-            " ORDER BY DATE_POSTED DESC;";
-
     @Override
-    public List<Post> findByUserId(Long id) throws InternalServerError {
-        return findById(id, FIND_BY_USER_ID);
-    }
+    public List<Post> findPosts(Long userPageId, String friendId, String byFriends, String byOwner) throws InternalServerError {
+        try {
+            CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+            CriteriaQuery<Post> criteria = builder.createQuery(Post.class);
+            Root<Post> root = criteria.from(Post.class);
+            Predicate predicate = builder.conjunction();
 
-    @Override
-    public List<Post> findByUserPageId(Long id) throws InternalServerError {
-        return findById(id, FIND_BY_USER_PAGE_ID);
-    }
+            predicate = builder.and(predicate, builder.equal(root.get("userPagePosted").get("id"), userPageId));
 
-    @Override
-    public List<Post> findByUserPageIdWithoutOwner(Long id) throws InternalServerError {
-        return findById(id, FIND_BY_USER_PAGE_ID_WITHOUT_OWNER);
+            if (friendId != null)
+                predicate = builder.and(predicate, builder.equal(root.get("userPosted").get("id"), convertId(friendId)));
+            else if (convertToBoolean(byFriends).equals(true))
+                predicate = builder.and(predicate, builder.notEqual(root.get("userPosted").get("id"), userPageId));
+            else if (convertToBoolean(byOwner).equals(true))
+                predicate = builder.and(predicate, builder.equal(root.get("userPosted").get("id"), userPageId));
+
+            return getEntityManager().createQuery(criteria.select(root)
+                    .where(predicate)).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
     }
 
     @Override
@@ -58,18 +62,6 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
     @Override
     Class<Post> getEntityClass() {
         return Post.class;
-    }
-
-
-    private List<Post> findById(Long id, String request) throws InternalServerError {
-        try {
-            Query query = getEntityManager().createNativeQuery(request, Post.class);
-            query.setParameter(1, id);
-            return query.getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new InternalServerError();
-        }
     }
 
 }
