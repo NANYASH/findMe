@@ -129,5 +129,5 @@ public class UserController {
     public String getRegisterPage() {
         return "registerPage";
     }
-    
+
 }
