@@ -187,7 +187,8 @@
 
 
                                         <h3 class="panel-title">Filter by:
-                                             <input id="allFriends" type="checkbox" class="inline w3-margin-left"/>
+                                            <input id="allFriends" type="checkbox" value="false"
+                                                   class="inline w3-margin-left"/>
                                             <th>All friends</th>
 
                                             <select class="form-group" id="friendId">
@@ -203,7 +204,8 @@
                                             </select>
 
                                             <div class="pull-right">
-                                                <button id="filter-button" type="button" class="btn btn-default" th:onclick="'filter();'">
+                                                <button id="filter-button" type="button" class="btn btn-default"
+                                                        th:onclick="'filter();'">
                                                     <i class="glyphicon glyphicon-filter"></i>Filter
                                                 </button>
                                             </div>
@@ -488,7 +490,8 @@
             url: "/user/" + userId,
             type: "GET",
             data: {
-                userPostedId: $("#friendId option:selected").val()
+                userPostedId: $("#friendId option:selected").val(),
+                byFriends: $('#allFriends').val()
             },
             success: function (result) {
                 $(function () {
@@ -502,30 +505,37 @@
     };
 
 
-    $(function() {
-        $('#allFriends').change(function() {
-            var disabled =$(this).is(':checked')
+    $("#allFriends").on('change', function () {
+        if ($(this).is(':checked')) {
+            $(this).attr('value', 'true');
+        } else {
+            $(this).attr('value', 'false');
+        }
+    });
+
+
+    $(function () {
+        $('#allFriends').change(function () {
+            var disabled = $(this).is(':checked')
             $('#friendId').prop('disabled', disabled);
         });
     });
 
 
-    $(function() {
-        $('#friendId').change(function() {
+    $(function () {
+        $('#friendId').change(function () {
             var disabled = this.value != 'Select user'
             $('#allFriends').prop('disabled', disabled);
         });
     });
 
 
-    $(function() {
-        $('#friendId,#allFriends').change(function() {
-            var disabled =  $("#friendId").is(":not(:disabled)") &&  $("#allFriends").is(":not(:disabled)");
+    $(function () {
+        $('#friendId,#allFriends').change(function () {
+            var disabled = $("#friendId").is(":not(:disabled)") && $("#allFriends").is(":not(:disabled)");
             $('#filter-button').prop('disabled', disabled);
         });
     });
-
-
 
 </script>
 </body>
