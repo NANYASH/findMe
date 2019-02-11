@@ -18,7 +18,6 @@
 </head>
 
 <body>
-
 <header>
     <div class="container">
         <h2>Find me
@@ -31,7 +30,6 @@
         </h2>
     </div>
 </header>
-
 <nav class="navbar navbar-default">
     <div class="container">
         <div class="navbar-header">
@@ -50,7 +48,6 @@
         </div><!--/.nav-collapse -->
     </div>
 </nav>
-
 <section>
     <div class="container">
         <div class="row">
@@ -93,8 +90,6 @@
                                 <li><strong>University:</strong>
                                     <p th:text="${user.university}"></p></li>
                             </ul>
-
-
                             <div class="row member-row">
                                 <div class="col-md-3"
                                      th:if="${status} eq 'NOT_FRIENDS' or ${status} eq 'CANCELED' or ${status} eq 'DELETED'">
@@ -106,7 +101,6 @@
                                         </button>
                                     </p>
                                 </div>
-
                                 <div class="col-md-3" th:if="${status} eq 'ACCEPTED'">
                                     <p>
                                         <button id="delete-button" th:onclick="'remove(\'' + ${user.getId()} + '\');'"
@@ -128,7 +122,6 @@
                                 </div>
                                 <div th:if=" ${status} eq 'ACCEPTED' or ${status} eq 'MY_PROFILE'">
                                     <div class="panel-body">
-
                                         <form id="create-post">
 
                                             <!-- <div class="form-group">
@@ -140,12 +133,9 @@
                                                        class="form-control input-md" placeholder="Write on the wall"
                                                        required/>
                                             </div>
-
-
                                             <button id="submitPost" th:onclick="'createPost();'" type="submit"
                                                     class="btn btn-default">Submit
                                             </button>
-
                                             <div class="pull-right">
                                                 <div class="btn-toolbar">
                                                     <!-- <select class="form-group" id="usersTagged">
@@ -162,30 +152,20 @@
                                                                placeholder="Location"
                                                                class="form-control input-xxs"/>
                                                     </div>
-
-
                                                     <div class="form-group">
                                                         <input id="usersTagged" name="usersTagged" type="text"
                                                                placeholder="Tagged users"
                                                                class="form-control input-xxs"/>
                                                     </div>
-
-
                                                 </div>
                                             </div>
-
                                         </form>
-
                                     </div>
                                 </div>
                             </div>
-
-
                             <div class="row">
                                 <form id="filter-post">
                                     <div class="col-md-12">
-
-
                                         <h3 class="panel-title">Filter by:
                                             <input id="allFriends" type="checkbox" value="false"
                                                    class="inline w3-margin-left"/>
@@ -202,7 +182,6 @@
                                                     </option>
                                                 </tr>
                                             </select>
-
                                             <div class="pull-right">
                                                 <button id="filter-button" type="button" class="btn btn-default"
                                                         th:onclick="'filter();'">
@@ -276,12 +255,10 @@
                     </div>
                 </div>
                 <div th:if="${status} eq 'MY_PROFILE'">
-
                     <div class="panel panel-default friends">
                         <div class="panel-heading">
                             <h3 class="panel-title">Incoming Requests</h3>
                         </div>
-
                         <tr th:each="incomingRequest : ${incomingRequests}">
                             <div class="panel-body">
 
@@ -466,7 +443,6 @@
         $.ajax({
             url: "/add-post",
             type: "POST",
-
             data: {
                 text: $("#text").val(),
                 userPageId: userId.toString(),
@@ -501,7 +477,6 @@
         });
     };
 
-
     $("#allFriends").on('change', function () {
         if ($(this).is(':checked')) {
             $(this).attr('value', 'true');
@@ -510,7 +485,6 @@
         }
     });
 
-
     $(function () {
         $('#allFriends').change(function () {
             var disabled = $(this).is(':checked')
@@ -518,14 +492,12 @@
         });
     });
 
-
     $(function () {
         $('#friendId').change(function () {
             var disabled = this.value != 'Select user'
             $('#allFriends').prop('disabled', disabled);
         });
     });
-
 
     $(function () {
         $('#friendId,#allFriends').change(function () {
