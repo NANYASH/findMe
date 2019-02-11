@@ -86,7 +86,7 @@ public class UserController {
     }
 
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
-    public String profile(HttpSession session, Model model, @PathVariable String userId, @RequestParam(required=false) String userPostedId, @RequestParam(defaultValue = "false",required=false) String byFriends) {
+    public String profile(HttpSession session, Model model, @PathVariable String userId, @RequestParam(required = false) String userPostedId, @RequestParam(defaultValue = "false", required = false) String byFriends) {
         try {
             Long userProfileId = convertId(userId);
             User userSession = (User) session.getAttribute("user");
@@ -104,7 +104,6 @@ public class UserController {
 
                     if (relationshipStatus.equals(RelationshipStatus.ACCEPTED))
                         model.addAttribute("friends", relationshipService.findByRelationshipStatus(userProfileId, RelationshipStatus.ACCEPTED));
-
 
                 } else if (userSession.equals(foundUserProfile)) {
                     model.addAttribute("status", RelationshipStatus.MY_PROFILE.toString());
@@ -130,6 +129,5 @@ public class UserController {
     public String getRegisterPage() {
         return "registerPage";
     }
-
-
+    
 }
