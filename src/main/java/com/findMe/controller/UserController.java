@@ -1,11 +1,12 @@
 package com.findMe.controller;
 
-import com.findMe.model.RelationshipStatus;
+import com.findMe.model.enums.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.NotFoundException;
 import com.findMe.exception.UnauthorizedException;
 import com.findMe.model.User;
+import com.findMe.service.PostService;
 import com.findMe.service.RelationshipService;
 import com.findMe.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,14 @@ import static com.findMe.util.Util.validateLogIn;
 public class UserController {
     private UserService userService;
     private RelationshipService relationshipService;
+    private PostService postService;
+
 
     @Autowired
-    public UserController(UserService userService, RelationshipService relationshipService) {
+    public UserController(UserService userService, RelationshipService relationshipService, PostService postService) {
         this.userService = userService;
         this.relationshipService = relationshipService;
+        this.postService = postService;
     }
 
     @RequestMapping(path = "/user-registration", method = RequestMethod.POST)
@@ -57,7 +61,7 @@ public class UserController {
 
             User foundUser = userService.login(email, password);
             session.setAttribute("user", foundUser);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(foundUser.getId(), HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
@@ -82,22 +86,33 @@ public class UserController {
     }
 
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
-    public String profile(HttpSession session, Model model, @PathVariable String userId) {
+    public String profile(HttpSession session, Model model, @PathVariable String userId, @RequestParam(required=false) String userPostedId, @RequestParam(defaultValue = "false",required=false) String byFriends) {
         try {
-            Long convertedUserId = convertId(userId);
-            RelationshipStatus relationshipStatus = relationshipService.findStatusById(validateLogIn(session).getId(), convertedUserId);
-            User found = userService.findUserById(convertedUserId);
+            Long userProfileId = convertId(userId);
+            User userSession = (User) session.getAttribute("user");
+            User foundUserProfile = userService.findUserById(userProfileId);
 
-            model.addAttribute("user", found);
-            if (relationshipStatus != null)
-                model.addAttribute("status", relationshipStatus.toString());
-            else if (session.getAttribute("user").equals(found)) {
-                model.addAttribute("status", RelationshipStatus.MY_PROFILE.toString());
-                model.addAttribute("outgoingRequests", relationshipService.findOutgoingRequests(convertedUserId));
-                model.addAttribute("incomingRequests", relationshipService.findIncomingRequests(convertedUserId));
-            } else
-                model.addAttribute("status", RelationshipStatus.NOT_FRIENDS.toString());
-            model.addAttribute("friends", relationshipService.findByRelationshipStatus(convertedUserId, RelationshipStatus.ACCEPTED));
+            model.addAttribute("user", foundUserProfile);
+            model.addAttribute("posts", postService.findPosts(userProfileId, userPostedId, byFriends));
+
+            if (userSession != null) {
+
+                RelationshipStatus relationshipStatus = relationshipService.findStatusById(userSession.getId(), userProfileId);
+
+                if (relationshipStatus != null) {
+                    model.addAttribute("status", relationshipStatus.toString());
+
+                    if (relationshipStatus.equals(RelationshipStatus.ACCEPTED))
+                        model.addAttribute("friends", relationshipService.findByRelationshipStatus(userProfileId, RelationshipStatus.ACCEPTED));
+
+
+                } else if (userSession.equals(foundUserProfile)) {
+                    model.addAttribute("status", RelationshipStatus.MY_PROFILE.toString());
+                    model.addAttribute("outgoingRequests", relationshipService.findOutgoingRequests(userProfileId));
+                    model.addAttribute("incomingRequests", relationshipService.findIncomingRequests(userProfileId));
+                    model.addAttribute("friends", relationshipService.findByRelationshipStatus(userProfileId, RelationshipStatus.ACCEPTED));
+                }
+            }
         } catch (BadRequestException e) {
             e.printStackTrace();
             return "error400";
@@ -107,16 +122,14 @@ public class UserController {
         } catch (InternalServerError e) {
             e.printStackTrace();
             return "error500";
-        } catch (UnauthorizedException e) {
-            e.printStackTrace();
-            return "error401";
         }
-        return "profilePage";
+        return "profile";
     }
 
     @RequestMapping(path = "/user-registration", method = RequestMethod.GET)
     public String getRegisterPage() {
         return "registerPage";
     }
+
 
 }

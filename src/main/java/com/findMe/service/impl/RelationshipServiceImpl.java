@@ -3,12 +3,12 @@ package com.findMe.service.impl;
 import com.findMe.dao.RelationshipDAO;
 import com.findMe.model.Relationship;
 import com.findMe.model.RelationshipId;
-import com.findMe.model.RelationshipStatus;
+import com.findMe.model.enums.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.model.User;
 import com.findMe.service.RelationshipService;
-import com.findMe.validator.RelationshipValidator;
+import com.findMe.validator.relationshipValidator.RelationshipValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

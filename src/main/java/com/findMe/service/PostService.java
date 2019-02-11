@@ -1,18 +1,13 @@
-package com.findMe.dao;
+package com.findMe.service;
 
-
+import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.model.Post;
 import com.findMe.model.User;
 
 import java.util.List;
 
-public interface PostDAO {
-    Post save(Post post) throws InternalServerError;
-
-    Post update(Post post) throws InternalServerError;
-
+public interface PostService {
+    Post addPost(Post post, Long userPageId, Long[]  usersTaggedIds) throws InternalServerError, BadRequestException;
     List<Post> findPosts(Long userPageId, String userPostedId, String byFriends) throws InternalServerError;
-
-    List<User> findUsersTagged(Long[] usersTaggedIds) throws InternalServerError;
 }

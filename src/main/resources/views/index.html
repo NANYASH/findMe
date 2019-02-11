@@ -1,7 +1,30 @@
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"
+      xmlns:th="http://www.thymeleaf.org">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Find me</title>
+
+    <!-- Custom styles  -->
+    <link href="../css/style.css" rel="stylesheet">
+</head>
+
+<header>
+    <div class="container">
+        <h2>Find me
+        </h2>
+    </div>
+</header>
+
+
 <body>
 <div class="container">
     <div class="row">
@@ -35,7 +58,7 @@
                             <div class="form-group">
                                 <label class="col-md-4 control-label"></label>
                                 <div class="col-md-4">
-                                    <button id="submit" class="btn btn-success">Log In</button>
+                                    <button id="login-button" class="btn btn-success">Log In</button>
                                 </div>
                             </div>
                         </fieldset>
@@ -45,7 +68,7 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label"></label>
                             <div class="col-md-4">
-                                <button id="register" type="submit" class="btn btn-success">Sign Up</button>
+                                <button id="register-button" type="submit" class="btn btn-success">Sign Up</button>
                             </div>
                         </div>
                     </form>
@@ -55,24 +78,23 @@
     </div>
 </div>
 
+
 <script>
     $("#login-form").submit(function (e) {
         e.preventDefault();
         $.ajax({
-            url: "login",
+            url: "/login",
             type: "GET",
             data: {email: $("#email").val(), password: $("#password").val()},
-            success: function success() {
-                alert("User is logged.")
+            success: function success(data) {
+                window.location.replace("/user/" + data.toString());
             },
             error: function error(xhr) {
                 alert(xhr.responseText);
             }
         });
-
     });
 </script>
-
 </body>
 
 </html>
