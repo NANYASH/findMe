@@ -11,12 +11,12 @@ public class UsersTaggedValidator extends AbstractPostChainValidator {
 
     @Override
     void validate() throws BadRequestException {
-        if (super.getPostValidatorRequestData().getUsersTaggedIds().length != 0) {
+        if (getPostValidatorRequestData().getUsersTaggedIds().length != 0) {
             Set<User> usersTagged;
-            if (super.getPostValidatorRequestData().getPost().getUsersTagged().size() != super.getPostValidatorRequestData().getUsersTaggedIds().length) {
-                usersTagged = new HashSet<>(super.getPostValidatorRequestData().getPost().getUsersTagged());
+            if (getPostValidatorRequestData().getPost().getUsersTagged().size() != getPostValidatorRequestData().getUsersTaggedIds().length) {
+                usersTagged = new HashSet<>(getPostValidatorRequestData().getPost().getUsersTagged());
 
-                for (long userTaggedId : super.getPostValidatorRequestData().getUsersTaggedIds()) {
+                for (long userTaggedId : getPostValidatorRequestData().getUsersTaggedIds()) {
                     if (!usersTagged.contains(userTaggedId))
                         throw new BadRequestException("User with id " + userTaggedId + " does not exist.");
                 }
