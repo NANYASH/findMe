@@ -4,7 +4,6 @@ package com.findMe.validator.postValidator;
 import com.findMe.exception.BadRequestException;
 import com.findMe.model.Post;
 import com.findMe.model.Relationship;
-import com.findMe.model.enums.RelationshipStatus;
 import com.findMe.model.validateData.PostValidatorRequestData;
 import org.springframework.stereotype.Component;
 

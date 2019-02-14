@@ -9,11 +9,11 @@ public class RelationshipValidator extends AbstractPostChainValidator {
     @Override
     void validate() throws BadRequestException {
 
-        if (!super.getPostValidatorRequestData().getPost().getUserPosted().equals(super.getPostValidatorRequestData().getPost().getUserPagePosted())) {
+        if (!getPostValidatorRequestData().getPost().getUserPosted().equals(getPostValidatorRequestData().getPost().getUserPagePosted())) {
 
-            if (super.getPostValidatorRequestData().getRelationship().getRelationshipStatus() != null
-                    && super.getPostValidatorRequestData().getRelationship().getRelationshipStatus().equals(RelationshipStatus.ACCEPTED)) {
-                checkNextValidator(super.getNextValidator());
+            if (getPostValidatorRequestData().getRelationship().getRelationshipStatus() != null
+                    && getPostValidatorRequestData().getRelationship().getRelationshipStatus().equals(RelationshipStatus.ACCEPTED)) {
+                checkNextValidator(getNextValidator());
 
             } else
                 throw new BadRequestException("Users are not friends. Action cannot be performed.");
