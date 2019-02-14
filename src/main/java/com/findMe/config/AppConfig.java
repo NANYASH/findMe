@@ -22,7 +22,7 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 
 import javax.persistence.EntityManagerFactory;
-
+import java.util.Properties;
 
 
 @Configuration
@@ -33,6 +33,7 @@ public class AppConfig implements WebMvcConfigurer{
 
     @Autowired
     private ApplicationContext applicationContext;
+
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
@@ -59,9 +60,15 @@ public class AppConfig implements WebMvcConfigurer{
     @Bean
     public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setJpaProperties(additionalProperties());
         transactionManager.setEntityManagerFactory(emf);
-
         return transactionManager;
+    }
+
+    private Properties additionalProperties() {
+        Properties properties = new Properties();
+        properties.setProperty("hibernate.show_sql", "true");
+        return properties;
     }
 
     @Bean
@@ -80,6 +87,7 @@ public class AppConfig implements WebMvcConfigurer{
         templateEngine.setEnableSpringELCompiler(true);
         return templateEngine;
     }
+
 
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry){
