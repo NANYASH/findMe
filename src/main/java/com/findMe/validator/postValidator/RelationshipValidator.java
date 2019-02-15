@@ -10,7 +10,6 @@ public class RelationshipValidator extends AbstractPostChainValidator {
     void validate() throws BadRequestException {
 
         if (!getPostValidatorRequestData().getPost().getUserPosted().equals(getPostValidatorRequestData().getPost().getUserPagePosted())) {
-
             if (getPostValidatorRequestData().getRelationship().getRelationshipStatus() != null
                     && getPostValidatorRequestData().getRelationship().getRelationshipStatus().equals(RelationshipStatus.ACCEPTED)) {
                 checkNextValidator(getNextValidator());

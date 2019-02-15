@@ -27,10 +27,8 @@ public class UsersTaggedValidator extends AbstractPostChainValidator {
 
     private Set<Long> getUsersIds(List<User> usersFound) {
         Set<Long> usersFoundIds = new HashSet<>();
-
-        for (User user : usersFound) {
+        for (User user : usersFound)
             usersFoundIds.add(user.getId());
-        }
         return usersFoundIds;
     }
 }

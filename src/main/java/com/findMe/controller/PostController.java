@@ -4,7 +4,7 @@ package com.findMe.controller;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.UnauthorizedException;
-import com.findMe.model.validateData.PostParametersData;
+import com.findMe.model.viewData.PostParametersData;
 import com.findMe.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

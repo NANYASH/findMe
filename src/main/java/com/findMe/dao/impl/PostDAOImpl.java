@@ -56,12 +56,10 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
 
             predicate = builder.and(predicate,builder.or(
                     builder.equal(userRoot.get("id"),relationshipRoot.get("relationshipId").get("userFromId")),
-                    builder.equal(userRoot.get("id"),relationshipRoot.get("relationshipId").get("userToId"))
-            ));
+                    builder.equal(userRoot.get("id"),relationshipRoot.get("relationshipId").get("userToId"))));
             predicate = builder.and(predicate,builder.or(
                     builder.equal(relationshipRoot.get("relationshipId").get("userFromId"),userPostedId),
-                    builder.equal(relationshipRoot.get("relationshipId").get("userToId"),userPostedId)
-            ));
+                    builder.equal(relationshipRoot.get("relationshipId").get("userToId"),userPostedId)));
 
             predicate = builder.and(predicate,builder.equal(relationshipRoot.get("relationshipStatus"), RelationshipStatus.ACCEPTED));
             predicate = builder.and(predicate,exp.in(usersTaggedIds));

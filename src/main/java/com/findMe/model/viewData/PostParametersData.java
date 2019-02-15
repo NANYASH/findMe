@@ -1,4 +1,4 @@
-package com.findMe.model.validateData;
+package com.findMe.model.viewData;
 
 import com.findMe.model.User;
 import lombok.AllArgsConstructor;

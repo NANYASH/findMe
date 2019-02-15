@@ -8,7 +8,7 @@ import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.model.Post;
 import com.findMe.model.Relationship;
-import com.findMe.model.validateData.PostParametersData;
+import com.findMe.model.viewData.PostParametersData;
 import com.findMe.model.validateData.PostValidatorRequestData;
 import com.findMe.service.PostService;
 import com.findMe.validator.postValidator.PostValidator;
