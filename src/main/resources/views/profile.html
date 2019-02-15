@@ -122,31 +122,16 @@
                                 </div>
                                 <div th:if=" ${status} eq 'ACCEPTED' or ${status} eq 'MY_PROFILE'">
                                     <div class="panel-body">
-                                        <form id="create-post">
-
-                                            <!-- <div class="form-group">
-                                                 <textarea class="form-control" placeholder="Write on the wall"></textarea>
-                                             </div>-->
-
+                                        <form id="create-post" th:object="${PostParametersData}">
                                             <div class="form-group">
                                                 <input id="text" name="text" type="text"
                                                        class="form-control input-md" placeholder="Write on the wall"
                                                        required/>
                                             </div>
-                                            <button id="submitPost" th:onclick="'createPost();'" type="submit"
-                                                    class="btn btn-default">Submit
+                                            <button id="submitPost" type="submit" class="btn btn-default">Submit
                                             </button>
                                             <div class="pull-right">
                                                 <div class="btn-toolbar">
-                                                    <!-- <select class="form-group" id="usersTagged">
-                                                         <option selected="selected">
-                                                             Friends
-                                                         </option>
-                                                         <tr th:each="friend : ${friends}">
-                                                             <option th:text="${friend.getFirstName()}+' '+${friend.getLastName()}"/>
-                                                         </tr>
-                                                     </select>-->
-
                                                     <div class="form-group">
                                                         <input id="location" name="location" type="text"
                                                                placeholder="Location"
@@ -439,24 +424,22 @@
         })
     }
 
-    function createPost() {
+    $("#create-post").submit(function (e) {
+        e.preventDefault();
+
         $.ajax({
             url: "/add-post",
             type: "POST",
-            data: {
-                text: $("#text").val(),
-                userPageId: userId.toString(),
-                usersTagged: $("#usersTagged").val(),
-                location: $("#location").val()
-            },
+            data: $('#create-post').serialize()+'&userPageId=' + userId,
             success: function success() {
                 window.location.reload(true);
             },
-            error: function error(xhr) {
+            error: function (xhr) {
                 alert(xhr.responseText);
             }
         });
-    };
+    });
+
 
     function filter() {
         $.ajax({

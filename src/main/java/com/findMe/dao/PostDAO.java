@@ -14,5 +14,5 @@ public interface PostDAO {
 
     List<Post> findPosts(Long userPageId, String userPostedId, String byFriends) throws InternalServerError;
 
-    List<User> findUsersTagged(Long[] usersTaggedIds) throws InternalServerError;
+    List<User> findUsersTagged(Long userPostedId, Long[] usersTaggedIds) throws InternalServerError;
 }

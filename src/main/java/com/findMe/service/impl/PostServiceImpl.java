@@ -44,7 +44,7 @@ public class PostServiceImpl implements PostService {
         Long[] usersTaggedIds = validateIds(postParametersData.getUsersTagged());
 
         if (usersTaggedIds.length != 0)
-            post.setUsersTagged(postDAO.findUsersTagged(usersTaggedIds));
+            post.setUsersTagged(postDAO.findUsersTagged(postParametersData.getUserPosted().getId(), usersTaggedIds));
         if (postParametersData.getUserPosted().getId().equals(postParametersData.getUserPageId())) {
             post.setUserPagePosted(postParametersData.getUserPosted());
         } else {
