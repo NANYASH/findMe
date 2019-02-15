@@ -149,10 +149,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <form id="filter-post">
+                                <form id="filter-post" th:object="${PostFilterData}">
                                     <div class="col-md-12">
                                         <h3 class="panel-title">Filter by:
-                                            <input id="allFriends" type="checkbox" value="false"
+                                            <input id="byFriends" type="checkbox" th:default="false" value="false"
                                                    class="inline w3-margin-left"/>
                                             <th>All friends</th>
 
@@ -168,8 +168,7 @@
                                                 </tr>
                                             </select>
                                             <div class="pull-right">
-                                                <button id="filter-button" type="button" class="btn btn-default"
-                                                        th:onclick="'filter();'">
+                                                <button id="filter-button" type="submit" class="btn btn-default">
                                                     <i class="glyphicon glyphicon-filter"></i>Filter
                                                 </button>
                                             </div>
@@ -440,14 +439,32 @@
         });
     });
 
+    $("#filter-post").submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: "/user/" + userId,
+            type: "GET",
+            data: $('#filter-post').serialize()+'&userPostedId='+ $("#friendId option:selected").val()+'&byFriends='+$('#byFriends').val(),
+            success: function (result) {
+                $(function () {
+                    $("body").html(result);
+                });
+            },
+            error: function (xhr) {
+                alert(xhr.responseText);
+            }
+        });
+    });
 
-    function filter() {
+
+
+   /* function filter() {
         $.ajax({
             url: "/user/" + userId,
             type: "GET",
             data: {
                 userPostedId: $("#friendId option:selected").val(),
-                byFriends: $('#allFriends').val()
+                byFriends: $('#byFriends').val()
             },
             success: function (result) {
                 $(function () {
@@ -458,9 +475,9 @@
                 alert(xhr.responseText);
             }
         });
-    };
+    };*/
 
-    $("#allFriends").on('change', function () {
+    $("#byFriends").on('change', function () {
         if ($(this).is(':checked')) {
             $(this).attr('value', 'true');
         } else {
@@ -469,7 +486,7 @@
     });
 
     $(function () {
-        $('#allFriends').change(function () {
+        $('#byFriends').change(function () {
             var disabled = $(this).is(':checked')
             $('#friendId').prop('disabled', disabled);
         });
@@ -478,13 +495,13 @@
     $(function () {
         $('#friendId').change(function () {
             var disabled = this.value != 'Select user'
-            $('#allFriends').prop('disabled', disabled);
+            $('#byFriends').prop('disabled', disabled);
         });
     });
 
     $(function () {
-        $('#friendId,#allFriends').change(function () {
-            var disabled = $("#friendId").is(":not(:disabled)") && $("#allFriends").is(":not(:disabled)");
+        $('#friendId,#byFriends').change(function () {
+            var disabled = $("#friendId").is(":not(:disabled)") && $("#byFriends").is(":not(:disabled)");
             $('#filter-button').prop('disabled', disabled);
         });
     });

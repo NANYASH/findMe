@@ -8,6 +8,7 @@ import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.model.Post;
 import com.findMe.model.Relationship;
+import com.findMe.model.viewData.PostFilterData;
 import com.findMe.model.viewData.PostParametersData;
 import com.findMe.model.validateData.PostValidatorRequestData;
 import com.findMe.service.PostService;
@@ -58,8 +59,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> findPosts(Long userPageId, String userPostedId, String byFriends) throws InternalServerError {
-        return postDAO.findPosts(userPageId,userPostedId,byFriends);
+    public List<Post> findPosts(PostFilterData postFilterData) throws InternalServerError {
+        return postDAO.findPosts(postFilterData);
     }
 
     private Post buildPost(PostParametersData postParametersData){

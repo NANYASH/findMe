@@ -1,13 +1,11 @@
 package com.findMe.model.viewData;
 
 import com.findMe.model.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
+@ToString
 @Getter
 @Setter
 public class PostParametersData {

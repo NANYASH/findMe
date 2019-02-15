@@ -7,6 +7,7 @@ import com.findMe.model.Post;
 import com.findMe.model.Relationship;
 import com.findMe.model.User;
 import com.findMe.model.enums.RelationshipStatus;
+import com.findMe.model.viewData.PostFilterData;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
@@ -22,19 +23,19 @@ import static com.findMe.util.Util.convertToBoolean;
 public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
 
     @Override
-    public List<Post> findPosts(Long userPageId, String userPostedId, String byFriends) throws InternalServerError {
+    public List<Post> findPosts(PostFilterData postFilterData) throws InternalServerError {
         try {
             CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
             CriteriaQuery<Post> criteria = builder.createQuery(Post.class);
             Root<Post> root = criteria.from(Post.class);
             Predicate predicate = builder.conjunction();
 
-            predicate = builder.and(predicate, builder.equal(root.get("userPagePosted").get("id"), userPageId));
+            predicate = builder.and(predicate, builder.equal(root.get("userPagePosted").get("id"), postFilterData.getUserPageId()));
 
-            if (userPostedId != null && !userPostedId.isEmpty())
-                predicate = builder.and(predicate, builder.equal(root.get("userPosted").get("id"), convertId(userPostedId)));
-            else if (convertToBoolean(byFriends).equals(true))
-                predicate = builder.and(predicate, builder.notEqual(root.get("userPosted").get("id"), userPageId));
+            if (postFilterData.getUserPostedId() != null)
+                predicate = builder.and(predicate, builder.equal(root.get("userPosted").get("id"), postFilterData.getUserPostedId()));
+            else if (convertToBoolean(postFilterData.getByFriends()).equals(true))
+                predicate = builder.and(predicate, builder.notEqual(root.get("userPosted").get("id"), postFilterData.getUserPageId()));
 
             return getEntityManager().createQuery(criteria.select(root)
                     .where(predicate)).getResultList();
