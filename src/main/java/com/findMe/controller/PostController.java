@@ -48,10 +48,10 @@ public class PostController {
     }
 
     @RequestMapping(path = "/feed", method = RequestMethod.GET)
-    public String findNews(HttpSession session, Model model) {
+    public String findPostsByFriendsPages(HttpSession session, Model model) {
         try {
             User userSession = validateLogIn(session);
-            model.addAttribute("news", postService.findNews(userSession.getId()));
+            model.addAttribute("news", postService.findPostsByFriendsPages(userSession.getId()));
         } catch (UnauthorizedException e) {
             e.printStackTrace();
         } catch (InternalServerError e) {

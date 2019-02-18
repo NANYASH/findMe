@@ -95,7 +95,7 @@ public class UserController {
             User foundUserProfile = userService.findUserById(userProfileId);
 
             model.addAttribute("user", foundUserProfile);
-            model.addAttribute("posts",  postService.findPosts(postFilterData));
+            model.addAttribute("posts",  postService.findPostsByPage(postFilterData));
 
             if (userSession != null) {
 

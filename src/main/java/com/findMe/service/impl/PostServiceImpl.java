@@ -60,12 +60,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> findPosts(PostFilterData postFilterData) throws InternalServerError {
+    public List<Post> findPostsByPage(PostFilterData postFilterData) throws InternalServerError {
         return postDAO.findPosts(postFilterData);
     }
 
     @Override
-    public List<Post> findNews(Long userId) throws InternalServerError {
+    public List<Post> findPostsByFriendsPages(Long userId) throws InternalServerError {
         return postDAO.findNews(userId);
     }
 
