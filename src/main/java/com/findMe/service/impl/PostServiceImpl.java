@@ -8,6 +8,7 @@ import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.model.Post;
 import com.findMe.model.Relationship;
+import com.findMe.model.User;
 import com.findMe.model.viewData.PostFilterData;
 import com.findMe.model.viewData.PostParametersData;
 import com.findMe.model.validateData.PostValidatorRequestData;
@@ -53,7 +54,7 @@ public class PostServiceImpl implements PostService {
             post.setUserPagePosted(userDAO.findById(postParametersData.getUserPageId()));
         }
 
-        postValidator.validatePost(new PostValidatorRequestData(post,usersTaggedIds,relationship));
+        postValidator.validatePost(new PostValidatorRequestData(post, usersTaggedIds, relationship));
         post.setDatePosted(LocalDate.now());
         return postDAO.save(post);
     }
@@ -63,7 +64,12 @@ public class PostServiceImpl implements PostService {
         return postDAO.findPosts(postFilterData);
     }
 
-    private Post buildPost(PostParametersData postParametersData){
+    @Override
+    public List<Post> findNews(Long userId) throws InternalServerError {
+        return postDAO.findNews(userId);
+    }
+
+    private Post buildPost(PostParametersData postParametersData) {
         Post post = new Post();
         post.setUserPosted(postParametersData.getUserPosted());
         post.setLocation(postParametersData.getLocation());

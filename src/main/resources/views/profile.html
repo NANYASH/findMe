@@ -30,6 +30,7 @@
         </h2>
     </div>
 </header>
+
 <nav class="navbar navbar-default">
     <div class="container">
         <div class="navbar-header">
@@ -43,11 +44,13 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-
+                <li class="active"><a>Profile</a></li>
+                <li th:if="${status} eq 'MY_PROFILE'"><a th:href="'/feed'">News</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
 </nav>
+
 <section>
     <div class="container">
         <div class="row">
@@ -429,7 +432,7 @@
         $.ajax({
             url: "/add-post",
             type: "POST",
-            data: $('#create-post').serialize()+'&userPageId=' + userId,
+            data: $('#create-post').serialize() + '&userPageId=' + userId,
             success: function success() {
                 window.location.reload(true);
             },
@@ -444,7 +447,7 @@
         $.ajax({
             url: "/user/" + userId,
             type: "GET",
-            data: $('#filter-post').serialize()+'&userPostedId='+ $("#friendId option:selected").val()+'&byFriends='+$('#byFriends').val(),
+            data: $('#filter-post').serialize() + '&userPostedId=' + $("#friendId option:selected").val() + '&yFriends=' + $('#byFriends').val(),
             success: function (result) {
                 $(function () {
                     $("body").html(result);
@@ -455,27 +458,6 @@
             }
         });
     });
-
-
-
-   /* function filter() {
-        $.ajax({
-            url: "/user/" + userId,
-            type: "GET",
-            data: {
-                userPostedId: $("#friendId option:selected").val(),
-                byFriends: $('#byFriends').val()
-            },
-            success: function (result) {
-                $(function () {
-                    $("body").html(result);
-                });
-            },
-            error: function error(xhr) {
-                alert(xhr.responseText);
-            }
-        });
-    };*/
 
     $("#byFriends").on('change', function () {
         if ($(this).is(':checked')) {

@@ -4,17 +4,20 @@ package com.findMe.controller;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.UnauthorizedException;
+import com.findMe.model.User;
 import com.findMe.model.viewData.PostParametersData;
 import com.findMe.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpSession;
+
 import static com.findMe.util.Util.*;
 
 @Controller
@@ -42,6 +45,19 @@ public class PostController {
             e.printStackTrace();
             return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @RequestMapping(path = "/feed", method = RequestMethod.GET)
+    public String findNews(HttpSession session, Model model) {
+        try {
+            User userSession = validateLogIn(session);
+            model.addAttribute("news", postService.findNews(userSession.getId()));
+        } catch (UnauthorizedException e) {
+            e.printStackTrace();
+        } catch (InternalServerError e) {
+            e.printStackTrace();
+        }
+        return "news";
     }
 
 }

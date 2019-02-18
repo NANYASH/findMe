@@ -10,17 +10,24 @@ import com.findMe.model.enums.RelationshipStatus;
 import com.findMe.model.viewData.PostFilterData;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.TypedQuery;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static com.findMe.util.Util.convertId;
 import static com.findMe.util.Util.convertToBoolean;
 
 @Transactional
 @Repository
 public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
+
+    private static final String SELECT_FRIENDS_PAGES_POSTS = "SELECT * FROM POST WHERE USER_PAGE_ID IN" +
+            " (SELECT ID FROM USER_TABLE" +
+            " JOIN RELATIONSHIP ON USER_TABLE.ID = RELATIONSHIP.USER_FROM_ID OR USER_TABLE.ID = RELATIONSHIP.USER_TO_ID" +
+            " WHERE STATUS = 'ACCEPTED' AND ((USER_FROM_ID = ? AND USER_TO_ID = user_table.id) OR (USER_TO_ID = ? AND USER_FROM_ID = user_table.id))) " +
+            " ORDER BY POST.DATE_POSTED";
+
 
     @Override
     public List<Post> findPosts(PostFilterData postFilterData) throws InternalServerError {
@@ -46,6 +53,22 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
     }
 
     @Override
+    public List<Post> findNews(Long userId) throws InternalServerError {
+        try {
+            Query query = getEntityManager().createNativeQuery(SELECT_FRIENDS_PAGES_POSTS, Post.class);
+            query.setParameter(1, userId);
+            query.setParameter(2, userId);
+            return query.getResultList();
+        } catch (NoResultException e) {
+            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
+    }
+
+    @Override
     public List<User> findUsersTagged(Long userPostedId, Long[] usersTaggedIds) throws InternalServerError {
         try {
             CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
@@ -55,15 +78,15 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
             Predicate predicate = builder.conjunction();
             Expression<String> exp = userRoot.get("id");
 
-            predicate = builder.and(predicate,builder.or(
-                    builder.equal(userRoot.get("id"),relationshipRoot.get("relationshipId").get("userFromId")),
-                    builder.equal(userRoot.get("id"),relationshipRoot.get("relationshipId").get("userToId"))));
-            predicate = builder.and(predicate,builder.or(
-                    builder.equal(relationshipRoot.get("relationshipId").get("userFromId"),userPostedId),
-                    builder.equal(relationshipRoot.get("relationshipId").get("userToId"),userPostedId)));
+            predicate = builder.and(predicate, builder.or(
+                    builder.equal(userRoot.get("id"), relationshipRoot.get("relationshipId").get("userFromId")),
+                    builder.equal(userRoot.get("id"), relationshipRoot.get("relationshipId").get("userToId"))));
+            predicate = builder.and(predicate, builder.or(
+                    builder.equal(relationshipRoot.get("relationshipId").get("userFromId"), userPostedId),
+                    builder.equal(relationshipRoot.get("relationshipId").get("userToId"), userPostedId)));
 
-            predicate = builder.and(predicate,builder.equal(relationshipRoot.get("relationshipStatus"), RelationshipStatus.ACCEPTED));
-            predicate = builder.and(predicate,exp.in(usersTaggedIds));
+            predicate = builder.and(predicate, builder.equal(relationshipRoot.get("relationshipStatus"), RelationshipStatus.ACCEPTED));
+            predicate = builder.and(predicate, exp.in(usersTaggedIds));
 
             return getEntityManager().createQuery(criteria.select(userRoot)
                     .where(predicate)).getResultList();
@@ -72,6 +95,7 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
             throw new InternalServerError();
         }
     }
+
 
     @Override
     Class<Post> getEntityClass() {
