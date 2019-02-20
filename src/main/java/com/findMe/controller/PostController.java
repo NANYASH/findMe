@@ -61,11 +61,11 @@ public class PostController {
             User userSession = validateLogIn(session);
             if (currentOffset == null) {
                 posts = postService.findPostsByFriendsPages(userSession.getId(), offset);
-                offset = 1L;
+                offset = 10L;
             }else {
                 offset = Long.valueOf(currentOffset);
                 posts = postService.findPostsByFriendsPages(userSession.getId(), offset);
-                offset+=1;
+                offset+=10;
             }
             model.addAttribute("news", posts);
             model.addAttribute("offset", offset);
