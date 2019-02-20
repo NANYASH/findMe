@@ -118,11 +118,11 @@
         })
     }
 
-    function load(inputId) {
+    function load(currentOffset) {
         $.ajax({
             url: "/feed",
             type: "GET",
-            data: {currentSize: inputId.toString()},
+            data: {currentOffset: currentOffset.toString()},
             success: function (result) {
                 $(function () {
                     $("body").html(result);

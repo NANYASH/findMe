@@ -53,17 +53,17 @@ public class PostController {
     }
 
     @RequestMapping(path = "/feed", method = RequestMethod.GET)
-    public String findPostsByFriendsPages(HttpSession session, Model model, @RequestParam(required = false) String currentSize) {
+    public String findPostsByFriendsPages(HttpSession session, Model model, @RequestParam(required = false) String currentOffset) {
         Long offset = 0L;
         List<Post> posts;
 
         try {
             User userSession = validateLogIn(session);
-            if (currentSize == null) {
+            if (currentOffset == null) {
                 posts = postService.findPostsByFriendsPages(userSession.getId(), offset);
                 offset = 1L;
             }else {
-                offset = Long.valueOf(currentSize);
+                offset = Long.valueOf(currentOffset);
                 posts = postService.findPostsByFriendsPages(userSession.getId(), offset);
                 offset+=1;
             }
