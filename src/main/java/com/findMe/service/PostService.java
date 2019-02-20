@@ -11,5 +11,5 @@ import java.util.List;
 public interface PostService {
     Post addPost(PostParametersData postParametersData) throws InternalServerError, BadRequestException;
     List<Post> findPostsByPage(PostFilterData postFilterData) throws InternalServerError;
-    List<Post> findPostsByFriendsPages(Long userId) throws InternalServerError;
+    List<Post> findPostsByFriendsPages(Long userId, Long limit) throws InternalServerError;
 }

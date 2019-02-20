@@ -65,8 +65,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> findPostsByFriendsPages(Long userId) throws InternalServerError {
-        return postDAO.findNews(userId);
+    public List<Post> findPostsByFriendsPages(Long userId, Long limit) throws InternalServerError {
+        return postDAO.findNews(userId, limit);
     }
 
     private Post buildPost(PostParametersData postParametersData) {

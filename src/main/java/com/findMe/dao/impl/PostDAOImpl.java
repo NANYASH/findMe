@@ -22,11 +22,11 @@ import static com.findMe.util.Util.convertToBoolean;
 @Repository
 public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
 
-    private static final String SELECT_FRIENDS_PAGES_POSTS = "SELECT * FROM POST WHERE USER_PAGE_ID IN" +
-            " (SELECT ID FROM USER_TABLE" +
+    private static final String SELECT_FRIENDS_PAGES_POSTS = "SELECT * FROM POST WHERE USER_PAGE_ID IN(" +
+            " SELECT ID FROM USER_TABLE" +
             " JOIN RELATIONSHIP ON USER_TABLE.ID = RELATIONSHIP.USER_FROM_ID OR USER_TABLE.ID = RELATIONSHIP.USER_TO_ID" +
-            " WHERE STATUS = 'ACCEPTED' AND ((USER_FROM_ID = ? AND USER_TO_ID = user_table.id) OR (USER_TO_ID = ? AND USER_FROM_ID = user_table.id))) " +
-            " ORDER BY POST.DATE_POSTED";
+            " WHERE STATUS = 'ACCEPTED' AND ((USER_FROM_ID = ? AND USER_TO_ID = user_table.id) OR (USER_TO_ID = ? AND USER_FROM_ID = user_table.id)))" +
+            " ORDER BY POST.DATE_POSTED DESC LIMIT 1 OFFSET ?";
 
 
     @Override
@@ -53,11 +53,12 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
     }
 
     @Override
-    public List<Post> findNews(Long userId) throws InternalServerError {
+    public List<Post> findNews(Long userId, Long limit) throws InternalServerError {
         try {
             Query query = getEntityManager().createNativeQuery(SELECT_FRIENDS_PAGES_POSTS, Post.class);
             query.setParameter(1, userId);
             query.setParameter(2, userId);
+            query.setParameter(3, limit);
             return query.getResultList();
         } catch (NoResultException e) {
             e.printStackTrace();
@@ -67,29 +68,6 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
             throw new InternalServerError();
         }
     }
-
-
-     /*private static final String SELECT_FRIENDS_PAGES_POSTS2 = "SELECT p FROM Post p WHERE p.userPagePosted.id in" +
-            " (SELECT User.id FROM Relationship, User WHERE Relationship.relationshipStatus = 'ACCEPTED' AND " +
-            " ((Relationship.userToId = User.id AND Relationship.userFromId = :userId) OR" +
-            " (Relationship.userFromId = User.id AND Relationship.userToId = :userId)))" +
-            " AND p.userPagePosted.id not in :usersIds" +
-            " ORDER BY p.datePosted";
-
-
-      public List<Post> findPostsByFriendsPages(Long userId, List<Long> usersIds) throws InternalServerError {
-        try {
-            Relationship result = null;
-            List<Post> resultList = getEntityManager().createQuery(SELECT_FRIENDS_PAGES_POSTS2, Post.class)
-                    .setParameter("userId",userId)
-                    .setParameter("usersIds", usersIds)
-                    .getResultList();
-            return resultList;
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new InternalServerError();
-        }
-    }*/
 
 
     @Override

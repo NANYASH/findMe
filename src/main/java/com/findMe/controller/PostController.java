@@ -4,6 +4,7 @@ package com.findMe.controller;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.UnauthorizedException;
+import com.findMe.model.Post;
 import com.findMe.model.User;
 import com.findMe.model.viewData.PostParametersData;
 import com.findMe.service.PostService;
@@ -15,8 +16,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.findMe.util.Util.*;
 
@@ -48,10 +53,22 @@ public class PostController {
     }
 
     @RequestMapping(path = "/feed", method = RequestMethod.GET)
-    public String findPostsByFriendsPages(HttpSession session, Model model) {
+    public String findPostsByFriendsPages(HttpSession session, Model model, @RequestParam(required = false) String currentSize) {
+        Long offset = 0L;
+        List<Post> posts;
+
         try {
             User userSession = validateLogIn(session);
-            model.addAttribute("news", postService.findPostsByFriendsPages(userSession.getId()));
+            if (currentSize == null) {
+                posts = postService.findPostsByFriendsPages(userSession.getId(), offset);
+                offset = 1L;
+            }else {
+                offset = Long.valueOf(currentSize);
+                posts = postService.findPostsByFriendsPages(userSession.getId(), offset);
+                offset+=1;
+            }
+            model.addAttribute("news", posts);
+            model.addAttribute("offset", offset);
         } catch (UnauthorizedException e) {
             e.printStackTrace();
         } catch (InternalServerError e) {
