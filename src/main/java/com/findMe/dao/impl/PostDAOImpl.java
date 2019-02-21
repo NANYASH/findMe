@@ -22,11 +22,13 @@ import static com.findMe.util.Util.convertToBoolean;
 @Repository
 public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
 
-    private static final String SELECT_FRIENDS_PAGES_POSTS = "SELECT * FROM POST WHERE USER_PAGE_ID IN(" +
-            " SELECT ID FROM USER_TABLE" +
-            " JOIN RELATIONSHIP ON USER_TABLE.ID = RELATIONSHIP.USER_FROM_ID OR USER_TABLE.ID = RELATIONSHIP.USER_TO_ID" +
-            " WHERE STATUS = 'ACCEPTED' AND ((USER_FROM_ID = ? AND USER_TO_ID = user_table.id) OR (USER_TO_ID = ? AND USER_FROM_ID = user_table.id)))" +
-            " ORDER BY POST.DATE_POSTED DESC LIMIT 1 OFFSET ?";
+    private static final String SQL_NEWS_LIST = "SELECT p" +
+            " FROM Post p" +
+            " LEFT JOIN Relationship r " +
+            " ON (r.relationshipId.userFromId = :userId AND r.relationshipId.userToId = p.userPagePosted.id) " +
+            " OR (r.relationshipId.userToId = :userId AND r.relationshipId.userFromId= p.userPagePosted.id)" +
+            " WHERE r.relationshipStatus = 'ACCEPTED'" +
+            " ORDER BY p.datePosted DESC";
 
 
     @Override
@@ -53,12 +55,12 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
     }
 
     @Override
-    public List<Post> findNews(Long userId, Long limit) throws InternalServerError {
+    public List<Post> findNews(Long userId, Integer offset) throws InternalServerError {
         try {
-            Query query = getEntityManager().createNativeQuery(SELECT_FRIENDS_PAGES_POSTS, Post.class);
-            query.setParameter(1, userId);
-            query.setParameter(2, userId);
-            query.setParameter(3, limit);
+            Query query = getEntityManager().createQuery(SQL_NEWS_LIST, Post.class);
+            query.setParameter("userId", userId);
+            query.setFirstResult(offset);
+            query.setMaxResults(10);
             return query.getResultList();
         } catch (NoResultException e) {
             e.printStackTrace();

@@ -15,7 +15,7 @@ public interface PostDAO {
 
     List<Post> findPosts(PostFilterData postFilterData) throws InternalServerError;
 
-    List<Post> findNews(Long userId, Long limit) throws InternalServerError;
+    List<Post> findNews(Long userId, Integer offset) throws InternalServerError;
 
     List<User> findUsersTagged(Long userPostedId, Long[] usersTaggedIds) throws InternalServerError;
 }
