@@ -6,6 +6,7 @@ import com.findMe.exception.InternalServerError;
 import com.findMe.exception.NotFoundException;
 import com.findMe.exception.UnauthorizedException;
 import com.findMe.model.User;
+import com.findMe.model.viewData.PostFilterData;
 import com.findMe.service.PostService;
 import com.findMe.service.RelationshipService;
 import com.findMe.service.UserService;
@@ -86,14 +87,15 @@ public class UserController {
     }
 
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
-    public String profile(HttpSession session, Model model, @PathVariable String userId, @RequestParam(required=false) String userPostedId, @RequestParam(defaultValue = "false",required=false) String byFriends) {
+    public String profile(HttpSession session, Model model, @PathVariable String userId, @ModelAttribute PostFilterData postFilterData) {
         try {
             Long userProfileId = convertId(userId);
+            postFilterData.setUserPageId(userProfileId);
             User userSession = (User) session.getAttribute("user");
             User foundUserProfile = userService.findUserById(userProfileId);
 
             model.addAttribute("user", foundUserProfile);
-            model.addAttribute("posts", postService.findPosts(userProfileId, userPostedId, byFriends));
+            model.addAttribute("posts",  postService.findPostsByPage(postFilterData));
 
             if (userSession != null) {
 
@@ -104,7 +106,6 @@ public class UserController {
 
                     if (relationshipStatus.equals(RelationshipStatus.ACCEPTED))
                         model.addAttribute("friends", relationshipService.findByRelationshipStatus(userProfileId, RelationshipStatus.ACCEPTED));
-
 
                 } else if (userSession.equals(foundUserProfile)) {
                     model.addAttribute("status", RelationshipStatus.MY_PROFILE.toString());
@@ -130,6 +131,5 @@ public class UserController {
     public String getRegisterPage() {
         return "registerPage";
     }
-
 
 }

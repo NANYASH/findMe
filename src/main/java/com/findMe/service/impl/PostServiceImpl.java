@@ -8,6 +8,10 @@ import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.model.Post;
 import com.findMe.model.Relationship;
+import com.findMe.model.User;
+import com.findMe.model.viewData.PostFilterData;
+import com.findMe.model.viewData.PostParametersData;
+import com.findMe.model.validateData.PostValidatorRequestData;
 import com.findMe.service.PostService;
 import com.findMe.validator.postValidator.PostValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
 import java.util.List;
+
+import static com.findMe.util.Util.validateIds;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -33,26 +39,42 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post addPost(Post post, Long userPageId, Long[] usersTaggedIds) throws InternalServerError, BadRequestException {
+    public Post addPost(PostParametersData postParametersData) throws InternalServerError, BadRequestException {
         Relationship relationship = null;
+        Post post = buildPost(postParametersData);
+
+        Long[] usersTaggedIds = validateIds(postParametersData.getUsersTagged());
 
         if (usersTaggedIds.length != 0)
-            post.setUsersTagged(postDAO.findUsersTagged(usersTaggedIds));
-
-        if (post.getUserPosted().getId().equals(userPageId)) {
-            post.setUserPagePosted(post.getUserPosted());
+            post.setUsersTagged(postDAO.findUsersTagged(postParametersData.getUserPosted().getId(), usersTaggedIds));
+        if (postParametersData.getUserPosted().getId().equals(postParametersData.getUserPageId())) {
+            post.setUserPagePosted(postParametersData.getUserPosted());
         } else {
-            relationship = relationshipDAO.getRelationship(userPageId, post.getUserPosted().getId());
-            post.setUserPagePosted(userDAO.findById(userPageId));
+            relationship = relationshipDAO.getRelationship(postParametersData.getUserPageId(), postParametersData.getUserPosted().getId());
+            post.setUserPagePosted(userDAO.findById(postParametersData.getUserPageId()));
         }
-        postValidator.validatePost(post, usersTaggedIds, relationship);
+
+        postValidator.validatePost(new PostValidatorRequestData(post, usersTaggedIds, relationship));
         post.setDatePosted(LocalDate.now());
         return postDAO.save(post);
     }
 
     @Override
-    public List<Post> findPosts(Long userPageId, String userPostedId, String byFriends) throws InternalServerError {
-        return postDAO.findPosts(userPageId,userPostedId,byFriends);
+    public List<Post> findPostsByPage(PostFilterData postFilterData) throws InternalServerError {
+        return postDAO.findPosts(postFilterData);
+    }
+
+    @Override
+    public List<Post> findPostsByFriendsPages(Long userId, Integer offset) throws InternalServerError {
+        return postDAO.findNews(userId, offset);
+    }
+
+    private Post buildPost(PostParametersData postParametersData) {
+        Post post = new Post();
+        post.setUserPosted(postParametersData.getUserPosted());
+        post.setLocation(postParametersData.getLocation());
+        post.setText(postParametersData.getText());
+        return post;
     }
 
 }

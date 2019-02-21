@@ -7,6 +7,7 @@ import com.findMe.model.enums.RelationshipStatus;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.model.User;
+import com.findMe.model.validateData.RelationshipValidatorRequestData;
 import com.findMe.service.RelationshipService;
 import com.findMe.validator.relationshipValidator.RelationshipValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +35,9 @@ public class RelationshipServiceImpl implements RelationshipService {
 
         Relationship relationship = relationshipDAO.getRelationship(userFromId, userToId);
 
-        relationshipValidator.validateUpdate(userFromId, userToId, relationship, RelationshipStatus.REQUESTED,
+        relationshipValidator.validateUpdate(new RelationshipValidatorRequestData(userFromId, userToId, relationship, RelationshipStatus.REQUESTED,
                 relationshipDAO.getNumberOfRelationships(userFromId, RelationshipStatus.ACCEPTED),
-                relationshipDAO.getNumberOfOutgoingRequests(userFromId));
+                relationshipDAO.getNumberOfOutgoingRequests(userFromId)));
 
         if (relationship == null) {
             relationshipDAO.addRelationship(new Relationship(new RelationshipId(userFromId, userToId), RelationshipStatus.REQUESTED, LocalDate.now()));
@@ -54,9 +55,9 @@ public class RelationshipServiceImpl implements RelationshipService {
 
         Relationship relationship = relationshipDAO.getRelationship(userFromId, userToId);
 
-        relationshipValidator.validateUpdate(userFromId, userToId, relationship, status,
+        relationshipValidator.validateUpdate(new RelationshipValidatorRequestData(userFromId, userToId, relationship, status,
                 relationshipDAO.getNumberOfRelationships(userToId, RelationshipStatus.ACCEPTED),
-                relationshipDAO.getNumberOfOutgoingRequests(userFromId));
+                relationshipDAO.getNumberOfOutgoingRequests(userFromId)));
 
         relationship.setRelationshipStatus(status);
         relationship.setLastUpdateDate(LocalDate.now());

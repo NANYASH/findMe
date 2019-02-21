@@ -10,8 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RelationshipValidator {
 
-    public Relationship validateUpdate(Long userFromId, Long userToId,Relationship relationship, RelationshipStatus newStatus, Long numberOfFriends, Long numberOfOutgoingRequests) throws BadRequestException {
-        RelationshipValidatorRequestData relationshipValidatorRequestData = new RelationshipValidatorRequestData(userFromId, userToId, relationship,newStatus,numberOfFriends,numberOfOutgoingRequests);
+    public Relationship validateUpdate(RelationshipValidatorRequestData relationshipValidatorRequestData) throws BadRequestException {
         AbstractRelationshipChainValidator requestValidator = new RequestValidator();
         AbstractRelationshipChainValidator rejectValidator = new RejectValidator();
         AbstractRelationshipChainValidator cancelValidator = new CancelValidator();
@@ -34,6 +33,6 @@ public class RelationshipValidator {
 
         requestValidator.validate();
 
-        return relationship;
+        return relationshipValidatorRequestData.getRelationship();
     }
 }

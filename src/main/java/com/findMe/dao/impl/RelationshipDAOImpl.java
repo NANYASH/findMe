@@ -154,7 +154,6 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
         }
     }
 
-
     @Override
     Class<Relationship> getEntityClass() {
         return Relationship.class;

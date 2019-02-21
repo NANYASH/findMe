@@ -24,7 +24,7 @@ public class Util {
             return Boolean.valueOf(booleanValue);
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            throw new BadRequestException("Cannot be converted to Long type");
+            throw new BadRequestException("Cannot be converted to Boolean type");
         }
     }
 
