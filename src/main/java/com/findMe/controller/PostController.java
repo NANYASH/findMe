@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.findMe.util.Util.*;

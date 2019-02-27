@@ -10,6 +10,7 @@ import com.findMe.model.viewData.PostFilterData;
 import com.findMe.service.PostService;
 import com.findMe.service.RelationshipService;
 import com.findMe.service.UserService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +29,10 @@ import static com.findMe.util.Util.validateLogIn;
 
 @Controller
 public class UserController {
+    private static final Logger LOGGER = Logger.getLogger(UserController.class);
     private UserService userService;
     private RelationshipService relationshipService;
     private PostService postService;
-
 
     @Autowired
     public UserController(UserService userService, RelationshipService relationshipService, PostService postService) {
@@ -44,12 +45,15 @@ public class UserController {
     public ResponseEntity registerUser(@ModelAttribute User user) {
         try {
             userService.registerUser(user);
+            LOGGER.info("User registered.");
             return new ResponseEntity("User is registered.", HttpStatus.CREATED);
         } catch (BadRequestException e) {
             e.printStackTrace();
+            LOGGER.error("BadRequestException: "+e.getMessage());
             return new ResponseEntity("User with such username/email already exists.", HttpStatus.BAD_REQUEST);
         } catch (InternalServerError e) {
             e.printStackTrace();
+            LOGGER.error("InternalServerError: "+e.getMessage());
             return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -62,12 +66,15 @@ public class UserController {
 
             User foundUser = userService.login(email, password);
             session.setAttribute("user", foundUser);
+            LOGGER.info("User logged.");
             return new ResponseEntity<>(foundUser.getId(), HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
+            LOGGER.error("BadRequestException: "+e.getMessage());
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (InternalServerError e) {
             e.printStackTrace();
+            LOGGER.error("BadRequestException: "+e.getMessage());
             return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
