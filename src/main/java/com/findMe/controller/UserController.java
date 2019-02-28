@@ -121,14 +121,18 @@ public class UserController {
                     model.addAttribute("friends", relationshipService.findByRelationshipStatus(userProfileId, RelationshipStatus.ACCEPTED));
                 }
             }
+            LOGGER.info("User page opened.");
         } catch (BadRequestException e) {
             e.printStackTrace();
+            LOGGER.error("BadRequestException: "+e.getMessage());
             return "error400";
         } catch (NotFoundException e) {
             e.printStackTrace();
+            LOGGER.error("NotFoundException: "+e.getMessage());
             return "error404";
         } catch (InternalServerError e) {
             e.printStackTrace();
+            LOGGER.error("BadRequestException: "+e.getMessage());
             return "error500";
         }
         return "profile";
