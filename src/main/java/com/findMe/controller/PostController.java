@@ -27,6 +27,7 @@ import static com.findMe.util.Util.*;
 
 @Controller
 public class PostController {
+    private static final Logger LOGGER = Logger.getLogger(PostController.class);
     private PostService postService;
 
     @Autowired
@@ -39,19 +40,19 @@ public class PostController {
         try {
             postParametersData.setUserPosted(validateLogIn(session));
             postService.addPost(postParametersData);
-            Logger.getLogger("rootLogger").info("Post added.");
+            LOGGER.info("Post added.");
             return new ResponseEntity("Request is sent.", HttpStatus.OK);
         } catch (UnauthorizedException e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").warn("UnauthorizedException: "+e.getMessage());
+            LOGGER.error("UnauthorizedException: "+e.getMessage());
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BadRequestException e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").warn("BadRequestException: "+e.getMessage());
+            LOGGER.error("BadRequestException: "+e.getMessage());
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (InternalServerError e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").fatal("InternalServerError: "+e.getMessage());
+            LOGGER.error("InternalServerError: "+e.getMessage());
             return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -75,10 +76,10 @@ public class PostController {
             model.addAttribute("offset", offset);
         } catch (UnauthorizedException e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").warn("UnauthorizedException: "+e.getMessage());
+            LOGGER.error("UnauthorizedException: "+e.getMessage());
         } catch (InternalServerError e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").fatal("InternalServerError: "+e.getMessage());
+            LOGGER.error("InternalServerError: "+e.getMessage());
         }
         return "news";
     }

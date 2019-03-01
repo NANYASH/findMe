@@ -29,6 +29,7 @@ import static com.findMe.util.Util.validateLogIn;
 
 @Controller
 public class UserController {
+    private static final Logger LOGGER = Logger.getLogger(UserController.class);
     private UserService userService;
     private RelationshipService relationshipService;
     private PostService postService;
@@ -44,15 +45,15 @@ public class UserController {
     public ResponseEntity registerUser(@ModelAttribute User user) {
         try {
             userService.registerUser(user);
-            Logger.getLogger("rootLogger").info("User registered.");
+            LOGGER.info("User registered.");
             return new ResponseEntity("User is registered.", HttpStatus.CREATED);
         } catch (BadRequestException e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").warn("BadRequestException: "+e.getMessage());
+            LOGGER.error("BadRequestException: "+e.getMessage());
             return new ResponseEntity("User with such username/email already exists.", HttpStatus.BAD_REQUEST);
         } catch (InternalServerError e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").fatal("InternalServerError: "+e.getMessage());
+            LOGGER.error("InternalServerError: "+e.getMessage());
             return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -65,15 +66,15 @@ public class UserController {
 
             User foundUser = userService.login(email, password);
             session.setAttribute("user", foundUser);
-            Logger.getLogger("rootLogger").info("User logged.");
+            LOGGER.info("User logged.");
             return new ResponseEntity<>(foundUser.getId(), HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").warn("BadRequestException: "+e.getMessage());
+            LOGGER.error("BadRequestException: "+e.getMessage());
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (InternalServerError e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").fatal("InternalServerError: "+e.getMessage());
+            LOGGER.error("InternalServerError: "+e.getMessage());
             return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -85,7 +86,7 @@ public class UserController {
             user = validateLogIn(session);
         } catch (UnauthorizedException e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").warn("BadRequestException: "+e.getMessage());
+            LOGGER.error("BadRequestException: "+e.getMessage());
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
         userService.logout(user, LocalDate.now());
@@ -124,15 +125,15 @@ public class UserController {
             Logger.getLogger("rootLogger").info("User page opened.");
         } catch (BadRequestException e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").warn("BadRequestException: "+e.getMessage());
+            LOGGER.error("BadRequestException: "+e.getMessage());
             return "error400";
         } catch (NotFoundException e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").error("NotFoundException: "+e.getMessage());
+            LOGGER.error("NotFoundException: "+e.getMessage());
             return "error404";
         } catch (InternalServerError e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").fatal("InternalServerError: "+e.getMessage());
+            LOGGER.error("InternalServerError: "+e.getMessage());
             return "error500";
         }
         return "profile";
