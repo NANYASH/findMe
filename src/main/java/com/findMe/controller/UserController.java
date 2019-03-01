@@ -73,7 +73,7 @@ public class UserController {
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (InternalServerError e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").fatal("BadRequestException: "+e.getMessage());
+            Logger.getLogger("rootLogger").fatal("InternalServerError: "+e.getMessage());
             return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -132,7 +132,7 @@ public class UserController {
             return "error404";
         } catch (InternalServerError e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").fatal("BadRequestException: "+e.getMessage());
+            Logger.getLogger("rootLogger").fatal("InternalServerError: "+e.getMessage());
             return "error500";
         }
         return "profile";

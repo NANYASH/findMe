@@ -8,6 +8,7 @@ import com.findMe.model.Post;
 import com.findMe.model.User;
 import com.findMe.model.viewData.PostParametersData;
 import com.findMe.service.PostService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,15 +39,19 @@ public class PostController {
         try {
             postParametersData.setUserPosted(validateLogIn(session));
             postService.addPost(postParametersData);
+            Logger.getLogger("rootLogger").info("Post added.");
             return new ResponseEntity("Request is sent.", HttpStatus.OK);
         } catch (UnauthorizedException e) {
             e.printStackTrace();
+            Logger.getLogger("rootLogger").warn("UnauthorizedException: "+e.getMessage());
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (BadRequestException e) {
             e.printStackTrace();
+            Logger.getLogger("rootLogger").warn("BadRequestException: "+e.getMessage());
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (InternalServerError e) {
             e.printStackTrace();
+            Logger.getLogger("rootLogger").fatal("InternalServerError: "+e.getMessage());
             return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -70,8 +75,10 @@ public class PostController {
             model.addAttribute("offset", offset);
         } catch (UnauthorizedException e) {
             e.printStackTrace();
+            Logger.getLogger("rootLogger").warn("UnauthorizedException: "+e.getMessage());
         } catch (InternalServerError e) {
             e.printStackTrace();
+            Logger.getLogger("rootLogger").fatal("InternalServerError: "+e.getMessage());
         }
         return "news";
     }
