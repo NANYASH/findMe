@@ -122,7 +122,7 @@ public class UserController {
                     model.addAttribute("friends", relationshipService.findByRelationshipStatus(userProfileId, RelationshipStatus.ACCEPTED));
                 }
             }
-            Logger.getLogger("rootLogger").info("User page opened.");
+            LOGGER.info("User page opened.");
         } catch (BadRequestException e) {
             e.printStackTrace();
             LOGGER.error("BadRequestException: "+e.getMessage());
