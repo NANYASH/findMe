@@ -48,7 +48,7 @@ public class UserController {
             return new ResponseEntity("User is registered.", HttpStatus.CREATED);
         } catch (BadRequestException e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").error("BadRequestException: "+e.getMessage());
+            Logger.getLogger("rootLogger").warn("BadRequestException: "+e.getMessage());
             return new ResponseEntity("User with such username/email already exists.", HttpStatus.BAD_REQUEST);
         } catch (InternalServerError e) {
             e.printStackTrace();
@@ -69,7 +69,7 @@ public class UserController {
             return new ResponseEntity<>(foundUser.getId(), HttpStatus.OK);
         } catch (BadRequestException e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").error("BadRequestException: "+e.getMessage());
+            Logger.getLogger("rootLogger").warn("BadRequestException: "+e.getMessage());
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (InternalServerError e) {
             e.printStackTrace();
@@ -85,6 +85,7 @@ public class UserController {
             user = validateLogIn(session);
         } catch (UnauthorizedException e) {
             e.printStackTrace();
+            Logger.getLogger("rootLogger").warn("BadRequestException: "+e.getMessage());
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
         userService.logout(user, LocalDate.now());
@@ -123,11 +124,11 @@ public class UserController {
             Logger.getLogger("rootLogger").info("User page opened.");
         } catch (BadRequestException e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").error("BadRequestException: "+e.getMessage());
+            Logger.getLogger("rootLogger").warn("BadRequestException: "+e.getMessage());
             return "error400";
         } catch (NotFoundException e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").error("NotFoundException: "+e.getMessage());
+            Logger.getLogger("rootLogger").warn("NotFoundException: "+e.getMessage());
             return "error404";
         } catch (InternalServerError e) {
             e.printStackTrace();
