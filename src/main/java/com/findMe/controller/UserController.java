@@ -128,7 +128,7 @@ public class UserController {
             return "error400";
         } catch (NotFoundException e) {
             e.printStackTrace();
-            Logger.getLogger("rootLogger").warn("NotFoundException: "+e.getMessage());
+            Logger.getLogger("rootLogger").error("NotFoundException: "+e.getMessage());
             return "error404";
         } catch (InternalServerError e) {
             e.printStackTrace();
