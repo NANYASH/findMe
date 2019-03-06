@@ -36,51 +36,28 @@ public class PostController {
     }
 
     @RequestMapping(path = "/add-post", method = RequestMethod.POST)
-    public ResponseEntity createNewPost(HttpSession session, @ModelAttribute PostParametersData postParametersData) throws UnauthorizedException {
-        try {
-            postParametersData.setUserPosted(validateLogIn(session));
-            postService.addPost(postParametersData);
-            LOGGER.info("Post added.");
-            return new ResponseEntity("Request is sent.", HttpStatus.OK);
-        } catch (UnauthorizedException e) {
-            e.printStackTrace();
-            LOGGER.error("UnauthorizedException: "+e.getMessage());
-            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (BadRequestException e) {
-            e.printStackTrace();
-            LOGGER.error("BadRequestException: "+e.getMessage());
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (InternalServerError e) {
-            e.printStackTrace();
-            LOGGER.error("InternalServerError: "+e.getMessage());
-            return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity createNewPost(HttpSession session, @ModelAttribute PostParametersData postParametersData) throws UnauthorizedException, BadRequestException, InternalServerError {
+        postParametersData.setUserPosted(validateLogIn(session));
+        postService.addPost(postParametersData);
+        LOGGER.info("Post added.");
+        return new ResponseEntity("Request is sent.", HttpStatus.OK);
     }
 
     @RequestMapping(path = "/feed", method = RequestMethod.GET)
-    public String findPostsByFriendsPages(HttpSession session, Model model, @RequestParam(required = false) String currentOffset) {
+    public String findPostsByFriendsPages(HttpSession session, Model model, @RequestParam(required = false) String currentOffset) throws UnauthorizedException, InternalServerError {
         Integer offset = 0;
         List<Post> posts;
-
-        try {
-            User userSession = validateLogIn(session);
-            if (currentOffset == null) {
-                posts = postService.findPostsByFriendsPages(userSession.getId(), offset);
-                offset = 10;
-            }else {
-                offset = Integer.valueOf(currentOffset);
-                posts = postService.findPostsByFriendsPages(userSession.getId(), offset);
-                offset+=10;
-            }
-            model.addAttribute("news", posts);
-            model.addAttribute("offset", offset);
-        } catch (UnauthorizedException e) {
-            e.printStackTrace();
-            LOGGER.error("UnauthorizedException: "+e.getMessage());
-        } catch (InternalServerError e) {
-            e.printStackTrace();
-            LOGGER.error("InternalServerError: "+e.getMessage());
+        User userSession = validateLogIn(session);
+        if (currentOffset == null) {
+            posts = postService.findPostsByFriendsPages(userSession.getId(), offset);
+            offset = 10;
+        } else {
+            offset = Integer.valueOf(currentOffset);
+            posts = postService.findPostsByFriendsPages(userSession.getId(), offset);
+            offset += 10;
         }
+        model.addAttribute("news", posts);
+        model.addAttribute("offset", offset);
         return "news";
     }
 

@@ -42,100 +42,60 @@ public class UserController {
     }
 
     @RequestMapping(path = "/user-registration", method = RequestMethod.POST)
-    public ResponseEntity registerUser(@ModelAttribute User user) {
-        try {
-            userService.registerUser(user);
-            LOGGER.info("User registered.");
-            return new ResponseEntity("User is registered.", HttpStatus.CREATED);
-        } catch (BadRequestException e) {
-            e.printStackTrace();
-            LOGGER.error("BadRequestException: "+e.getMessage());
-            return new ResponseEntity("User with such username/email already exists.", HttpStatus.BAD_REQUEST);
-        } catch (InternalServerError e) {
-            e.printStackTrace();
-            LOGGER.error("InternalServerError: "+e.getMessage());
-            return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity registerUser(@ModelAttribute User user) throws BadRequestException, InternalServerError {
+        userService.registerUser(user);
+        LOGGER.info("User (id: "+user.getId()+") registered.");
+        return new ResponseEntity("User is registered.", HttpStatus.CREATED);
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.GET)
-    public ResponseEntity logIn(HttpSession session, @RequestParam String email, @RequestParam String password) {
-        try {
-            if (session.getAttribute("user") != null)
-                return new ResponseEntity("User is already logged in.", HttpStatus.FORBIDDEN);
+    public ResponseEntity logIn(HttpSession session, @RequestParam String email, @RequestParam String password) throws BadRequestException, InternalServerError {
+        if (session.getAttribute("user") != null)
+            return new ResponseEntity("User is already logged in.", HttpStatus.FORBIDDEN);
 
-            User foundUser = userService.login(email, password);
-            session.setAttribute("user", foundUser);
-            LOGGER.info("User logged.");
-            return new ResponseEntity<>(foundUser.getId(), HttpStatus.OK);
-        } catch (BadRequestException e) {
-            e.printStackTrace();
-            LOGGER.error("BadRequestException: "+e.getMessage());
-            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch (InternalServerError e) {
-            e.printStackTrace();
-            LOGGER.error("InternalServerError: "+e.getMessage());
-            return new ResponseEntity("InternalServerError", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        User foundUser = userService.login(email, password);
+        session.setAttribute("user", foundUser);
+        LOGGER.info("User (id: "+foundUser.getId()+") is logged.");
+        return new ResponseEntity<>(foundUser.getId(), HttpStatus.OK);
     }
 
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
-    public ResponseEntity logOut(HttpSession session) throws BadRequestException, InternalServerError {
-        User user;
-        try {
-            user = validateLogIn(session);
-        } catch (UnauthorizedException e) {
-            e.printStackTrace();
-            LOGGER.error("BadRequestException: "+e.getMessage());
-            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        }
+    public ResponseEntity logOut(HttpSession session) throws BadRequestException, InternalServerError, UnauthorizedException {
+        User user = validateLogIn(session);
         userService.logout(user, LocalDate.now());
         session.setAttribute("user", null); // or session.removeAttribute("id");
+        LOGGER.info("User (id: "+user.getId()+") is logged out.");
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
-    public String profile(HttpSession session, Model model, @PathVariable String userId, @ModelAttribute PostFilterData postFilterData) {
-        try {
-            Long userProfileId = convertId(userId);
-            postFilterData.setUserPageId(userProfileId);
-            User userSession = (User) session.getAttribute("user");
-            User foundUserProfile = userService.findUserById(userProfileId);
+    public String profile(HttpSession session, Model model, @PathVariable String userId, @ModelAttribute PostFilterData postFilterData) throws InternalServerError, NotFoundException, BadRequestException {
+        Long userProfileId = convertId(userId);
+        postFilterData.setUserPageId(userProfileId);
+        User userSession = (User) session.getAttribute("user");
+        User foundUserProfile = userService.findUserById(userProfileId);
 
-            model.addAttribute("user", foundUserProfile);
-            model.addAttribute("posts",  postService.findPostsByPage(postFilterData));
+        model.addAttribute("user", foundUserProfile);
+        model.addAttribute("posts", postService.findPostsByPage(postFilterData));
 
-            if (userSession != null) {
+        if (userSession != null) {
 
-                RelationshipStatus relationshipStatus = relationshipService.findStatusById(userSession.getId(), userProfileId);
+            RelationshipStatus relationshipStatus = relationshipService.findStatusById(userSession.getId(), userProfileId);
 
-                if (relationshipStatus != null) {
-                    model.addAttribute("status", relationshipStatus.toString());
+            if (relationshipStatus != null) {
+                model.addAttribute("status", relationshipStatus.toString());
 
-                    if (relationshipStatus.equals(RelationshipStatus.ACCEPTED))
-                        model.addAttribute("friends", relationshipService.findByRelationshipStatus(userProfileId, RelationshipStatus.ACCEPTED));
-
-                } else if (userSession.equals(foundUserProfile)) {
-                    model.addAttribute("status", RelationshipStatus.MY_PROFILE.toString());
-                    model.addAttribute("outgoingRequests", relationshipService.findOutgoingRequests(userProfileId));
-                    model.addAttribute("incomingRequests", relationshipService.findIncomingRequests(userProfileId));
+                if (relationshipStatus.equals(RelationshipStatus.ACCEPTED))
                     model.addAttribute("friends", relationshipService.findByRelationshipStatus(userProfileId, RelationshipStatus.ACCEPTED));
-                }
+
+            } else if (userSession.equals(foundUserProfile)) {
+                model.addAttribute("status", RelationshipStatus.MY_PROFILE.toString());
+                model.addAttribute("outgoingRequests", relationshipService.findOutgoingRequests(userProfileId));
+                model.addAttribute("incomingRequests", relationshipService.findIncomingRequests(userProfileId));
+                model.addAttribute("friends", relationshipService.findByRelationshipStatus(userProfileId, RelationshipStatus.ACCEPTED));
             }
-            LOGGER.info("User page opened.");
-        } catch (BadRequestException e) {
-            e.printStackTrace();
-            LOGGER.error("BadRequestException: "+e.getMessage());
-            return "error400";
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-            LOGGER.error("NotFoundException: "+e.getMessage());
-            return "error404";
-        } catch (InternalServerError e) {
-            e.printStackTrace();
-            LOGGER.error("InternalServerError: "+e.getMessage());
-            return "error500";
         }
+        LOGGER.info("User page (id: "+userId+") opened.");
         return "profile";
     }
 
