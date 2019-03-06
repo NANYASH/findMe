@@ -1,5 +1,7 @@
 package com.findMe.exception.handler;
 
+import com.findMe.controller.PostController;
+import com.findMe.controller.RelationshipController;
 import com.findMe.controller.UserController;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
@@ -11,9 +13,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import javax.servlet.http.HttpServletRequest;
 
-@ControllerAdvice
-public class ResponseStatusHandler {
-    private static final Logger LOGGER = Logger.getLogger(ResponseStatusHandler.class);
+@ControllerAdvice(assignableTypes = {PostController.class, UserController.class, RelationshipController.class})
+public class GenericResponseStatusHandler {
+    private static final Logger LOGGER = Logger.getLogger(GenericResponseStatusHandler.class);
 
     @ExceptionHandler(value = BadRequestException.class)
     public ResponseEntity badRequestHandler(HttpServletRequest request, Exception e){
