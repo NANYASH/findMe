@@ -1,38 +1,36 @@
 package com.findMe.exception.handler;
 
-import com.findMe.controller.PostController;
-import com.findMe.controller.RelationshipController;
-import com.findMe.controller.UserController;
+
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.NotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.ModelAndView;
+
 import javax.servlet.http.HttpServletRequest;
 
-@ControllerAdvice(assignableTypes = {PostController.class, UserController.class, RelationshipController.class})
+@ControllerAdvice
 public class GenericResponseStatusHandler {
     private static final Logger LOGGER = Logger.getLogger(GenericResponseStatusHandler.class);
 
     @ExceptionHandler(value = BadRequestException.class)
-    public ResponseEntity badRequestHandler(HttpServletRequest request, Exception e){
+    public ModelAndView badRequestHandler(HttpServletRequest request, Exception e){
         LOGGER.error(request.getMethod()+" "+e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ModelAndView("error400",HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = NotFoundException.class)
-    public ResponseEntity notFoundHandler(HttpServletRequest request, Exception e){
+    public ModelAndView notFoundHandler(HttpServletRequest request, Exception e){
         LOGGER.error(request.getMethod()+" "+e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        return new ModelAndView("error404", HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = InternalServerError.class)
-    public ResponseEntity internalServerErrorHandler(HttpServletRequest request, Exception e){
+    public ModelAndView internalServerErrorHandler(HttpServletRequest request, Exception e){
         LOGGER.error(request.getMethod()+" "+e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ModelAndView("error500", HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
 }
