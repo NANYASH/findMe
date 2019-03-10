@@ -6,14 +6,14 @@ import com.findMe.exception.NotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 
-@RestControllerAdvice(basePackages = "com.findMe.restController")
-public class GenericRestControllerResponseStatusHandler {
-    private static final Logger LOGGER = Logger.getLogger(GenericRestControllerResponseStatusHandler.class);
+@ControllerAdvice(basePackages = "com.findMe.controller")
+public class GenericViewControllerResponseStatusHandler {
+    private static final Logger LOGGER = Logger.getLogger(GenericViewControllerResponseStatusHandler.class);
 
     @ExceptionHandler(value = BadRequestException.class)
     public ResponseEntity badRequestHandler(HttpServletRequest request, Exception e){

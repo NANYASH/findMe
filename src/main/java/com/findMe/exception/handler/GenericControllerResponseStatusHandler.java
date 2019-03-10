@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
-@ControllerAdvice(basePackages = "com.findMe.controller")
+@ControllerAdvice(basePackages = "com.findMe.viewController")
 public class GenericControllerResponseStatusHandler {
     private static final Logger LOGGER = Logger.getLogger(GenericControllerResponseStatusHandler.class);
 

@@ -1,4 +1,4 @@
-package com.findMe.restController;
+package com.findMe.controller;
 
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -19,7 +20,7 @@ import java.time.LocalDate;
 
 import static com.findMe.util.Util.validateLogIn;
 
-@RestController
+@Controller
 public class UserRestController {
     private static final Logger LOGGER = Logger.getLogger(UserRestController.class);
     private UserService userService;

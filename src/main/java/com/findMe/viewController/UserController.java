@@ -1,4 +1,4 @@
-package com.findMe.controller;
+package com.findMe.viewController;
 
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
