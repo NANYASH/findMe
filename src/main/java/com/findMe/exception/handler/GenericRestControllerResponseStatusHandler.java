@@ -1,21 +1,19 @@
 package com.findMe.exception.handler;
 
-import com.findMe.controller.PostController;
-import com.findMe.controller.RelationshipController;
-import com.findMe.controller.UserController;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.NotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import javax.servlet.http.HttpServletRequest;
 
-@ControllerAdvice(assignableTypes = {PostController.class, UserController.class, RelationshipController.class})
-public class GenericResponseStatusHandler {
-    private static final Logger LOGGER = Logger.getLogger(GenericResponseStatusHandler.class);
+@RestControllerAdvice(basePackages = "com.findMe.restController")
+public class GenericRestControllerResponseStatusHandler {
+    private static final Logger LOGGER = Logger.getLogger(GenericRestControllerResponseStatusHandler.class);
 
     @ExceptionHandler(value = BadRequestException.class)
     public ResponseEntity badRequestHandler(HttpServletRequest request, Exception e){

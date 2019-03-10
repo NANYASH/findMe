@@ -1,6 +1,5 @@
 package com.findMe.exception.handler;
 
-import com.findMe.controller.HomeController;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.NotFoundException;
@@ -12,14 +11,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
-@ControllerAdvice(assignableTypes = HomeController.class)
-public class HomeControllerResponseStatusHandler {
-    private static final Logger LOGGER = Logger.getLogger(HomeControllerResponseStatusHandler.class);
+@ControllerAdvice(basePackages = "com.findMe.controller")
+public class GenericControllerResponseStatusHandler {
+    private static final Logger LOGGER = Logger.getLogger(GenericControllerResponseStatusHandler.class);
 
     @ExceptionHandler(value = BadRequestException.class)
     public ModelAndView badRequestHandler(HttpServletRequest request, Exception e){
         LOGGER.error(request.getMethod()+" "+e.getMessage());
-        return new ModelAndView("error4",HttpStatus.BAD_REQUEST);
+        return new ModelAndView("error400",HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = NotFoundException.class)
