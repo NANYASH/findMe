@@ -23,20 +23,26 @@ public class Message {
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "TEXT")
+    @Column(name = "TEXT", length = 140)
     private String text;
 
     @Column(name = "DATE_SENT")
     private LocalDate dateSent;
 
+    @Column(name = "DATE_EDITED")
+    private LocalDate dateEdited;
+
+    @Column(name = "DATE_DELETED")
+    private LocalDate dateDeleted;
+
     @Column(name = "DATE_READ")
     private LocalDate dateRead;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "ID_USER_FROM")
+    @JoinColumn(name = "USER_FROM_ID")
     private User userFrom;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "ID_USER_TO")
+    @JoinColumn(name = "USER_TO_ID")
     private User userTo;
 }
