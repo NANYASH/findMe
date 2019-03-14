@@ -22,7 +22,7 @@ import static com.findMe.util.Util.convertToBoolean;
 @Repository
 public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
 
-    private static final String SQL_NEWS_LIST = "SELECT p" +
+    private static final String FIND_NEWS_LIST = "SELECT p" +
             " FROM Post p" +
             " LEFT JOIN Relationship r " +
             " ON (r.relationshipId.userFromId = :userId AND r.relationshipId.userToId = p.userPagePosted.id) " +
@@ -57,7 +57,7 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
     @Override
     public List<Post> findNews(Long userId, Integer offset) throws InternalServerError {
         try {
-            Query query = getEntityManager().createQuery(SQL_NEWS_LIST, Post.class);
+            Query query = getEntityManager().createQuery(FIND_NEWS_LIST, Post.class);
             query.setParameter("userId", userId);
             query.setFirstResult(offset);
             query.setMaxResults(10);

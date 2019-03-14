@@ -21,12 +21,12 @@ import java.time.LocalDate;
 import static com.findMe.util.Util.validateLogIn;
 
 @Controller
-public class UserRestController {
-    private static final Logger LOGGER = Logger.getLogger(UserRestController.class);
+public class UserController {
+    private static final Logger LOGGER = Logger.getLogger(UserController.class);
     private UserService userService;
 
     @Autowired
-    public UserRestController(UserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 

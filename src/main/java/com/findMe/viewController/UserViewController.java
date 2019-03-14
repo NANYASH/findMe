@@ -20,14 +20,14 @@ import javax.servlet.http.HttpSession;
 import static com.findMe.util.Util.convertId;
 
 @Controller
-public class UserController {
-    private static final Logger LOGGER = Logger.getLogger(UserController.class);
+public class UserViewController {
+    private static final Logger LOGGER = Logger.getLogger(UserViewController.class);
     private UserService userService;
     private RelationshipService relationshipService;
     private PostService postService;
 
     @Autowired
-    public UserController(UserService userService, RelationshipService relationshipService, PostService postService) {
+    public UserViewController(UserService userService, RelationshipService relationshipService, PostService postService) {
         this.userService = userService;
         this.relationshipService = relationshipService;
         this.postService = postService;

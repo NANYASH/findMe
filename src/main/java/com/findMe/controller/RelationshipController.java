@@ -21,12 +21,12 @@ import static com.findMe.util.Util.convertRelationshipStatus;
 import static com.findMe.util.Util.validateLogIn;
 
 @Controller
-public class RelationshipRestController {
-    private static final Logger LOGGER = Logger.getLogger(RelationshipRestController.class);
+public class RelationshipController {
+    private static final Logger LOGGER = Logger.getLogger(RelationshipController.class);
     private RelationshipService relationshipService;
 
     @Autowired
-    public RelationshipRestController(RelationshipService relationshipService) {
+    public RelationshipController(RelationshipService relationshipService) {
         this.relationshipService = relationshipService;
     }
 

@@ -38,11 +38,11 @@ public class Message {
     @Column(name = "DATE_READ")
     private LocalDate dateRead;
 
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "USER_FROM_ID")
     private User userFrom;
 
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "USER_TO_ID")
     private User userTo;
 }

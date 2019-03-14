@@ -19,12 +19,12 @@ import java.util.List;
 import static com.findMe.util.Util.validateLogIn;
 
 @Controller
-public class PostController {
-    private static final Logger LOGGER = Logger.getLogger(PostController.class);
+public class PostViewController {
+    private static final Logger LOGGER = Logger.getLogger(PostViewController.class);
     private PostService postService;
 
     @Autowired
-    public PostController(PostService postService) {
+    public PostViewController(PostService postService) {
         this.postService = postService;
     }
 

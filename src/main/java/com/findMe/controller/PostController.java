@@ -19,12 +19,12 @@ import javax.servlet.http.HttpSession;
 import static com.findMe.util.Util.*;
 
 @Controller
-public class PostRestController {
-    private static final Logger LOGGER = Logger.getLogger(PostRestController.class);
+public class PostController {
+    private static final Logger LOGGER = Logger.getLogger(PostController.class);
     private PostService postService;
 
     @Autowired
-    public PostRestController(PostService postService) {
+    public PostController(PostService postService) {
         this.postService = postService;
     }
 

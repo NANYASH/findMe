@@ -44,7 +44,7 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-              <!--  th:href="'/user/'+${loggedUser.getId()}"-->
+                <!--  th:href="'/user/'+${loggedUser.getId()}"-->
                 <li><a>Profile</a></li>
                 <li class="active"><a>News</a></li>
             </ul>
@@ -86,25 +86,26 @@
                             </div>
                         </div>
                     </tr>
+                    <center>
+                        <button id="loadMore"
+                                th:onclick="'load(\'' + ${offset} + '\');'"
+                                class="btn btn-success"> Load more
+                        </button>
+                    </center>
                 </div>
             </div>
         </div>
 
-        <button id="loadMore"
-                th:onclick="'load(\'' + ${offset} + '\');'"
-                class="btn btn-success"> Load more
-        </button>
-
     </div>
 </section>
-
-
 <footer>
     <div class="container">
         <p>Dobble Copyright &copy, 2019</p>
     </div>
 </footer>
 <script>
+    var userId = window.location.pathname.split('/').pop();
+
     function logout() {
         $.ajax({
             url: "/logout",
@@ -120,7 +121,7 @@
 
     function load(currentOffset) {
         $.ajax({
-            url: "/feed",
+            url: "/feed/" + userId,
             type: "GET",
             data: {currentOffset: currentOffset.toString()},
             success: function (result) {
