@@ -98,14 +98,14 @@
 
     </div>
 </section>
+
+
 <footer>
     <div class="container">
         <p>Dobble Copyright &copy, 2019</p>
     </div>
 </footer>
 <script>
-    var userId = window.location.pathname.split('/').pop();
-
     function logout() {
         $.ajax({
             url: "/logout",
@@ -121,7 +121,7 @@
 
     function load(currentOffset) {
         $.ajax({
-            url: "/feed/" + userId,
+            url: "/feed",
             type: "GET",
             data: {currentOffset: currentOffset.toString()},
             success: function (result) {
