@@ -6,7 +6,6 @@ import com.findMe.exception.InternalServerError;
 import com.findMe.exception.UnauthorizedException;
 import com.findMe.model.Message;
 import com.findMe.model.User;
-import com.findMe.model.viewData.MessageParametersData;
 import com.findMe.service.MessageService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,7 @@ public class MessageViewController {
             messages = messageService.findMessages(userSession.getId(),userToId, offset);
             offset += 10;
         }
-        model.addAttribute("messages",messages);
+        model.addAttribute("messages", messages);
         model.addAttribute("offset", offset);
         LOGGER.info("Chat is opened.");
         return "message";

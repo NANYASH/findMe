@@ -16,4 +16,6 @@ public interface MessageDAO {
     Message findMessageById(Long messageId) throws InternalServerError;
 
     List<Message> findMessages(Long userFromId, Long userToId, Integer offset) throws InternalServerError;
+
+    void updateMessages(List<Long> messagesIds) throws InternalServerError;
 }

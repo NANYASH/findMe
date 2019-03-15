@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -57,7 +58,19 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Message> findMessages(Long userFromId, Long userToId, Integer offset) throws InternalServerError {
-        return messageDAO.findMessages(userFromId, userToId, offset);
+        List<Long> messagesIdsToUpdate = new ArrayList<>();
+        List<Message> messages = messageDAO.findMessages(userFromId, userToId, offset);
+        for (Message message : messages) {
+            if (message.getDateRead() == null) {
+                if (message.getUserTo().getId().equals(userFromId)) {
+                    message.setDateSent(LocalDate.now());
+                    messagesIdsToUpdate.add(message.getId());
+                }
+            }
+        }
+        if (messagesIdsToUpdate.size() > 0)
+            messageDAO.updateMessages(messagesIdsToUpdate);
+        return messages;
     }
 
     private void validateUpdate(MessageParametersData messageParametersData, Message currentMessage) throws BadRequestException {

@@ -44,21 +44,10 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     private static final String FIND_INCOMING_REQUESTS = "SELECT DISTINCT USER_TABLE.* FROM USER_TABLE JOIN RELATIONSHIP ON  USER_TABLE.ID = USER_FROM_ID" +
             " WHERE USER_TO_ID = ? AND STATUS = 'REQUESTED'";
 
-    //Can't handle result (returns list)
-    private static final String COUNT_NUMBER_OF_RELATIONSHIPS_BY_STATUS_NATIVE = "SELECT COUNT(RELATIONSHIP.*)" +
-            " FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = USER_TABLE.ID OR USER_TO_ID = USER_TABLE.ID" +
-            " WHERE  STATUS = ?" +
-            " AND ((USER_FROM_ID = ? AND USER_TO_ID = user_table.id) OR (USER_TO_ID = ? AND USER_FROM_ID = user_table.id))";
-
     private static final String COUNT_NUMBER_OF_RELATIONSHIPS_BY_STATUS = "SELECT COUNT(r) FROM User u,Relationship r " +
             " WHERE r.relationshipStatus = :status " +
             " AND ((r.relationshipId.userFromId = :userId AND r.relationshipId.userToId = u.id) OR (r.relationshipId.userToId = :userId AND r.relationshipId.userFromId = u.id))";
 
-    //Can't handle result (returns list)
-    private static final String COUNT_NUMBER_OF_OUTGOING_REQUESTS_NATIVE = "SELECT COUNT(*)" +
-            " FROM USER_TABLE JOIN RELATIONSHIP ON USER_FROM_ID = USER_TABLE.ID OR USER_TO_ID = USER_TABLE.ID" +
-            " WHERE STATUS = 'REQUESTED'" +
-            " AND USER_FROM_ID = ? AND USER_TO_ID = USER_TABLE.ID";
 
     private static final String COUNT_NUMBER_OF_OUTGOING_REQUESTS = "SELECT COUNT(r) FROM User u,Relationship r " +
             " WHERE r.relationshipStatus = 'REQUESTED' " +

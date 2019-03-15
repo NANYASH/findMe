@@ -62,13 +62,13 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading"></div>
                                 <div class="panel-body">
-                                    <form id="create-post" th:object="${PostParametersData}">
+                                    <form id="create-message" th:object="${PostParametersData}">
                                         <div class="form-group">
                                             <input id="text" name="text" type="text"
                                                    class="form-control input-md" placeholder="Write message"
                                                    required/>
                                         </div>
-                                        <button id="submitPost" type="submit" class="btn btn-default">Submit
+                                        <button id="sendMessage" type="submit" class="btn btn-default">Send
                                         </button>
                                     </form>
                                 </div>
@@ -173,6 +173,22 @@
             }
         })
     }
+
+    $("#create-message").submit(function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: "/send-message",
+            type: "POST",
+            data: $('#create-message').serialize() + '&userToId=' + userId,
+            success: function success() {
+                window.location.reload(true);
+            },
+            error: function (xhr) {
+                alert(xhr.responseText);
+            }
+        });
+    });
 </script>
 </body>
 </html>
