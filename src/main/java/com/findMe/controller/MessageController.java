@@ -4,7 +4,7 @@ package com.findMe.controller;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.exception.UnauthorizedException;
-import com.findMe.model.viewData.MessageParametersData;
+import com.findMe.model.Message;
 import com.findMe.service.MessageService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,25 +31,25 @@ public class MessageController {
     }
 
     @RequestMapping(path = "/send-message", method = RequestMethod.POST)
-    public ResponseEntity sendMessage(HttpSession session, @ModelAttribute MessageParametersData messageParametersData) throws BadRequestException, InternalServerError, UnauthorizedException {
-        messageParametersData.setUserFromId(validateLogIn(session).getId());
-        messageService.addMessage(messageParametersData);
+    public ResponseEntity sendMessage(HttpSession session, @ModelAttribute Message message) throws BadRequestException, InternalServerError, UnauthorizedException {
+        message.setUserFrom(validateLogIn(session));
+        messageService.addMessage(message);
         LOGGER.info("Message is sent.");
         return new ResponseEntity("Message is sent.", HttpStatus.OK);
     }
 
     @RequestMapping(path = "/edit-message", method = RequestMethod.POST)
-    public ResponseEntity editMessage(HttpSession session, @ModelAttribute MessageParametersData messageParametersData) throws BadRequestException, InternalServerError, UnauthorizedException {
-        messageParametersData.setUserFromId(validateLogIn(session).getId());
-        messageService.updateMessage(messageParametersData);
+    public ResponseEntity editMessage(HttpSession session, @ModelAttribute Message message) throws BadRequestException, InternalServerError, UnauthorizedException {
+        message.setUserFrom(validateLogIn(session));
+        messageService.updateMessage(message);
         LOGGER.info("Message is edited.");
         return new ResponseEntity("Message is edited.", HttpStatus.OK);
     }
 
     @RequestMapping(path = "/delete-message", method = RequestMethod.POST)
-    public ResponseEntity deleteMessage(HttpSession session, @ModelAttribute MessageParametersData messageParametersData) throws UnauthorizedException, BadRequestException, InternalServerError {
-        messageParametersData.setUserFromId(validateLogIn(session).getId());
-        messageService.deleteMessage(messageParametersData);
+    public ResponseEntity deleteMessage(HttpSession session, @ModelAttribute Message message) throws UnauthorizedException, BadRequestException, InternalServerError {
+        message.setUserFrom(validateLogIn(session));
+        messageService.deleteMessage(message);
         LOGGER.info("Message is deleted.");
         return new ResponseEntity("Message is deleted.", HttpStatus.OK);
     }

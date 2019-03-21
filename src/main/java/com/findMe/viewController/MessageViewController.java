@@ -3,10 +3,12 @@ package com.findMe.viewController;
 
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
+import com.findMe.exception.NotFoundException;
 import com.findMe.exception.UnauthorizedException;
 import com.findMe.model.Message;
 import com.findMe.model.User;
 import com.findMe.service.MessageService;
+import com.findMe.service.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,14 +26,16 @@ import static com.findMe.util.Util.validateLogIn;
 public class MessageViewController {
     private static final Logger LOGGER = Logger.getLogger(MessageViewController.class);
     private MessageService messageService;
+    private UserService userService;
 
     @Autowired
-    public MessageViewController(MessageService messageService) {
+    public MessageViewController(MessageService messageService, UserService userService) {
         this.messageService = messageService;
+        this.userService = userService;
     }
 
     @RequestMapping(path = "/chat/{userId}", method = RequestMethod.GET)
-    public String getMessages(HttpSession session, Model model, @PathVariable String userId, @RequestParam(required = false) String currentOffset) throws BadRequestException, InternalServerError, UnauthorizedException {
+    public String getMessages(HttpSession session, Model model, @PathVariable String userId, @RequestParam(required = false) String currentOffset) throws BadRequestException, InternalServerError, UnauthorizedException, NotFoundException {
         Integer offset = 0;
         List<Message> messages;
         User userSession = validateLogIn(session);
@@ -45,6 +49,7 @@ public class MessageViewController {
             messages = messageService.findMessages(userSession.getId(),userToId, offset);
             offset += 10;
         }
+        model.addAttribute("user",userService.findUserById(userToId));
         model.addAttribute("messages", messages);
         model.addAttribute("offset", offset);
         LOGGER.info("Chat is opened.");

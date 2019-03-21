@@ -69,11 +69,5 @@ public class User {
     @Column(name = "PASSWORD")
     private String password;
 
-    @OneToMany(targetEntity = Message.class, fetch = FetchType.LAZY, mappedBy = "userFrom")
-    private List<Message> messagesSent;
-
-    @OneToMany(targetEntity = Message.class, fetch = FetchType.LAZY, mappedBy = "userTo")
-    private List<Message> messagesReceived;
-
     //interests;
 }
