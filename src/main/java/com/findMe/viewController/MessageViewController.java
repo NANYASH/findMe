@@ -26,12 +26,10 @@ import static com.findMe.util.Util.validateLogIn;
 public class MessageViewController {
     private static final Logger LOGGER = Logger.getLogger(MessageViewController.class);
     private MessageService messageService;
-    private UserService userService;
 
     @Autowired
-    public MessageViewController(MessageService messageService, UserService userService) {
+    public MessageViewController(MessageService messageService) {
         this.messageService = messageService;
-        this.userService = userService;
     }
 
     @RequestMapping(path = "/chat/{userId}", method = RequestMethod.GET)
@@ -49,7 +47,6 @@ public class MessageViewController {
             messages = messageService.findMessages(userSession.getId(),userToId, offset);
             offset += 10;
         }
-        model.addAttribute("user",userService.findUserById(userToId));
         model.addAttribute("messages", messages);
         model.addAttribute("offset", offset);
         LOGGER.info("Chat is opened.");
