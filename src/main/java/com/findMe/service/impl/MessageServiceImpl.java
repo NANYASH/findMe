@@ -31,23 +31,14 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Message addMessage(Message message) throws InternalServerError, BadRequestException {
         Relationship relationship = relationshipDAO.getRelationship(message.getUserFrom().getId(), message.getUserTo().getId());
-        if (relationship.getRelationshipStatus().equals(RelationshipStatus.ACCEPTED))
-            return messageDAO.save(message);
-        throw new BadRequestException("Message cannot be send.");
+        validateSave(relationship, message);
+        return messageDAO.save(message);
     }
 
     @Override
     public Message updateMessage(Message message) throws InternalServerError, BadRequestException {
         validateUpdate(message);
-        message.setDateEdited(LocalDate.now());
         return messageDAO.update(message);
-    }
-
-    @Override
-    public void deleteMessage(Message message) throws InternalServerError, BadRequestException {
-        validateUpdate(message);
-        message.setDateDeleted(LocalDate.now());
-        messageDAO.delete(message);
     }
 
     @Override
@@ -57,7 +48,7 @@ public class MessageServiceImpl implements MessageService {
         for (Message message : messages) {
             if (message.getDateRead() == null) {
                 if (message.getUserTo().getId().equals(userFromId)) {
-                    message.setDateSent(LocalDate.now());
+                    message.setDateRead(LocalDate.now());
                     messagesIdsToUpdate.add(message.getId());
                 }
             }
@@ -69,8 +60,18 @@ public class MessageServiceImpl implements MessageService {
 
     private void validateUpdate(Message currentMessage) throws BadRequestException {
         if (currentMessage.getDateRead() != null) throw new BadRequestException("Message has been read.");
-        if (currentMessage.getDateDeleted() != null) throw new BadRequestException("Message has been deleted.");
+        if (currentMessage.getDateDeleted() != null && currentMessage.getDateEdited() != null) {
+            if (currentMessage.getDateDeleted().isBefore(currentMessage.getDateEdited()))
+                throw new BadRequestException("Message has been deleted.");
+        }
         if (currentMessage.getText().length() > 140) throw new BadRequestException("Message is too long");
+    }
+
+    private void validateSave(Relationship relationship, Message message) throws BadRequestException {
+        if (relationship == null) throw new BadRequestException("Message cannot be send to this user.");
+        if (!relationship.getRelationshipStatus().equals(RelationshipStatus.ACCEPTED))
+            throw new BadRequestException("Message cannot be send to this user.");
+        if (message.getText().length() > 140) throw new BadRequestException("Message is too long");
     }
 
 }

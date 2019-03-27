@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpSession;
 
+import java.time.LocalDate;
+
 import static com.findMe.util.Util.validateLogIn;
 
 
@@ -41,6 +43,7 @@ public class MessageController {
     @RequestMapping(path = "/edit-message", method = RequestMethod.POST)
     public ResponseEntity editMessage(HttpSession session, @ModelAttribute Message message) throws BadRequestException, InternalServerError, UnauthorizedException {
         message.setUserFrom(validateLogIn(session));
+        message.setDateEdited(LocalDate.now());
         messageService.updateMessage(message);
         LOGGER.info("Message is edited.");
         return new ResponseEntity("Message is edited.", HttpStatus.OK);
@@ -49,6 +52,7 @@ public class MessageController {
     @RequestMapping(path = "/delete-message", method = RequestMethod.POST)
     public ResponseEntity deleteMessage(HttpSession session, @ModelAttribute Message message) throws UnauthorizedException, BadRequestException, InternalServerError {
         message.setUserFrom(validateLogIn(session));
+        message.setDateDeleted(LocalDate.now());
         messageService.deleteMessage(message);
         LOGGER.info("Message is deleted.");
         return new ResponseEntity("Message is deleted.", HttpStatus.OK);

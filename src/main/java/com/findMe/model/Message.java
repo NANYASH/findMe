@@ -45,4 +45,6 @@ public class Message {
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "USER_TO_ID")
     private User userTo;
+
+
 }

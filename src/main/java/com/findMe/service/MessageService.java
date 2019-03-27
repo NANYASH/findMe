@@ -12,8 +12,6 @@ public interface MessageService {
 
     Message updateMessage(Message message) throws InternalServerError, BadRequestException;
 
-    void deleteMessage(Message message) throws InternalServerError, BadRequestException;
-
     List<Message> findMessages(Long userFromId, Long userToId, Integer offset) throws InternalServerError;
 
 }
