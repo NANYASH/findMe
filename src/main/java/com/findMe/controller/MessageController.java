@@ -53,7 +53,7 @@ public class MessageController {
     public ResponseEntity deleteMessage(HttpSession session, @ModelAttribute Message message) throws UnauthorizedException, BadRequestException, InternalServerError {
         message.setUserFrom(validateLogIn(session));
         message.setDateDeleted(LocalDate.now());
-        messageService.deleteMessage(message);
+        messageService.updateMessage(message);
         LOGGER.info("Message is deleted.");
         return new ResponseEntity("Message is deleted.", HttpStatus.OK);
     }
