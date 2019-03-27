@@ -57,10 +57,10 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
     @Override
     public List<Post> findNews(Long userId, Integer offset) throws InternalServerError {
         try {
-            Query query = getEntityManager().createQuery(FIND_NEWS_LIST, Post.class);
-            query.setParameter("userId", userId);
-            query.setFirstResult(offset);
-            query.setMaxResults(10);
+            Query query = getEntityManager().createQuery(FIND_NEWS_LIST, Post.class)
+                    .setParameter("userId", userId)
+                    .setFirstResult(offset)
+                    .setMaxResults(10);
             return query.getResultList();
         } catch (NoResultException e) {
             e.printStackTrace();

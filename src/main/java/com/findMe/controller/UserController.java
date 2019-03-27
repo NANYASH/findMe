@@ -33,7 +33,7 @@ public class UserController {
     @RequestMapping(path = "/user-registration", method = RequestMethod.POST)
     public ResponseEntity registerUser(@ModelAttribute User user) throws BadRequestException, InternalServerError {
         userService.registerUser(user);
-        LOGGER.info("User (id: "+user.getId()+") registered.");
+        LOGGER.info("User (id: " + user.getId() + ") registered.");
         return new ResponseEntity("User is registered.", HttpStatus.CREATED);
     }
 
@@ -44,7 +44,7 @@ public class UserController {
 
         User foundUser = userService.login(email, password);
         session.setAttribute("user", foundUser);
-        LOGGER.info("User (id: "+foundUser.getId()+") is logged.");
+        LOGGER.info("User (id: " + foundUser.getId() + ") is logged.");
         return new ResponseEntity<>(foundUser.getId(), HttpStatus.OK);
     }
 
@@ -53,7 +53,7 @@ public class UserController {
         User user = validateLogIn(session);
         userService.logout(user, LocalDate.now());
         session.setAttribute("user", null); // or session.removeAttribute("id");
-        LOGGER.info("User (id: "+user.getId()+") is logged out.");
+        LOGGER.info("User (id: " + user.getId() + ") is logged out.");
         return new ResponseEntity(HttpStatus.OK);
     }
 

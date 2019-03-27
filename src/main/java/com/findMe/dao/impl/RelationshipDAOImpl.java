@@ -62,14 +62,14 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     @Override
     public void updateRelationship(Long userFromId, Long userToId, Relationship relationship) throws InternalServerError, BadRequestException {
         try {
-            Query query = getEntityManager().createNativeQuery(UPDATE_RELATIONSHIP, Relationship.class);
-            query.setParameter(1, userFromId);
-            query.setParameter(2, userToId);
-            query.setParameter(3, relationship.getRelationshipStatus().toString());
-            query.setParameter(4, relationship.getLastUpdateDate());
-            query.setParameter(5, relationship.getRelationshipId().getUserFromId());
-            query.setParameter(6, relationship.getRelationshipId().getUserToId());
-            query.executeUpdate();
+            getEntityManager().createNativeQuery(UPDATE_RELATIONSHIP, Relationship.class)
+                    .setParameter(1, userFromId)
+                    .setParameter(2, userToId)
+                    .setParameter(3, relationship.getRelationshipStatus().toString())
+                    .setParameter(4, relationship.getLastUpdateDate())
+                    .setParameter(5, relationship.getRelationshipId().getUserFromId())
+                    .setParameter(6, relationship.getRelationshipId().getUserToId())
+                    .executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
             throw new InternalServerError();
@@ -79,11 +79,11 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     @Override
     public Relationship getRelationship(Long userFromId, Long userToId) throws InternalServerError {
         try {
-            Query query = getEntityManager().createNativeQuery(FIND_STATUS_BY_ID, Relationship.class);
-            query.setParameter(1, userFromId);
-            query.setParameter(2, userToId);
-            query.setParameter(3, userToId);
-            query.setParameter(4, userFromId);
+            Query query = getEntityManager().createNativeQuery(FIND_STATUS_BY_ID, Relationship.class)
+                    .setParameter(1, userFromId)
+                    .setParameter(2, userToId)
+                    .setParameter(3, userToId)
+                    .setParameter(4, userFromId);
             return (Relationship) query.getSingleResult();
         } catch (NoResultException e) {
             e.printStackTrace();
@@ -97,10 +97,10 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     @Override
     public List<User> findByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError {
         try {
-            Query query = getEntityManager().createNativeQuery(FIND_BY_RELATIONSHIP_STATUS, User.class);
-            query.setParameter(1, status.toString());
-            query.setParameter(2, userId);
-            query.setParameter(3, userId);
+            Query query = getEntityManager().createNativeQuery(FIND_BY_RELATIONSHIP_STATUS, User.class)
+                    .setParameter(1, status.toString())
+                    .setParameter(2, userId)
+                    .setParameter(3, userId);
             return query.getResultList();
         } catch (Exception e) {
             e.printStackTrace();
@@ -121,9 +121,9 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     @Override
     public Long getNumberOfRelationships(Long userId, RelationshipStatus status) throws InternalServerError {
         try {
-            Query query = getEntityManager().createQuery(COUNT_NUMBER_OF_RELATIONSHIPS_BY_STATUS);
-            query.setParameter("status", status);
-            query.setParameter("userId", userId);
+            Query query = getEntityManager().createQuery(COUNT_NUMBER_OF_RELATIONSHIPS_BY_STATUS)
+                    .setParameter("status", status)
+                    .setParameter("userId", userId);
             return (Long) query.getSingleResult();
         } catch (Exception e) {
             e.printStackTrace();
@@ -134,8 +134,8 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     @Override
     public Long getNumberOfOutgoingRequests(Long userId) throws InternalServerError {
         try {
-            Query query = getEntityManager().createQuery(COUNT_NUMBER_OF_OUTGOING_REQUESTS);
-            query.setParameter("userId", userId);
+            Query query = getEntityManager().createQuery(COUNT_NUMBER_OF_OUTGOING_REQUESTS)
+                    .setParameter("userId", userId);
             return (Long) query.getSingleResult();
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,8 +150,8 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
 
     private List<User> findRequested(Long userId, String request) throws InternalServerError {
         try {
-            Query query = getEntityManager().createNativeQuery(request, User.class);
-            query.setParameter(1, userId);
+            Query query = getEntityManager().createNativeQuery(request, User.class)
+                    .setParameter(1, userId);
             return query.getResultList();
         } catch (Exception e) {
             e.printStackTrace();

@@ -36,9 +36,9 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
     @Override
     public User findByPhoneAndEmail(String phone, String email) throws InternalServerError {
         try {
-            Query query = getEntityManager().createNativeQuery(FIND_USER_BY_PHONE_AND_EMAIL, User.class);
-            query.setParameter(1, phone);
-            query.setParameter(2, email);
+            Query query = getEntityManager().createNativeQuery(FIND_USER_BY_PHONE_AND_EMAIL, User.class)
+                    .setParameter(1, phone)
+                    .setParameter(2, email);
             return (User) query.getSingleResult();
         } catch (NoResultException e) {
             e.printStackTrace();

@@ -51,13 +51,13 @@ public class MessageDAOImpl extends GenericDAO<Message> implements MessageDAO {
     @Override
     public List<Message> findMessages(Long userFromId, Long userToId, Integer offset) throws InternalServerError {
         try {
-            Query query = getEntityManager().createNativeQuery(FIND_MESSAGES, Message.class);
-            query.setParameter(1, userFromId);
-            query.setParameter(2, userToId);
-            query.setParameter(3, userFromId);
-            query.setParameter(4, userToId);
-            query.setFirstResult(offset);
-            query.setMaxResults(10);
+            Query query = getEntityManager().createNativeQuery(FIND_MESSAGES, Message.class)
+                    .setParameter(1, userFromId)
+                    .setParameter(2, userToId)
+                    .setParameter(3, userFromId)
+                    .setParameter(4, userToId)
+                    .setFirstResult(offset)
+                    .setMaxResults(10);
             return query.getResultList();
         } catch (NoResultException e) {
             e.printStackTrace();
