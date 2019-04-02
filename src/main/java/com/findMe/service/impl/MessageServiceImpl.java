@@ -3,7 +3,6 @@ package com.findMe.service.impl;
 
 import com.findMe.dao.MessageDAO;
 import com.findMe.dao.RelationshipDAO;
-import com.findMe.dao.UserDAO;
 import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.model.Message;
@@ -42,6 +41,20 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public void updateSelectedMessages(List<Message> messages) throws InternalServerError, BadRequestException {
+        if (messages.size() > 10)
+            throw new BadRequestException("Too much messages in one operation");
+        for (Message message : messages)
+            validateUpdate(message);
+        messageDAO.updateMessagesDateDeleted(messages);
+    }
+
+    @Override
+    public void updateAllMessages(Long userFormId, Long userToId) throws InternalServerError, BadRequestException {
+        messageDAO.updateAllDateDeleted(userFormId, userToId);
+    }
+
+    @Override
     public List<Message> findMessages(Long userFromId, Long userToId, Integer offset) throws InternalServerError {
         List<Long> messagesIdsToUpdate = new ArrayList<>();
         List<Message> messages = messageDAO.findMessages(userFromId, userToId, offset);
@@ -54,12 +67,12 @@ public class MessageServiceImpl implements MessageService {
             }
         }
         if (messagesIdsToUpdate.size() > 0)
-            messageDAO.updateMessages(messagesIdsToUpdate);
+            messageDAO.updateMessagesDateRead(messagesIdsToUpdate);
         return messages;
     }
 
     private void validateUpdate(Message currentMessage) throws BadRequestException {
-        if (currentMessage.getDateRead() != null) throw new BadRequestException("Message has been read.");
+        //if (currentMessage.getDateRead() != null) throw new BadRequestException("Message has been read."); requirements changed
         if (currentMessage.getDateDeleted() != null && currentMessage.getDateEdited() != null) {
             if (currentMessage.getDateDeleted().isBefore(currentMessage.getDateEdited()))
                 throw new BadRequestException("Message has been deleted.");

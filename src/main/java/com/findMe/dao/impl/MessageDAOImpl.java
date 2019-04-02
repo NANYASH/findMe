@@ -24,9 +24,14 @@ public class MessageDAOImpl extends GenericDAO<Message> implements MessageDAO {
             " END ASC," +
             " DATE_SENT ASC";
 
-    private static final String UPDATE_MESSAGES = "UPDATE Message m SET m.dateRead = :dateRead WHERE " +
+    private static final String UPDATE_MESSAGES_DATE_READ = "UPDATE Message m SET m.dateRead = :paramDate WHERE " +
             "m.id IN :idsList";
 
+    private static final String UPDATE_MESSAGES_DATE_DELETED = "UPDATE Message m SET m.dateDeleted = :paramDate WHERE " +
+            "m IN :messagesList";
+
+    private static final String UPDATE_ALL_DATE_DELETED = "UPDATE MESSAGE SET DATE_DELETED = ? " +
+            "WHERE ((USER_FROM_ID = ? AND USER_TO_ID = ?) OR (USER_TO_ID = ? AND USER_FROM_ID = ?)) AND DATE_DELETED IS NULL";
 
     @Override
     public Message save(Message message) throws InternalServerError {
@@ -70,16 +75,44 @@ public class MessageDAOImpl extends GenericDAO<Message> implements MessageDAO {
 
 
     @Override
-    public void updateMessages(List<Long> messagesIds) throws InternalServerError {
+    public void updateMessagesDateRead(List<Long> messagesIds) throws InternalServerError {
         try {
-            getEntityManager().createQuery(UPDATE_MESSAGES)
-                    .setParameter("dateRead", LocalDate.now())
+            getEntityManager().createQuery(UPDATE_MESSAGES_DATE_READ)
+                    .setParameter("paramDate", LocalDate.now())
                     .setParameter("idsList", messagesIds)
                     .executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
             throw new InternalServerError();
         }
+    }
+
+    @Override
+    public void updateMessagesDateDeleted(List<Message> messages) throws InternalServerError {
+        try {
+            getEntityManager().createQuery(UPDATE_MESSAGES_DATE_DELETED)
+                    .setParameter("paramDate", LocalDate.now())
+                    .setParameter("messagesList", messages)
+                    .executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
+    }
+
+    @Override
+    public void updateAllDateDeleted(Long userFromId, Long userToId) throws InternalServerError {
+        try {
+            getEntityManager().createNativeQuery(UPDATE_ALL_DATE_DELETED)
+                    .setParameter(1, LocalDate.now())
+                    .setParameter(2, userFromId)
+                    .setParameter(3, userToId)
+                    .executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerError();
+        }
+
     }
 
     @Override

@@ -41,11 +41,11 @@ public class MessageViewController {
 
         if (currentOffset == null) {
             messages = messageService.findMessages(userSession.getId(),userToId, offset);
-            offset = 10;
+            offset = 20;
         } else {
             offset = Integer.valueOf(currentOffset);
             messages = messageService.findMessages(userSession.getId(),userToId, offset);
-            offset += 10;
+            offset += 20;
         }
         model.addAttribute("messages", messages);
         model.addAttribute("offset", offset);

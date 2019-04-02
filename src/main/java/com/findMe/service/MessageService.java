@@ -12,6 +12,10 @@ public interface MessageService {
 
     Message updateMessage(Message message) throws InternalServerError, BadRequestException;
 
+    void updateSelectedMessages(List<Message> messages) throws InternalServerError, BadRequestException;
+
+    void updateAllMessages(Long userFormId, Long userToId) throws InternalServerError, BadRequestException;
+
     List<Message> findMessages(Long userFromId, Long userToId, Integer offset) throws InternalServerError;
 
 }
