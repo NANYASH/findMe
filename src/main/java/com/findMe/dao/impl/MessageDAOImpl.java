@@ -10,6 +10,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -66,7 +67,7 @@ public class MessageDAOImpl extends GenericDAO<Message> implements MessageDAO {
             return query.getResultList();
         } catch (NoResultException e) {
             e.printStackTrace();
-            return null;
+            return new ArrayList<>();
         } catch (Exception e) {
             e.printStackTrace();
             throw new InternalServerError();

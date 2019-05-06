@@ -36,6 +36,8 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Message updateMessage(Message message) throws InternalServerError, BadRequestException {
+        if (message.getDateDeleted() == null && message.getDateRead() != null)
+            throw new BadRequestException("Message has been read.");
         validateUpdate(message);
         return messageDAO.update(message);
     }
@@ -73,11 +75,11 @@ public class MessageServiceImpl implements MessageService {
 
     private void validateUpdate(Message currentMessage) throws BadRequestException {
         //if (currentMessage.getDateRead() != null) throw new BadRequestException("Message has been read."); requirements changed
+        if (currentMessage.getText().length() > 140) throw new BadRequestException("Message is too long");
         if (currentMessage.getDateDeleted() != null && currentMessage.getDateEdited() != null) {
             if (currentMessage.getDateDeleted().isBefore(currentMessage.getDateEdited()))
                 throw new BadRequestException("Message has been deleted.");
         }
-        if (currentMessage.getText().length() > 140) throw new BadRequestException("Message is too long");
     }
 
     private void validateSave(Relationship relationship, Message message) throws BadRequestException {
