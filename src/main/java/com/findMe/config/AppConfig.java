@@ -22,7 +22,7 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 
 import javax.persistence.EntityManagerFactory;
-
+import java.util.Properties;
 
 
 @Configuration
@@ -36,23 +36,35 @@ public class AppConfig implements WebMvcConfigurer{
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+
+        //Properties entityManagerProperties = new Properties();
+        //entityManagerProperties.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        //entityManagerProperties.put("hibernate.hbm2ddl.auto", "add-drop");
+        //entityManagerProperties.put("show_sql", "true");
+        //entityManagerProperties.put("hibernate.show_sql", "true");
+        //entityManagerProperties.put("hibernate.temp.use_jdbc_metadata_defaults", "false");
+
+
+
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
+
         em.setPackagesToScan(new String[]{"com"});
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
+        //em.setJpaProperties(entityManagerProperties);
 
         return em;
     }
 
-    @Bean
+    @Bean(name = "dataSource")
     public DriverManagerDataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://findme.cnrx1jkycv8d.us-east-2.rds.amazonaws.com:5432/postgres");
-        dataSource.setUsername("main");
-        dataSource.setPassword("asol1998");
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/findme");
+        dataSource.setUsername("postgres");
+        //dataSource.setPassword("asol1998");
         return dataSource;
     }
 

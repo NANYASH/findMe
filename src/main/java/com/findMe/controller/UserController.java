@@ -30,14 +30,21 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping(path = "/user-registration", method = RequestMethod.POST)
+    @PostMapping(path = "/user-registration")
     public ResponseEntity registerUser(@ModelAttribute User user) throws BadRequestException, InternalServerError {
-        userService.registerUser(user);
+        userService.create(user);
         LOGGER.info("User (id: " + user.getId() + ") registered.");
         return new ResponseEntity("User is registered.", HttpStatus.CREATED);
     }
 
-    @RequestMapping(path = "/login", method = RequestMethod.GET)
+    @PostMapping(path = "/user-update")
+    public ResponseEntity updateUser(@ModelAttribute User user) throws BadRequestException, InternalServerError {
+        userService.update(user);
+        LOGGER.info("User (id: " + user.getId() + ") updated.");
+        return new ResponseEntity("User is updated.", HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/login")
     public ResponseEntity logIn(HttpSession session, @RequestParam String email, @RequestParam String password) throws BadRequestException, InternalServerError {
         if (session.getAttribute("user") != null)
             return new ResponseEntity("User is already logged in.", HttpStatus.FORBIDDEN);
@@ -48,7 +55,7 @@ public class UserController {
         return new ResponseEntity<>(foundUser.getId(), HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/logout", method = RequestMethod.GET)
+    @GetMapping(path = "/logout")
     public ResponseEntity logOut(HttpSession session) throws BadRequestException, InternalServerError, UnauthorizedException {
         User user = validateLogIn(session);
         userService.logout(user, LocalDate.now());
@@ -57,7 +64,7 @@ public class UserController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/user-registration", method = RequestMethod.GET)
+    @GetMapping(path = "/user-registration")
     public String getRegisterPage() {
         return "registerPage";
     }

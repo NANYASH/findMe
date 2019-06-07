@@ -6,13 +6,13 @@ import com.findMe.model.User;
 
 
 public interface UserDAO {
-    User register(User user) throws InternalServerError, BadRequestException;
+    User add(User user) throws InternalServerError, BadRequestException;
 
     User update(User user) throws InternalServerError;
 
     void delete(Long id) throws InternalServerError;
 
-    User findById(Long id) throws InternalServerError;
+    User getById(Long id) throws InternalServerError;
 
-    User findByPhoneAndEmail(String phone, String email) throws InternalServerError;
+    User getByPhoneOrEmail(String phone, String email) throws InternalServerError;
 }

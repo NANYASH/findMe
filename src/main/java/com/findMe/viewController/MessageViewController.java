@@ -8,7 +8,6 @@ import com.findMe.exception.UnauthorizedException;
 import com.findMe.model.Message;
 import com.findMe.model.User;
 import com.findMe.service.MessageService;
-import com.findMe.service.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,7 +31,7 @@ public class MessageViewController {
         this.messageService = messageService;
     }
 
-    @RequestMapping(path = "/chat/{userId}", method = RequestMethod.GET)
+    @GetMapping(path = "/chat/{userId}")
     public String getMessages(HttpSession session, Model model, @PathVariable String userId, @RequestParam(required = false) String currentOffset) throws BadRequestException, InternalServerError, UnauthorizedException, NotFoundException {
         Integer offset = 0;
         List<Message> messages;

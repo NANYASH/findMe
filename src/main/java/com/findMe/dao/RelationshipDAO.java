@@ -10,17 +10,17 @@ import com.findMe.model.User;
 import java.util.List;
 
 public interface RelationshipDAO {
-    void addRelationship(Relationship relationship) throws InternalServerError, BadRequestException;
+    Relationship create(Relationship relationship) throws InternalServerError, BadRequestException;
 
-    void updateRelationship(Long userFromId, Long userToId, Relationship relationship) throws InternalServerError, BadRequestException;
+    void update(Long userFromId, Long userToId, Relationship relationship) throws InternalServerError, BadRequestException;
 
-    Relationship getRelationship(Long userFromId, Long userToId) throws InternalServerError;
+    Relationship getByFromIdToId(Long userFromId, Long userToId) throws InternalServerError;
 
-    List<User> findByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError;
+    List<User> getByStatus(Long userId, RelationshipStatus status) throws InternalServerError;
 
-    List<User> findOutgoingRequests(Long userId) throws InternalServerError;
+    List<User> getOutgoingRequests(Long userId) throws InternalServerError;
 
-    List<User> findIncomingRequests(Long userId) throws InternalServerError;
+    List<User> getIncomingRequests(Long userId) throws InternalServerError;
 
     Long getNumberOfRelationships(Long userId, RelationshipStatus status) throws InternalServerError;
 

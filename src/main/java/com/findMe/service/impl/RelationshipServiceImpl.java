@@ -33,18 +33,18 @@ public class RelationshipServiceImpl implements RelationshipService {
         if (userFromId.equals(userToId))
             throw new BadRequestException("User cannot add relationship with himself.");
 
-        Relationship relationship = relationshipDAO.getRelationship(userFromId, userToId);
+        Relationship relationship = relationshipDAO.getByFromIdToId(userFromId, userToId);
 
         relationshipValidator.validateUpdate(new RelationshipValidatorRequestData(userFromId, userToId, relationship, RelationshipStatus.REQUESTED,
                 relationshipDAO.getNumberOfRelationships(userFromId, RelationshipStatus.ACCEPTED),
                 relationshipDAO.getNumberOfOutgoingRequests(userFromId)));
 
         if (relationship == null) {
-            relationshipDAO.addRelationship(new Relationship(new RelationshipId(userFromId, userToId), RelationshipStatus.REQUESTED, LocalDate.now()));
+            relationshipDAO.create(new Relationship(new RelationshipId(userFromId, userToId), RelationshipStatus.REQUESTED, LocalDate.now()));
         } else {
             relationship.setRelationshipStatus(RelationshipStatus.REQUESTED);
             relationship.setLastUpdateDate(LocalDate.now());
-            relationshipDAO.updateRelationship(userFromId, userToId, relationship);
+            relationshipDAO.update(userFromId, userToId, relationship);
         }
     }
 
@@ -53,7 +53,7 @@ public class RelationshipServiceImpl implements RelationshipService {
         if (userFromId.equals(userToId))
             throw new BadRequestException("User cannot change relationship with himself.");
 
-        Relationship relationship = relationshipDAO.getRelationship(userFromId, userToId);
+        Relationship relationship = relationshipDAO.getByFromIdToId(userFromId, userToId);
 
         relationshipValidator.validateUpdate(new RelationshipValidatorRequestData(userFromId, userToId, relationship, status,
                 relationshipDAO.getNumberOfRelationships(userToId, RelationshipStatus.ACCEPTED),
@@ -61,12 +61,12 @@ public class RelationshipServiceImpl implements RelationshipService {
 
         relationship.setRelationshipStatus(status);
         relationship.setLastUpdateDate(LocalDate.now());
-        relationshipDAO.updateRelationship(userFromId, userToId, relationship);
+        relationshipDAO.update(userFromId, userToId, relationship);
     }
 
     @Override
     public RelationshipStatus findStatusById(Long userFromId, Long userToId) throws InternalServerError {
-        Relationship relationshipStatus = relationshipDAO.getRelationship(userFromId, userToId);
+        Relationship relationshipStatus = relationshipDAO.getByFromIdToId(userFromId, userToId);
         if (relationshipStatus != null)
             return relationshipStatus.getRelationshipStatus();
         return null;
@@ -74,17 +74,17 @@ public class RelationshipServiceImpl implements RelationshipService {
 
     @Override
     public List<User> findByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError {
-        return relationshipDAO.findByRelationshipStatus(userId, status);
+        return relationshipDAO.getByStatus(userId, status);
     }
 
     @Override
     public List<User> findOutgoingRequests(Long userId) throws InternalServerError {
-        return relationshipDAO.findOutgoingRequests(userId);
+        return relationshipDAO.getOutgoingRequests(userId);
     }
 
     @Override
     public List<User> findIncomingRequests(Long userId) throws InternalServerError {
-        return relationshipDAO.findIncomingRequests(userId);
+        return relationshipDAO.getIncomingRequests(userId);
     }
 
 }

@@ -35,8 +35,8 @@ public class MessageDAOImpl extends GenericDAO<Message> implements MessageDAO {
             "WHERE ((USER_FROM_ID = ? AND USER_TO_ID = ?) OR (USER_TO_ID = ? AND USER_FROM_ID = ?)) AND DATE_DELETED IS NULL";
 
     @Override
-    public Message save(Message message) throws InternalServerError {
-        return super.save(message);
+    public Message create(Message message) throws InternalServerError {
+        return super.create(message);
     }
 
     @Override
@@ -46,16 +46,16 @@ public class MessageDAOImpl extends GenericDAO<Message> implements MessageDAO {
 
     @Override
     public void delete(Message message) throws InternalServerError {
-        super.remove(message.getId());
+        super.delete(message.getId());
     }
 
     @Override
-    public Message findMessageById(Long messageId) throws InternalServerError {
-        return super.findById(messageId);
+    public Message getById(Long messageId) throws InternalServerError {
+        return super.getById(messageId);
     }
 
     @Override
-    public List<Message> findMessages(Long userFromId, Long userToId, Integer offset) throws InternalServerError {
+    public List<Message> getAll(Long userFromId, Long userToId, Integer offset) throws InternalServerError {
         try {
             Query query = getEntityManager().createNativeQuery(FIND_MESSAGES, Message.class)
                     .setParameter(1, userFromId)
@@ -76,7 +76,7 @@ public class MessageDAOImpl extends GenericDAO<Message> implements MessageDAO {
 
 
     @Override
-    public void updateMessagesDateRead(List<Long> messagesIds) throws InternalServerError {
+    public void updateDateRead(List<Long> messagesIds) throws InternalServerError {
         try {
             getEntityManager().createQuery(UPDATE_MESSAGES_DATE_READ)
                     .setParameter("paramDate", LocalDate.now())
@@ -89,7 +89,7 @@ public class MessageDAOImpl extends GenericDAO<Message> implements MessageDAO {
     }
 
     @Override
-    public void updateMessagesDateDeleted(List<Message> messages) throws InternalServerError {
+    public void updateDateDeleted(List<Message> messages) throws InternalServerError {
         try {
             getEntityManager().createQuery(UPDATE_MESSAGES_DATE_DELETED)
                     .setParameter("paramDate", LocalDate.now())

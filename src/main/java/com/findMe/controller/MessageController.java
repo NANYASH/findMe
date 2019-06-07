@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -35,7 +32,7 @@ public class MessageController {
         this.messageService = messageService;
     }
 
-    @RequestMapping(path = "/send-message", method = RequestMethod.POST)
+    @PostMapping(path = "/send-message")
     public ResponseEntity sendMessage(HttpSession session, @ModelAttribute Message message) throws BadRequestException, InternalServerError, UnauthorizedException {
         message.setUserFrom(validateLogIn(session));
         messageService.addMessage(message);
@@ -43,7 +40,7 @@ public class MessageController {
         return new ResponseEntity("Message is sent.", HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/edit-message", method = RequestMethod.POST)
+    @PostMapping(path = "/edit-message")
     public ResponseEntity editMessage(HttpSession session, @ModelAttribute Message message) throws BadRequestException, InternalServerError, UnauthorizedException {
         message.setUserFrom(validateLogIn(session));
         messageService.updateMessage(message);
@@ -51,7 +48,7 @@ public class MessageController {
         return new ResponseEntity("Message is updated.", HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/remove-selected-messages", method = RequestMethod.POST)
+    @PostMapping(path = "/remove-selected-messages")
     public ResponseEntity removeSelected(HttpSession session, @ModelAttribute List<Message> messages) throws BadRequestException, InternalServerError, UnauthorizedException {
         User userLogged = validateLogIn(session);
         for (Message message : messages)
@@ -61,7 +58,7 @@ public class MessageController {
         return new ResponseEntity("Messages are deleted.", HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/remove-chat", method = RequestMethod.POST)
+    @PostMapping(path = "/remove-chat")
     public ResponseEntity removeAll(HttpSession session, @RequestParam String userId) throws BadRequestException, InternalServerError, UnauthorizedException {
         Long userLoggedId = validateLogIn(session).getId();
         messageService.updateAllMessages(userLoggedId, convertId(userId));

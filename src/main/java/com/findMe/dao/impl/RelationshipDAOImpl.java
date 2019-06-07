@@ -53,14 +53,13 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
             " WHERE r.relationshipStatus = 'REQUESTED' " +
             " AND r.relationshipId.userFromId = :userId AND r.relationshipId.userToId = u.id";
 
-
     @Override
-    public void addRelationship(Relationship relationship) throws InternalServerError, BadRequestException {
-        super.save(relationship);
+    public Relationship create(Relationship relationship) throws InternalServerError {
+        return super.create(relationship);
     }
 
     @Override
-    public void updateRelationship(Long userFromId, Long userToId, Relationship relationship) throws InternalServerError, BadRequestException {
+    public void update(Long userFromId, Long userToId, Relationship relationship) throws InternalServerError, BadRequestException {
         try {
             getEntityManager().createNativeQuery(UPDATE_RELATIONSHIP, Relationship.class)
                     .setParameter(1, userFromId)
@@ -77,7 +76,7 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     }
 
     @Override
-    public Relationship getRelationship(Long userFromId, Long userToId) throws InternalServerError {
+    public Relationship getByFromIdToId(Long userFromId, Long userToId) throws InternalServerError {
         try {
             Query query = getEntityManager().createNativeQuery(FIND_STATUS_BY_ID, Relationship.class)
                     .setParameter(1, userFromId)
@@ -95,7 +94,7 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     }
 
     @Override
-    public List<User> findByRelationshipStatus(Long userId, RelationshipStatus status) throws InternalServerError {
+    public List<User> getByStatus(Long userId, RelationshipStatus status) throws InternalServerError {
         try {
             Query query = getEntityManager().createNativeQuery(FIND_BY_RELATIONSHIP_STATUS, User.class)
                     .setParameter(1, status.toString())
@@ -109,12 +108,12 @@ public class RelationshipDAOImpl extends GenericDAO<Relationship> implements Rel
     }
 
     @Override
-    public List<User> findOutgoingRequests(Long userId) throws InternalServerError {
+    public List<User> getOutgoingRequests(Long userId) throws InternalServerError {
         return findRequested(userId, FIND_OUTGOING_REQUESTS);
     }
 
     @Override
-    public List<User> findIncomingRequests(Long userId) throws InternalServerError {
+    public List<User> getIncomingRequests(Long userId) throws InternalServerError {
         return findRequested(userId, FIND_INCOMING_REQUESTS);
     }
 

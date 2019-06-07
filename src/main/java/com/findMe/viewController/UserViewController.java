@@ -33,15 +33,15 @@ public class UserViewController {
         this.postService = postService;
     }
 
-    @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
+    @GetMapping(path = "/user/{userId}")
     public String profile(HttpSession session, Model model, @PathVariable String userId, @ModelAttribute PostFilterData postFilterData) throws InternalServerError, NotFoundException, BadRequestException {
         Long userProfileId = convertId(userId);
         postFilterData.setUserPageId(userProfileId);
         User userSession = (User) session.getAttribute("user");
-        User foundUserProfile = userService.findUserById(userProfileId);
+        User foundUserProfile = userService.getById(userProfileId);
 
         model.addAttribute("user", foundUserProfile);
-        model.addAttribute("posts", postService.findPostsByPage(postFilterData));
+        model.addAttribute("posts", postService.getByPage(postFilterData));
 
         if (userSession != null) {
 

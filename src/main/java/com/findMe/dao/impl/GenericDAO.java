@@ -15,7 +15,7 @@ public abstract class GenericDAO<T> {
         return entityManager;
     }
 
-    public T save(T t) throws InternalServerError {
+    public T create(T t) throws InternalServerError {
         try {
             getEntityManager().persist(t);
         } catch (Exception e) {
@@ -35,11 +35,11 @@ public abstract class GenericDAO<T> {
         return t;
     }
 
-    public T remove(long id) throws InternalServerError {
+    public T delete(long id) throws InternalServerError {
         T t;
         try {
             t = getEntityManager().find(getEntityClass(), id);
-            getEntityManager().detach(t);
+            getEntityManager().remove(t);
         } catch (Exception e) {
             e.printStackTrace();
             throw new InternalServerError();
@@ -47,7 +47,7 @@ public abstract class GenericDAO<T> {
         return t;
     }
 
-    public T findById(long id) throws InternalServerError {
+    public T getById(long id) throws InternalServerError {
         try {
             return getEntityManager().find(getEntityClass(), id);
         } catch (Exception e) {

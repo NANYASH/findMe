@@ -9,13 +9,15 @@ import com.findMe.model.viewData.PostFilterData;
 import java.util.List;
 
 public interface PostDAO {
-    Post save(Post post) throws InternalServerError;
+    Post create(Post post) throws InternalServerError;
 
     Post update(Post post) throws InternalServerError;
 
-    List<Post> findPosts(PostFilterData postFilterData) throws InternalServerError;
+    void delete(Long id) throws InternalServerError;
 
-    List<Post> findNews(Long userId, Integer offset) throws InternalServerError;
+    List<Post> getPosts(PostFilterData postFilterData) throws InternalServerError;
 
-    List<User> findUsersTagged(Long userPostedId, Long[] usersTaggedIds) throws InternalServerError;
+    List<Post> getNews(Long userId, Integer offset) throws InternalServerError;
+
+    List<User> getTaggedUsers(Long userPostedId, Long[] usersTaggedIds) throws InternalServerError;
 }

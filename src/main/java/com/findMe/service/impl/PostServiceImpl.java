@@ -8,7 +8,6 @@ import com.findMe.exception.BadRequestException;
 import com.findMe.exception.InternalServerError;
 import com.findMe.model.Post;
 import com.findMe.model.Relationship;
-import com.findMe.model.User;
 import com.findMe.model.viewData.PostFilterData;
 import com.findMe.model.viewData.PostParametersData;
 import com.findMe.model.validateData.PostValidatorRequestData;
@@ -39,34 +38,39 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post addPost(PostParametersData postParametersData) throws InternalServerError, BadRequestException {
+    public Post create(PostParametersData postParametersData) throws InternalServerError, BadRequestException {
         Relationship relationship = null;
         Post post = buildPost(postParametersData);
 
         Long[] usersTaggedIds = validateIds(postParametersData.getUsersTagged());
 
         if (usersTaggedIds.length != 0)
-            post.setUsersTagged(postDAO.findUsersTagged(postParametersData.getUserPosted().getId(), usersTaggedIds));
+            post.setUsersTagged(postDAO.getTaggedUsers(postParametersData.getUserPosted().getId(), usersTaggedIds));
         if (postParametersData.getUserPosted().getId().equals(postParametersData.getUserPageId())) {
             post.setUserPagePosted(postParametersData.getUserPosted());
         } else {
-            relationship = relationshipDAO.getRelationship(postParametersData.getUserPageId(), postParametersData.getUserPosted().getId());
-            post.setUserPagePosted(userDAO.findById(postParametersData.getUserPageId()));
+            relationship = relationshipDAO.getByFromIdToId(postParametersData.getUserPageId(), postParametersData.getUserPosted().getId());
+            post.setUserPagePosted(userDAO.getById(postParametersData.getUserPageId()));
         }
 
         postValidator.validatePost(new PostValidatorRequestData(post, usersTaggedIds, relationship));
         post.setDatePosted(LocalDate.now());
-        return postDAO.save(post);
+        return postDAO.create(post);
     }
 
     @Override
-    public List<Post> findPostsByPage(PostFilterData postFilterData) throws InternalServerError {
-        return postDAO.findPosts(postFilterData);
+    public void delete(Long id) throws InternalServerError, BadRequestException {
+        postDAO.delete(id);
     }
 
     @Override
-    public List<Post> findPostsByFriendsPages(Long userId, Integer offset) throws InternalServerError {
-        return postDAO.findNews(userId, offset);
+    public List<Post> getByPage(PostFilterData postFilterData) throws InternalServerError {
+        return postDAO.getPosts(postFilterData);
+    }
+
+    @Override
+    public List<Post> getByFriendsPages(Long userId, Integer offset) throws InternalServerError {
+        return postDAO.getNews(userId, offset);
     }
 
     private Post buildPost(PostParametersData postParametersData) {

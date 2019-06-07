@@ -9,9 +9,11 @@ import java.time.LocalDate;
 
 
 public interface UserService {
-    User findUserById(Long id) throws InternalServerError, NotFoundException, BadRequestException;
+    User getById(Long id) throws InternalServerError, NotFoundException, BadRequestException;
 
-    User registerUser(User user) throws InternalServerError, BadRequestException;
+    User create(User user) throws InternalServerError, BadRequestException;
+
+    User update(User user) throws InternalServerError;
 
     User login(String login, String userEnteredPassword) throws InternalServerError, BadRequestException;
 

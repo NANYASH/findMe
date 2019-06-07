@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,14 +31,14 @@ public class RelationshipController {
         this.relationshipService = relationshipService;
     }
 
-    @RequestMapping(path = "/addRelationship", method = RequestMethod.POST)
+    @PostMapping(path = "/addRelationship")
     public ResponseEntity addRelationship(HttpSession session, @RequestParam String userToId) throws UnauthorizedException, BadRequestException, InternalServerError {
         relationshipService.addRelationship(validateLogIn(session).getId(), convertId(userToId));
         LOGGER.info("Relationship added");
         return new ResponseEntity("Request is sent.", HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/updateRelationship", method = RequestMethod.POST)
+    @PostMapping(path = "/updateRelationship")
     public ResponseEntity updateRelationship(HttpSession session, @RequestParam String userFromId, @RequestParam String status) throws UnauthorizedException, BadRequestException, InternalServerError {
         RelationshipStatus relationshipStatus = convertRelationshipStatus(status);
         Long userSessionId = validateLogIn(session).getId();

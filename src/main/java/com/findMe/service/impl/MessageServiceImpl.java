@@ -29,15 +29,13 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Message addMessage(Message message) throws InternalServerError, BadRequestException {
-        Relationship relationship = relationshipDAO.getRelationship(message.getUserFrom().getId(), message.getUserTo().getId());
+        Relationship relationship = relationshipDAO.getByFromIdToId(message.getUserFrom().getId(), message.getUserTo().getId());
         validateSave(relationship, message);
-        return messageDAO.save(message);
+        return messageDAO.create(message);
     }
 
     @Override
     public Message updateMessage(Message message) throws InternalServerError, BadRequestException {
-        if (message.getDateDeleted() == null && message.getDateRead() != null)
-            throw new BadRequestException("Message has been read.");
         validateUpdate(message);
         return messageDAO.update(message);
     }
@@ -48,7 +46,7 @@ public class MessageServiceImpl implements MessageService {
             throw new BadRequestException("Too much messages in one operation");
         for (Message message : messages)
             validateUpdate(message);
-        messageDAO.updateMessagesDateDeleted(messages);
+        messageDAO.updateDateDeleted(messages);
     }
 
     @Override
@@ -59,7 +57,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> findMessages(Long userFromId, Long userToId, Integer offset) throws InternalServerError {
         List<Long> messagesIdsToUpdate = new ArrayList<>();
-        List<Message> messages = messageDAO.findMessages(userFromId, userToId, offset);
+        List<Message> messages = messageDAO.getAll(userFromId, userToId, offset);
         for (Message message : messages) {
             if (message.getDateRead() == null) {
                 if (message.getUserTo().getId().equals(userFromId)) {
@@ -69,12 +67,12 @@ public class MessageServiceImpl implements MessageService {
             }
         }
         if (messagesIdsToUpdate.size() > 0)
-            messageDAO.updateMessagesDateRead(messagesIdsToUpdate);
+            messageDAO.updateDateRead(messagesIdsToUpdate);
         return messages;
     }
 
     private void validateUpdate(Message currentMessage) throws BadRequestException {
-        //if (currentMessage.getDateRead() != null) throw new BadRequestException("Message has been read."); requirements changed
+        if (currentMessage.getDateRead() != null) throw new BadRequestException("Message has been read.");
         if (currentMessage.getText().length() > 140) throw new BadRequestException("Message is too long");
         if (currentMessage.getDateDeleted() != null && currentMessage.getDateEdited() != null) {
             if (currentMessage.getDateDeleted().isBefore(currentMessage.getDateEdited()))

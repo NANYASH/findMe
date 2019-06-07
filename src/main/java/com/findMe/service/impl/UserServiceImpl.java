@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,22 +22,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserById(Long id) throws InternalServerError, NotFoundException, BadRequestException {
-        User userFound = userDAO.findById(id);
+    public User getById(Long id) throws InternalServerError, NotFoundException, BadRequestException {
+        User userFound = userDAO.getById(id);
         if (userFound == null)
             throw new NotFoundException("User with such id cannot be found.");
         return userFound;
     }
 
     @Override
-    public User registerUser(User user) throws InternalServerError, BadRequestException {
+    public User create(User user) throws InternalServerError, BadRequestException {
         user.setDateRegistered(LocalDate.now());
-        return userDAO.register(user);
+        return userDAO.add(user);
+    }
+
+    @Override
+    public User update(User user) throws InternalServerError {
+        return userDAO.update(user);
     }
 
     @Override
     public User login(String login, String userEnteredPassword) throws InternalServerError, BadRequestException {
-        User user = userDAO.findByPhoneAndEmail(login, login);
+        User user = userDAO.getByPhoneOrEmail(login, login);
         if (user != null && user.getPassword().equals(userEnteredPassword))
             return user;
         throw new BadRequestException("Incorrect credentials.");

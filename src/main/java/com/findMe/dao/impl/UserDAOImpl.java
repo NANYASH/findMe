@@ -17,24 +17,24 @@ public class UserDAOImpl extends GenericDAO<User> implements UserDAO {
     private static final String FIND_USER_BY_PHONE_AND_EMAIL = "SELECT * FROM user_table WHERE phone = ? OR email = ?";
 
     @Override
-    public User register(User user) throws InternalServerError, BadRequestException {
-        if (findByPhoneAndEmail(user.getPhone(), user.getEmail()) != null)
+    public User add(User user) throws InternalServerError, BadRequestException {
+        if (getByPhoneOrEmail(user.getPhone(), user.getEmail()) != null)
             throw new BadRequestException("User with such phone/email already exists");
-        return super.save(user);
+        return super.create(user);
     }
 
     @Override
     public void delete(Long id) throws InternalServerError {
-        super.remove(id);
+        super.delete(id);
     }
 
     @Override
-    public User findById(Long id) throws InternalServerError {
-        return super.findById(id);
+    public User getById(Long id) throws InternalServerError {
+        return super.getById(id);
     }
 
     @Override
-    public User findByPhoneAndEmail(String phone, String email) throws InternalServerError {
+    public User getByPhoneOrEmail(String phone, String email) throws InternalServerError {
         try {
             Query query = getEntityManager().createNativeQuery(FIND_USER_BY_PHONE_AND_EMAIL, User.class)
                     .setParameter(1, phone)

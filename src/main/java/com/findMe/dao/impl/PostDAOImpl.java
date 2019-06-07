@@ -30,9 +30,8 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
             " WHERE r.relationshipStatus = 'ACCEPTED'" +
             " ORDER BY p.datePosted DESC";
 
-
     @Override
-    public List<Post> findPosts(PostFilterData postFilterData) throws InternalServerError {
+    public List<Post> getPosts(PostFilterData postFilterData) throws InternalServerError {
         try {
             CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
             CriteriaQuery<Post> criteria = builder.createQuery(Post.class);
@@ -55,7 +54,7 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
     }
 
     @Override
-    public List<Post> findNews(Long userId, Integer offset) throws InternalServerError {
+    public List<Post> getNews(Long userId, Integer offset) throws InternalServerError {
         try {
             Query query = getEntityManager().createQuery(FIND_NEWS_LIST, Post.class)
                     .setParameter("userId", userId)
@@ -73,7 +72,7 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
 
 
     @Override
-    public List<User> findUsersTagged(Long userPostedId, Long[] usersTaggedIds) throws InternalServerError {
+    public List<User> getTaggedUsers(Long userPostedId, Long[] usersTaggedIds) throws InternalServerError {
         try {
             CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
             CriteriaQuery<User> criteria = builder.createQuery(User.class);
@@ -100,6 +99,11 @@ public class PostDAOImpl extends GenericDAO<Post> implements PostDAO {
         }
     }
 
+
+    @Override
+    public void delete(Long id) throws InternalServerError {
+        super.delete(id);
+    }
 
     @Override
     Class<Post> getEntityClass() {
